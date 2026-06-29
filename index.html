@@ -4,44 +4,70 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Código da Mensagem Magnética</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --cream: #fbf6f2;
+    --ink: #2a1a2a;          /* títulos serif escuros */
+    --ink-soft: #2d2438;     /* texto das opções */
+    --pink: #cf3a7d;         /* logo / acento */
+    --pink-bright: #ec3a8b;  /* acento do título */
+    --grad-a: #d6357a;
+    --grad-b: #e8638c;
+    --green-a: #1fa84a;
+    --green-b: #2cbf52;
+    --body-gray: #574b56;
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html, body { background: var(--cream); }
+
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #fdf5f7;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     min-height: 100vh;
-    color: #1a1a2e;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
-  /* HEADER */
+  .serif { font-family: 'Playfair Display', Georgia, serif; }
+
+  /* ===== HEADER ===== */
   .header {
     text-align: center;
-    padding: 18px 16px 14px;
-    border-bottom: 1px solid #f0e0e8;
+    padding: 18px 16px 16px;
     background: #fff;
+    border-bottom: 1px solid #f3e8ee;
+    position: relative;
+    z-index: 2;
   }
   .header-logo {
-    font-size: 15px;
-    color: #d63a7a;
-    font-weight: 600;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--pink);
     letter-spacing: 0.2px;
   }
-  .header-logo span { margin-right: 5px; }
+  .header-logo .heart { margin-right: 7px; }
 
-  /* PROGRESS BAR */
+  /* ===== PROGRESS BAR ===== */
   .progress-bar-wrap {
     display: none;
     background: #fff;
-    padding: 12px 50px 14px;
+    padding: 13px 50px 15px;
+    border-bottom: 1px solid #f3e8ee;
   }
   .progress-bar-wrap.visible { display: block; }
   .progress-meta {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
-    color: #aaa;
-    margin-bottom: 7px;
+    font-size: 12.5px;
+    color: #a99fa6;
+    margin-bottom: 8px;
+    font-weight: 500;
   }
   .progress-track {
     width: 100%;
@@ -52,255 +78,279 @@
   }
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #d63a7a, #e8638c);
+    background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
     border-radius: 99px;
-    transition: width 0.4s ease;
+    transition: width 0.45s cubic-bezier(.4,0,.2,1);
   }
 
-  /* SCREENS */
-  .screen {
-    display: none;
-    animation: fadeIn 0.3s ease;
-  }
-  .screen.active { display: block; }
-
+  /* ===== SCREENS ===== */
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.35s ease; }
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* LANDING SCREEN */
+  /* ===== LANDING ===== */
   .landing {
-    max-width: 480px;
+    max-width: 470px;
     margin: 0 auto;
-    padding: 24px 20px 40px;
+    padding: 30px 22px 48px;
     text-align: center;
   }
   .badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: #fff;
-    border: 1px solid #f0c8d8;
+    gap: 7px;
+    background: #fdeef5;
+    border: 1.5px solid #f6cadd;
     border-radius: 99px;
-    padding: 6px 14px;
-    font-size: 13px;
-    color: #d63a7a;
-    font-weight: 500;
-    margin-bottom: 22px;
+    padding: 8px 18px;
+    font-size: 13.5px;
+    color: var(--pink);
+    font-weight: 600;
+    margin-bottom: 26px;
   }
   .landing-title {
-    font-size: 30px;
+    font-size: 34px;
     font-weight: 800;
-    line-height: 1.2;
-    color: #1a1a2e;
-    margin-bottom: 20px;
+    line-height: 1.18;
+    color: var(--ink);
+    margin-bottom: 26px;
+    letter-spacing: -0.3px;
   }
-  .landing-title em {
-    font-style: normal;
-    color: #d63a7a;
-  }
+  .landing-title .accent { color: var(--pink-bright); }
   .whatsapp-img {
     width: 100%;
-    max-width: 340px;
-    border-radius: 16px;
-    margin: 0 auto 22px;
+    max-width: 330px;
+    border-radius: 18px;
+    margin: 0 auto 26px;
     display: block;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 28px rgba(120,60,90,0.14);
   }
   .landing-desc {
-    font-size: 15px;
-    line-height: 1.6;
-    color: #444;
-    margin-bottom: 24px;
+    font-size: 15.5px;
+    line-height: 1.62;
+    color: var(--body-gray);
+    margin-bottom: 26px;
   }
-  .landing-desc strong { color: #1a1a2e; }
+  .landing-desc strong { color: var(--ink); font-weight: 700; }
+
   .benefits {
     list-style: none;
-    text-align: left;
-    margin-bottom: 28px;
+    margin-bottom: 30px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 13px;
   }
   .benefits li {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     background: #fff;
-    border: 1px solid #f0dde8;
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-size: 14px;
-    color: #333;
+    border: 1px solid #f3e8ee;
+    border-radius: 15px;
+    padding: 15px 18px;
+    font-size: 14.5px;
+    color: #463d45;
+    text-align: left;
+    box-shadow: 0 3px 12px rgba(120,60,90,0.05);
   }
-  .benefits li .icon { font-size: 16px; flex-shrink: 0; }
+  .benefits li .ic { font-size: 18px; flex-shrink: 0; }
+
+  /* CTA com anel externo (igual ao design) */
+  .cta-ring {
+    border: 1.6px solid #b9e6c4;
+    border-radius: 22px;
+    padding: 7px;
+    background: transparent;
+  }
   .btn-main {
     display: block;
     width: 100%;
-    background: linear-gradient(135deg, #2db34a, #3cc957);
+    background: linear-gradient(180deg, var(--green-b), var(--green-a));
     color: #fff;
+    font-family: 'Inter', sans-serif;
     font-size: 17px;
     font-weight: 700;
-    padding: 18px 20px;
-    border-radius: 14px;
+    padding: 19px 18px;
+    border-radius: 15px;
     border: none;
     cursor: pointer;
-    letter-spacing: 0.3px;
-    box-shadow: 0 4px 16px rgba(45,179,74,0.35);
-    transition: transform 0.1s, box-shadow 0.1s;
-    text-decoration: none;
+    letter-spacing: 0.4px;
+    box-shadow: 0 6px 18px rgba(31,168,74,0.32);
+    transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
   }
-  .btn-main:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(45,179,74,0.3); }
+  .btn-main:hover { filter: brightness(1.04); }
+  .btn-main:active { transform: scale(0.985); box-shadow: 0 3px 10px rgba(31,168,74,0.3); }
   .trust-note {
-    margin-top: 12px;
-    font-size: 12px;
-    color: #999;
+    margin-top: 15px;
+    font-size: 12.5px;
+    color: #a99fa6;
+    font-weight: 500;
   }
 
-  /* QUESTION SCREEN */
+  /* ===== QUESTION ===== */
   .question-wrap {
-    max-width: 520px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 32px 20px 40px;
+    padding: 44px 24px 56px;
     text-align: center;
   }
-  .q-emoji { font-size: 48px; margin-bottom: 16px; display: block; }
+  .q-emoji {
+    font-size: 46px;
+    margin-bottom: 18px;
+    display: block;
+    line-height: 1;
+  }
   .q-title {
-    font-size: 22px;
+    font-size: 29px;
     font-weight: 800;
-    color: #1a1a2e;
-    line-height: 1.3;
-    margin-bottom: 28px;
+    color: var(--ink);
+    line-height: 1.28;
+    margin-bottom: 34px;
+    letter-spacing: -0.2px;
   }
   .options {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    text-align: left;
+    gap: 16px;
   }
   .option-btn {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     background: #fff;
-    border: 1.5px solid #e8d5e0;
-    border-radius: 14px;
-    padding: 16px 18px;
+    border: none;
+    border-radius: 18px;
+    padding: 21px 24px;
     cursor: pointer;
-    font-size: 15px;
-    color: #1a1a2e;
-    transition: border-color 0.15s, background 0.15s, transform 0.1s;
-    font-family: inherit;
-    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    box-shadow: 0 4px 16px rgba(120,60,90,0.06);
+    transition: transform 0.12s, box-shadow 0.18s;
     text-align: left;
+    width: 100%;
   }
   .option-btn:hover {
-    border-color: #d63a7a;
-    background: #fff8fb;
+    box-shadow: 0 6px 22px rgba(207,58,125,0.16);
+    transform: translateY(-1px);
   }
-  .option-btn:active { transform: scale(0.98); }
+  .option-btn:active { transform: scale(0.99); }
   .option-btn .radio {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
-    border: 2px solid #ddd;
+    border: 2px solid #e0d6dd;
     flex-shrink: 0;
-    margin-right: 12px;
-    transition: border-color 0.15s;
+    margin-right: 16px;
+    transition: border-color 0.15s, background 0.15s;
   }
-  .option-btn:hover .radio { border-color: #d63a7a; }
+  .option-btn:hover .radio { border-color: var(--pink); }
+  .option-text { flex: 1; line-height: 1.4; }
   .option-btn .arrow {
-    color: #ccc;
-    font-size: 18px;
+    color: #c8bcc8;
+    font-size: 20px;
     flex-shrink: 0;
-    margin-left: 8px;
+    margin-left: 10px;
+    font-weight: 400;
   }
-  .option-text { flex: 1; }
 
-  /* RESULT SCREEN */
+  /* ===== RESULT ===== */
   .result-wrap {
     max-width: 480px;
     margin: 0 auto;
-    padding: 28px 20px 40px;
+    padding: 36px 22px 52px;
     text-align: center;
   }
   .result-badge {
     display: inline-block;
-    background: #e8f9f0;
-    color: #2db34a;
+    background: #e9f9f0;
+    color: #1fa84a;
     border-radius: 99px;
-    padding: 6px 16px;
+    padding: 7px 18px;
     font-size: 13px;
     font-weight: 600;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
   }
   .result-title {
-    font-size: 26px;
+    font-size: 30px;
     font-weight: 800;
-    color: #1a1a2e;
-    line-height: 1.3;
-    margin-bottom: 14px;
+    color: var(--ink);
+    line-height: 1.24;
+    margin-bottom: 16px;
+    letter-spacing: -0.3px;
   }
-  .result-title em { font-style: normal; color: #d63a7a; }
+  .result-title .accent { color: var(--pink-bright); }
   .result-desc {
-    font-size: 15px;
+    font-size: 15.5px;
     line-height: 1.65;
-    color: #555;
-    margin-bottom: 24px;
+    color: var(--body-gray);
+    margin-bottom: 26px;
   }
   .result-box {
     background: #fff;
-    border: 1.5px solid #f0dde8;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 24px;
+    border: 1px solid #f3e8ee;
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 26px;
     text-align: left;
+    box-shadow: 0 4px 16px rgba(120,60,90,0.05);
   }
   .result-box h3 {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    color: #d63a7a;
+    color: var(--pink);
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 14px;
+    letter-spacing: 0.9px;
+    margin-bottom: 16px;
   }
   .result-item {
     display: flex;
-    gap: 10px;
+    gap: 11px;
     align-items: flex-start;
-    margin-bottom: 12px;
-    font-size: 14px;
-    color: #333;
+    margin-bottom: 13px;
+    font-size: 14.5px;
+    color: #463d45;
     line-height: 1.5;
   }
   .result-item:last-child { margin-bottom: 0; }
-  .result-item .check { color: #2db34a; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .result-item .check { color: #1fa84a; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
   .urgency {
-    background: linear-gradient(135deg, #fff5f0, #fff0f5);
-    border: 1.5px solid #ffd0d8;
-    border-radius: 14px;
-    padding: 16px 18px;
-    font-size: 14px;
-    color: #c44;
-    margin-bottom: 24px;
+    background: linear-gradient(135deg, #fff4f0, #fff0f5);
+    border: 1.5px solid #ffd3da;
+    border-radius: 16px;
+    padding: 17px 19px;
+    font-size: 14.5px;
+    color: #c0443e;
+    margin-bottom: 26px;
     line-height: 1.55;
+    text-align: left;
   }
-  .urgency strong { display: block; font-size: 15px; color: #b33; margin-bottom: 4px; }
+  .urgency strong { display: block; font-size: 15px; color: #b3332e; margin-bottom: 5px; }
   .price-note {
-    font-size: 13px;
-    color: #888;
-    margin-bottom: 16px;
+    font-size: 14px;
+    color: #8a7e86;
+    margin-bottom: 18px;
   }
-  .price-note s { color: #bbb; }
-  .price-note strong { color: #1a1a2e; font-size: 20px; }
+  .price-note s { color: #c4b8c0; }
+  .price-note b { color: var(--ink); font-size: 22px; font-weight: 800; }
+
+  @media (max-width: 520px) {
+    .progress-bar-wrap { padding: 12px 20px 14px; }
+    .landing-title { font-size: 29px; }
+    .q-title { font-size: 24px; }
+    .question-wrap { padding: 34px 18px 48px; }
+    .result-title { font-size: 26px; }
+  }
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <div class="header">
-  <div class="header-logo"><span>❤️</span> Código da Mensagem Magnética</div>
+  <div class="header-logo"><span class="heart">💗</span>Código da Mensagem Magnética</div>
 </div>
 
 <!-- PROGRESS BAR -->
@@ -317,13 +367,13 @@
 <!-- ======== TELA 0: LANDING ======== -->
 <div class="screen active" id="screen-0">
   <div class="landing">
-    <div class="badge">🌸 +3.300 mulheres já reconquistaram o ex</div>
+    <div class="badge">✨ +3.300 mulheres já reconquistaram o ex</div>
 
-    <h1 class="landing-title">
-      ⬇️ Descubra como fazer seu ex <em>te responder ainda hoje</em>
+    <h1 class="landing-title serif">
+      ⬇️ Descubra como fazer seu ex <span class="accent">te responder ainda hoje</span>
     </h1>
 
-    <img src="imgquiz/img1.png" alt="Mensagens WhatsApp" class="whatsapp-img">
+    <img src="imgquiz/img1.png" alt="Mensagens no WhatsApp" class="whatsapp-img">
 
     <p class="landing-desc">
       Use essas <strong>3 mensagens da psicologia</strong> e veja ele te responder hoje mesmo e querer voltar.
@@ -331,14 +381,14 @@
     </p>
 
     <ul class="benefits">
-      <li><span class="icon">🎯</span> Protocolo Personalizado de Reconquista incluído</li>
-      <li><span class="icon">🚫</span> O erro que faz 96% das mulheres perder o ex pra sempre</li>
-      <li><span class="icon">⚡</span> Atalho pra fazer ele implorar pra voltar em 72 horas</li>
+      <li><span class="ic">🎯</span> Protocolo Personalizado de Reconquista incluído</li>
+      <li><span class="ic">🚫</span> O erro que faz 96% das mulheres perder o ex pra sempre</li>
+      <li><span class="ic">⚡</span> Atalho pra fazer ele implorar pra voltar em 72 horas</li>
     </ul>
 
-    <button class="btn-main" onclick="goToQuestion(1)">
-      💌 QUERO RECONQUISTAR MEU EX
-    </button>
+    <div class="cta-ring">
+      <button class="btn-main" onclick="goToQuestion(1)">💕 QUERO RECONQUISTAR MEU EX</button>
+    </div>
     <p class="trust-note">🔒 Teste gratuito • Resultado em minutos</p>
   </div>
 </div>
@@ -347,33 +397,13 @@
 <div class="screen" id="screen-1">
   <div class="question-wrap">
     <span class="q-emoji">⏰</span>
-    <h2 class="q-title">Faz quanto tempo que vocês terminaram?</h2>
+    <h2 class="q-title serif">Faz quanto tempo que vocês terminaram?</h2>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(2)">
-        <span class="radio"></span>
-        <span class="option-text">Menos de 1 semana</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(2)">
-        <span class="radio"></span>
-        <span class="option-text">Esse mês</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(2)">
-        <span class="radio"></span>
-        <span class="option-text">Entre 1 e 6 meses</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(2)">
-        <span class="radio"></span>
-        <span class="option-text">Entre 6 meses e 1 ano</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(2)">
-        <span class="radio"></span>
-        <span class="option-text">Mais de 1 ano</span>
-        <span class="arrow">›</span>
-      </button>
+      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Menos de 1 semana</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Esse mês</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Entre 1 e 6 meses</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Entre 6 meses e 1 ano</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Mais de 1 ano</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
@@ -382,28 +412,12 @@
 <div class="screen" id="screen-2">
   <div class="question-wrap">
     <span class="q-emoji">💬</span>
-    <h2 class="q-title">Vocês ainda têm contato hoje em dia?</h2>
+    <h2 class="q-title serif">Vocês ainda têm contato hoje em dia?</h2>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(3)">
-        <span class="radio"></span>
-        <span class="option-text">Sim, conversamos às vezes</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(3)">
-        <span class="radio"></span>
-        <span class="option-text">Ele fala comigo, mas é frio e distante</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(3)">
-        <span class="radio"></span>
-        <span class="option-text">Me responde por obrigação</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(3)">
-        <span class="radio"></span>
-        <span class="option-text">Não, fui bloqueada em tudo</span>
-        <span class="arrow">›</span>
-      </button>
+      <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Sim, conversamos às vezes</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Ele fala comigo, mas é frio e distante</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Me responde por obrigação</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Não, fui bloqueada em tudo</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
@@ -412,33 +426,13 @@
 <div class="screen" id="screen-3">
   <div class="question-wrap">
     <span class="q-emoji">💔</span>
-    <h2 class="q-title">O que você mais sofre desde o término?</h2>
+    <h2 class="q-title serif">O que você mais sofre desde o término?</h2>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(4)">
-        <span class="radio"></span>
-        <span class="option-text">Sinto muita saudade e penso nele todo dia</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(4)">
-        <span class="radio"></span>
-        <span class="option-text">Ver ele seguir a vida como se eu não tivesse existido</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(4)">
-        <span class="radio"></span>
-        <span class="option-text">Não me manda mensagem e não me responde</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(4)">
-        <span class="radio"></span>
-        <span class="option-text">Sinto que não fui suficiente pra ele</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(4)">
-        <span class="radio"></span>
-        <span class="option-text">Ver ele com outra e saber que fui substituída</span>
-        <span class="arrow">›</span>
-      </button>
+      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Sinto muita saudade e penso nele todo dia</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Ver ele seguir a vida como se eu não tivesse existido</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Não me manda mensagem e não me responde</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Sinto que não fui suficiente pra ele</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Ver ele com outra e saber que fui substituída</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
@@ -447,28 +441,12 @@
 <div class="screen" id="screen-4">
   <div class="question-wrap">
     <span class="q-emoji">😰</span>
-    <h2 class="q-title">Se ele realmente se apaixonar por outra mulher, o que aconteceria com você?</h2>
+    <h2 class="q-title serif">Se ele realmente se apaixonar por outra mulher, o que aconteceria com você?</h2>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(5)">
-        <span class="radio"></span>
-        <span class="option-text">Eu perderia completamente o chão</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(5)">
-        <span class="radio"></span>
-        <span class="option-text">Ficaria mal, mas tentaria seguir em frente</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(5)">
-        <span class="radio"></span>
-        <span class="option-text">Tentaria reconquistar ele a qualquer custo</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(5)">
-        <span class="radio"></span>
-        <span class="option-text">Fingiria que não ligo, mesmo estando morta por dentro</span>
-        <span class="arrow">›</span>
-      </button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Eu perderia completamente o chão</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Ficaria mal, mas tentaria seguir em frente</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Tentaria reconquistar ele a qualquer custo</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Fingiria que não ligo, mesmo estando morta por dentro</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
@@ -477,28 +455,12 @@
 <div class="screen" id="screen-5">
   <div class="question-wrap">
     <span class="q-emoji">⌛</span>
-    <h2 class="q-title">Quanto tempo você acha que tem antes de ele te esquecer completamente?</h2>
+    <h2 class="q-title serif">Quanto tempo você acha que tem antes de ele te esquecer completamente?</h2>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(6)">
-        <span class="radio"></span>
-        <span class="option-text">Poucos dias, acho que já estou sendo substituída</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(6)">
-        <span class="radio"></span>
-        <span class="option-text">Algumas semanas, ainda consigo agir</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(6)">
-        <span class="radio"></span>
-        <span class="option-text">Uns meses, acho que ainda tem algo entre nós</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(6)">
-        <span class="radio"></span>
-        <span class="option-text">Não sei, mas tenho medo de descobrir</span>
-        <span class="arrow">›</span>
-      </button>
+      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Poucos dias, acho que já estou sendo substituída</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Algumas semanas, ainda consigo agir</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Uns meses, acho que ainda tem algo entre nós</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Não sei, mas tenho medo de descobrir</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
@@ -507,28 +469,12 @@
 <div class="screen" id="screen-6">
   <div class="question-wrap">
     <span class="q-emoji">💭</span>
-    <h2 class="q-title">O que você já tentou fazer para ele voltar?</h2>
+    <h2 class="q-title serif">O que você já tentou fazer para ele voltar?</h2>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(7)">
-        <span class="radio"></span>
-        <span class="option-text">Mandei mensagem pedindo pra voltar</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(7)">
-        <span class="radio"></span>
-        <span class="option-text">Fiz ciúmes pra ver se ele reagia</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(7)">
-        <span class="radio"></span>
-        <span class="option-text">Tentei o no contact mas não aguentei</span>
-        <span class="arrow">›</span>
-      </button>
-      <button class="option-btn" onclick="nextQ(7)">
-        <span class="radio"></span>
-        <span class="option-text">Nada ainda, mas quero fazer algo certo dessa vez</span>
-        <span class="arrow">›</span>
-      </button>
+      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Mandei mensagem pedindo pra voltar</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Fiz ciúmes pra ver se ele reagia</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Tentei o "no contact", mas não aguentei</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Nada ainda, mas quero fazer algo certo dessa vez</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
@@ -537,57 +483,33 @@
 <div class="screen" id="screen-7">
   <div class="result-wrap">
     <div class="result-badge">✅ Análise concluída</div>
-
-    <h2 class="result-title">
-      Você <em>ainda tem chances</em> de reconquistar ele — mas precisa agir agora
-    </h2>
-
+    <h2 class="result-title serif">Você <span class="accent">ainda tem chances</span> de reconquistar ele — mas precisa agir agora</h2>
     <p class="result-desc">
       Com base nas suas respostas, identificamos o seu perfil de reconquista.
       A boa notícia: existe uma sequência específica de mensagens que faz qualquer ex
       voltar a sentir atração — mesmo que ele esteja frio, distante ou com outra.
     </p>
-
     <div class="result-box">
       <h3>O que você vai descobrir:</h3>
-      <div class="result-item">
-        <span class="check">✅</span>
-        <span>A mensagem exata que desperta o ciúme e faz ele te responder em minutos</span>
-      </div>
-      <div class="result-item">
-        <span class="check">✅</span>
-        <span>O erro que 96% das mulheres cometem (e que empurra o ex pra sempre)</span>
-      </div>
-      <div class="result-item">
-        <span class="check">✅</span>
-        <span>Como usar a psicologia para ele sentir que a perda foi dele — não sua</span>
-      </div>
-      <div class="result-item">
-        <span class="check">✅</span>
-        <span>O protocolo de 72 horas pra fazer ele implorar pra voltar</span>
-      </div>
+      <div class="result-item"><span class="check">✅</span><span>A mensagem exata que desperta o ciúme e faz ele te responder em minutos</span></div>
+      <div class="result-item"><span class="check">✅</span><span>O erro que 96% das mulheres cometem (e que empurra o ex pra sempre)</span></div>
+      <div class="result-item"><span class="check">✅</span><span>Como usar a psicologia para ele sentir que a perda foi dele — não sua</span></div>
+      <div class="result-item"><span class="check">✅</span><span>O protocolo de 72 horas pra fazer ele implorar pra voltar</span></div>
     </div>
-
     <div class="urgency">
       <strong>⚠️ Atenção: o tempo está contra você</strong>
       Quanto mais tempo passa sem agir, mais ele se desapega emocionalmente.
       O método funciona melhor nas primeiras semanas — e você ainda está nessa janela.
     </div>
-
-    <p class="price-note">
-      De <s>R$197,00</s> por apenas <strong>R$37,00</strong> — acesso imediato
-    </p>
-
-    <button class="btn-main" onclick="window.open('https://pay.hotmart.com/', '_blank')">
-      💌 QUERO RECONQUISTAR MEU EX AGORA
-    </button>
+    <p class="price-note">De <s>R$197,00</s> por apenas <b>R$37,00</b> — acesso imediato</p>
+    <div class="cta-ring">
+      <button class="btn-main" onclick="window.open('https://pay.hotmart.com/', '_blank')">💕 QUERO RECONQUISTAR MEU EX AGORA</button>
+    </div>
     <p class="trust-note">🔒 Pagamento 100% seguro • Acesso imediato • Garantia de 7 dias</p>
   </div>
 </div>
 
 <script>
-  const TOTAL_Q = 6;
-
   const progressData = {
     1: { label: 'Pergunta 1 de 6', pct: 17 },
     2: { label: 'Pergunta 2 de 6', pct: 33 },
@@ -605,35 +527,22 @@
 
   function updateProgress(q) {
     const wrap = document.getElementById('progressWrap');
-    const fill = document.getElementById('progressFill');
-    const label = document.getElementById('progressLabel');
-    const pct = document.getElementById('progressPct');
-
     if (q >= 1 && q <= 6) {
       wrap.classList.add('visible');
       const d = progressData[q];
-      label.textContent = d.label;
-      pct.textContent = d.pct + '% concluído';
-      fill.style.width = d.pct + '%';
+      document.getElementById('progressLabel').textContent = d.label;
+      document.getElementById('progressPct').textContent = d.pct + '% concluído';
+      document.getElementById('progressFill').style.width = d.pct + '%';
     } else {
       wrap.classList.remove('visible');
     }
   }
 
-  function goToQuestion(q) {
-    updateProgress(q);
-    showScreen(q);
-  }
+  function goToQuestion(q) { updateProgress(q); showScreen(q); }
 
-  function nextQ(nextScreen) {
-    if (nextScreen <= 6) {
-      updateProgress(nextScreen);
-      showScreen(nextScreen);
-    } else {
-      // resultado
-      updateProgress(0);
-      showScreen(7);
-    }
+  function nextQ(next) {
+    if (next <= 6) { updateProgress(next); showScreen(next); }
+    else { updateProgress(0); showScreen(7); }
   }
 </script>
 
