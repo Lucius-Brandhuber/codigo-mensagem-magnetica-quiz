@@ -183,6 +183,20 @@
   }
   .btn-main:hover { filter: brightness(1.04); }
   .btn-main:active { transform: scale(0.985); box-shadow: 0 3px 10px rgba(31,168,74,0.3); }
+
+  /* Animação de ping no botão inicial */
+  @keyframes ctaPing {
+    0%   { transform: scale(1);     box-shadow: 0 6px 18px rgba(31,168,74,0.32), 0 0 0 0   rgba(44,191,82,0.5); }
+    70%  { transform: scale(1.03);  box-shadow: 0 9px 24px rgba(31,168,74,0.40), 0 0 0 16px rgba(44,191,82,0);  }
+    100% { transform: scale(1);     box-shadow: 0 6px 18px rgba(31,168,74,0.32), 0 0 0 0   rgba(44,191,82,0);   }
+  }
+  #screen-0 .btn-main {
+    animation: ctaPing 1.7s cubic-bezier(.4,0,.2,1) infinite;
+  }
+  #screen-0 .btn-main:hover { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) {
+    #screen-0 .btn-main { animation: none; }
+  }
   .trust-note {
     margin-top: 15px;
     font-size: 12.5px;
