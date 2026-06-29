@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Código da Mensagem Magnética</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fbf6f2;
+    --ink: #2a1a2a;
+    --pink: #cf3a7d;
+    --pink-bright: #ec3a8b;
+    --green-a: #1fa84a;
+    --green-b: #2cbf52;
+    --green-text: #1c9b46;
+    --body: #463d45;
+    --body-soft: #574b56;
+    --red: #d63a3a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--cream); }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--ink); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; line-height: 1.6;
+  }
+  .serif { font-family: 'Playfair Display', Georgia, serif; }
+
+  .header { text-align: center; padding: 18px 16px 16px; background: #fff; border-bottom: 1px solid #f3e8ee; }
+  .header-logo { font-family: 'Playfair Display', Georgia, serif; font-size: 21px; font-weight: 800; color: var(--pink); }
+  .header-logo .heart { margin-right: 7px; }
+
+  .wrap { max-width: 520px; margin: 0 auto; padding: 0 18px; }
+
+  /* CARD VIDEO */
+  .card {
+    background: #fff; border: 1px solid #f3e8ee; border-radius: 22px;
+    box-shadow: 0 8px 30px rgba(120,60,90,0.07); padding: 24px 20px; margin: 24px 0; text-align: center;
+  }
+  .live {
+    display: inline-flex; align-items: center; gap: 7px; background: #fdeef0; border: 1px solid #f6b9c2;
+    color: var(--red); font-weight: 700; font-size: 13px; padding: 5px 14px; border-radius: 99px; margin-bottom: 14px;
+    letter-spacing: 0.4px;
+  }
+  .live .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--red); animation: blink 1.1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+  .card-title { font-family:'Playfair Display',serif; font-size: 22px; font-weight: 800; color: var(--ink); margin-bottom: 18px; line-height:1.3; }
+
+  /* CHECKLIST (carregamentos) */
+  .checklist {
+    background:#fff; border:1px solid #f3e8ee; border-radius:18px; box-shadow:0 6px 20px rgba(120,60,90,0.06);
+    padding:22px 20px; margin: 4px 0 8px;
+  }
+  .checklist-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+  .checklist-head .t { font-family:'Playfair Display',serif; font-size:18px; font-weight:800; color:var(--ink); }
+  .checklist-head .c { font-size:14px; font-weight:700; color:var(--pink); }
+  .ci { margin-bottom:14px; }
+  .ci-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:7px; }
+  .ci-check {
+    width:18px; height:18px; border-radius:5px; background:#e2dce0; flex-shrink:0; margin-top:2px;
+    display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; transition:background .3s;
+  }
+  .ci.done .ci-check { background: var(--green-a); }
+  .ci-text { font-size:14px; color:#4a4048; line-height:1.4; transition:color .3s; }
+  .ci.done .ci-text { color:#a99fa6; text-decoration: line-through; }
+  .ci-bar { height:6px; background:#f3e1ea; border-radius:99px; overflow:hidden; margin-left:28px; }
+  .ci-fill { height:100%; width:0; background:linear-gradient(90deg,#d6357a,#ec5b8e); border-radius:99px; transition:width 1.2s linear; }
+  .gerado {
+    display:none; background:#eafaef; border:1px solid #b6e6c4; border-radius:14px; padding:15px;
+    text-align:center; font-weight:700; color:var(--green-text); margin-top:6px;
+  }
+
+  /* REVEAL SECTION */
+  #rest { display:none; }
+  .reveal-badge {
+    display:inline-block; background:#eafaef; border:1px solid #b6e6c4; color:var(--green-text);
+    border-radius:99px; padding:7px 18px; font-size:13px; font-weight:700; margin: 30px 0 14px;
+  }
+  .reveal-title { font-family:'Playfair Display',serif; font-size:28px; font-weight:800; color:var(--ink); text-align:center; margin-bottom:6px; }
+
+  /* CTA */
+  .cta-ring { border:1.6px solid #b9e6c4; border-radius:22px; padding:7px; margin:18px 0; }
+  .btn-cta {
+    display:block; width:100%; background:linear-gradient(180deg,var(--green-b),var(--green-a)); color:#fff;
+    font-family:'Inter',sans-serif; font-size:17px; font-weight:700; padding:20px 16px; border-radius:15px; border:none;
+    cursor:pointer; letter-spacing:0.3px; box-shadow:0 6px 18px rgba(31,168,74,0.32); transition:transform .12s,filter .12s;
+  }
+  .btn-cta:hover{ filter:brightness(1.04); }
+  .btn-cta:active{ transform:scale(.985); }
+  .cta-pulse{ animation:ctaPing 1.7s cubic-bezier(.4,0,.2,1) infinite; }
+  @keyframes ctaPing {
+    0%{transform:scale(1);box-shadow:0 6px 18px rgba(31,168,74,.32),0 0 0 0 rgba(44,191,82,.5)}
+    70%{transform:scale(1.02);box-shadow:0 9px 24px rgba(31,168,74,.4),0 0 0 16px rgba(44,191,82,0)}
+    100%{transform:scale(1);box-shadow:0 6px 18px rgba(31,168,74,.32),0 0 0 0 rgba(44,191,82,0)}
+  }
+  @media (prefers-reduced-motion: reduce){ .cta-pulse,.live .dot{animation:none} }
+
+  /* BOXES */
+  .box-green {
+    background:#f0faf3; border:1.5px solid #b6e6c4; border-radius:18px; padding:22px; margin:22px 0; text-align:left;
+  }
+  .box-green .gh { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .box-green .gh .ico { width:40px;height:40px;border-radius:50%;background:#dff5e6;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0; }
+  .box-green .gh .gt { font-family:'Playfair Display',serif; font-size:19px; font-weight:800; color:var(--ink); }
+  .box-green .gh .gs { font-size:13px; color:var(--body-soft); }
+  .box-green p { font-size:14.5px; color:var(--body); line-height:1.6; }
+  .box-green p strong{ color:var(--ink); }
+  .box-green .secure { font-size:13px; color:var(--green-text); font-weight:600; margin-top:12px; }
+
+  .box-white {
+    background:#fff; border:1px solid #f3e8ee; border-radius:18px; padding:22px; margin:22px 0; box-shadow:0 4px 16px rgba(120,60,90,0.05);
+  }
+  .box-white h3 { font-family:'Playfair Display',serif; font-size:19px; font-weight:800; color:var(--ink); margin-bottom:12px; }
+  .box-white .q { font-size:14.5px; color:#7a6f76; font-style:italic; margin-bottom:7px; }
+  .box-white p { font-size:14.5px; color:var(--body); line-height:1.6; margin-top:12px; }
+  .box-white p strong{ color:var(--ink); }
+
+  .box-pink {
+    background:#fdeef5; border:1.5px solid #f6cadd; border-radius:18px; padding:22px; margin:22px 0;
+  }
+  .box-pink h3 { font-size:17px; font-weight:800; color:var(--ink); margin-bottom:12px; }
+  .box-pink ol { margin:0 0 12px 18px; }
+  .box-pink ol li { font-size:14.5px; color:var(--body); margin-bottom:8px; line-height:1.5; }
+  .box-pink ol li::marker { color:var(--pink); font-weight:700; }
+  .box-pink .ok { font-size:14px; color:var(--green-text); font-weight:700; }
+
+  .divider { display:flex; align-items:center; gap:14px; color:#b6abb3; font-size:12px; font-weight:600; letter-spacing:2px; margin:34px 0 18px; }
+  .divider::before,.divider::after { content:''; flex:1; height:1px; background:#ece0e7; }
+
+  /* BONUS */
+  .bonus-hero {
+    background:linear-gradient(150deg,#3a1430,#1c0e1a); border-radius:20px; padding:26px 22px; text-align:center; color:#fff;
+    margin-bottom:18px; position:relative; overflow:hidden; box-shadow:0 12px 30px rgba(40,10,30,0.3);
+  }
+  .bonus-hero .mini { display:inline-block; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.18); color:#ffd9ea; font-size:12px; font-weight:600; padding:5px 14px; border-radius:99px; margin-bottom:14px; }
+  .bonus-hero .bt { font-family:'Playfair Display',serif; font-size:26px; font-weight:800; margin-bottom:6px; }
+  .bonus-hero .bt .em { margin-right:6px; }
+  .bonus-hero .bs { font-size:15px; font-weight:600; opacity:.95; }
+  .bonus-hero .bn { font-size:12.5px; opacity:.6; margin-top:6px; }
+
+  .bonus-card { display:flex; gap:14px; align-items:flex-start; background:#fff; border:1px solid #f3e8ee; border-radius:16px; padding:16px 18px; margin-bottom:12px; box-shadow:0 4px 14px rgba(120,60,90,0.05); }
+  .bonus-card .bi { width:42px;height:42px;border-radius:12px;background:#fdeef5;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0; }
+  .bonus-card .lbl { font-size:11px; font-weight:700; color:var(--pink); letter-spacing:.4px; }
+  .bonus-card .bt2 { font-size:15.5px; font-weight:700; color:var(--ink); margin:2px 0 4px; }
+  .bonus-card .bd { font-size:13.5px; color:var(--body-soft); line-height:1.45; margin-bottom:7px; }
+  .bonus-card .pr s { color:#bcb0b8; font-size:13px; margin-right:8px; }
+  .bonus-card .pr b { color:var(--green-text); font-size:13.5px; font-weight:700; }
+
+  .bonus-total { background:#fdeef5; border:1.5px solid #f6cadd; border-radius:16px; padding:22px; text-align:center; margin:18px 0; }
+  .bonus-total .l { font-size:14px; color:var(--body-soft); }
+  .bonus-total .s { font-size:18px; color:#bcb0b8; text-decoration:line-through; margin:4px 0 10px; }
+  .bonus-total .free { font-family:'Playfair Display',serif; font-size:24px; font-weight:800; color:var(--pink-bright); }
+
+  /* COUNTDOWN */
+  .countdown { border:1.5px solid #f6b9c2; border-radius:16px; padding:18px; text-align:center; margin:22px 0; }
+  .countdown .l { font-size:14px; font-weight:700; color:var(--red); letter-spacing:.4px; margin-bottom:12px; }
+  .cd-digits { display:flex; align-items:center; justify-content:center; gap:8px; }
+  .cd-box { background:var(--red); color:#fff; font-size:26px; font-weight:800; padding:10px 16px; border-radius:12px; min-width:60px; font-variant-numeric:tabular-nums; }
+  .cd-sep { font-size:26px; font-weight:800; color:var(--red); }
+
+  /* DEPOIMENTOS (chat) */
+  .results-label { text-align:center; font-size:12px; font-weight:600; letter-spacing:2px; color:#b6abb3; margin:30px 0 14px; }
+  .depo-banner { background:linear-gradient(135deg,#ec3a8b,#a23bd6); border-radius:16px; padding:18px; text-align:center; color:#fff; margin-bottom:0; position:relative; z-index:2; }
+  .depo-banner .t { font-family:'Playfair Display',serif; font-size:19px; font-weight:800; }
+  .depo-banner .s { font-size:12.5px; opacity:.95; margin-top:4px; }
+  .depo-banner .s b{ font-weight:800; }
+  .chat {
+    background:#0b141a; border-radius:0 0 16px 16px; padding:18px 14px; margin:-4px 0 18px;
+    background-image:radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px); background-size:18px 18px;
+  }
+  .bubble {
+    background:#202c33; color:#e9edef; border-radius:10px; padding:9px 12px 7px; margin-bottom:9px; max-width:88%;
+    font-size:14px; line-height:1.45; box-shadow:0 1px 1px rgba(0,0,0,0.2); position:relative;
+  }
+  .bubble .time { display:block; text-align:right; font-size:10.5px; color:#8696a0; margin-top:3px; }
+  .enc-notice { text-align:center; font-size:11px; color:#9aa7b0; background:#1c2a23; border-radius:8px; padding:7px 10px; margin:4px auto 12px; max-width:92%; line-height:1.4; }
+  .enc-notice b{ color:#cde8d6; }
+
+  .final-box { background:#fff; border:1px solid #f3e8ee; border-radius:18px; padding:22px; margin:18px 0; box-shadow:0 4px 16px rgba(120,60,90,0.05); }
+  .final-box p { font-size:15px; color:var(--body); line-height:1.6; margin-bottom:12px; }
+  .final-box .hl { font-weight:700; color:var(--ink); }
+  .final-box .opt { display:flex; gap:9px; align-items:flex-start; font-size:14.5px; margin-bottom:10px; line-height:1.5; }
+  .final-box .opt.no { color:#9a8f96; }
+  .final-box .opt.yes { color:var(--green-text); font-weight:600; }
+  .final-box .tip { color:var(--pink); font-weight:700; font-size:14px; text-align:center; margin-top:6px; }
+
+  .footer { text-align:center; font-size:12.5px; color:#a99fa6; padding:20px 0 36px; }
+
+  @media (max-width:520px){
+    .card-title{font-size:20px} .reveal-title{font-size:24px} .bonus-hero .bt{font-size:23px}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo"><span class="heart">💗</span>Código da Mensagem Magnética</div>
+</div>
+
+<div class="wrap">
+
+  <!-- VSL (sempre visível) -->
+  <div class="card">
+    <span class="live"><span class="dot"></span>AO VIVO</span>
+    <div class="card-title">Assista enquanto criamos seu Protocolo Personalizado</div>
+    <vturb-smartplayer id="vid-6a41de6488e2c7a969bd7270" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"><div class="vturb-player-placeholder" style="position: relative; width: 100%; padding: 177.77777777777777% 0 0; z-index: 0; background-color: black;"></div></vturb-smartplayer>
+  </div>
+
+  <!-- CARREGAMENTOS (sempre visível) -->
+  <div class="checklist">
+    <div class="checklist-head">
+      <span class="t">Criando seu Protocolo... ✏️</span>
+      <span class="c" id="clCount">0/8</span>
+    </div>
+    <div id="clItems">
+      <div class="ci"><div class="ci-row"><span class="ci-check">✓</span><span class="ci-text">Gerando a mensagem que fura qualquer bloqueio e desperta saudade no silêncio</span></div><div class="ci-bar"><div class="ci-fill"></div></div></div>
+      <div class="ci"><div class="ci-row"><span class="ci-check">✓</span><span class="ci-text">Criando o gatilho que faz ele duvidar da decisão de te deixar</span></div><div class="ci-bar"><div class="ci-fill"></div></div></div>
+      <div class="ci"><div class="ci-row"><span class="ci-check">✓</span><span class="ci-text">Quebrando o muro de mais de 1 ano de distância com a mensagem de reabertura emocional</span></div><div class="ci-bar"><div class="ci-fill"></div></div></div>
+      <div class="ci"><div class="ci-row"><span class="ci-check">✓</span><span class="ci-text">Construindo a virada psicológica que muda como ele te enxerga e dispara o arrependimento</span></div><div class="ci-bar"><div class="ci-fill"></div></div></div>
+      <div class="ci"><div class="ci-row"><span class="ci-check">✓</span><span class="ci-text">Gerando o plano de reaproximação que usa a culpa dele a seu favor</span></div><div class="ci-bar"><div class="ci-fill"></div></div></div>
+      <div class="ci"><div class="ci-row"><span class="ci-check">✓</span><span class="ci-text">Construindo a postura magnética que faz ele te ver como insubstituível</span></div><div class="ci-bar"><div class="ci-fill"></div></div></div>
+      <div class="ci"><div class="ci-row"><span class="ci-check">✓</span><span class="ci-text">Aprofundando o gatilho de reconexão que ativa o que ainda existe entre vocês</span></div><div class="ci-bar"><div class="ci-fill"></div></div></div>
+      <div class="ci"><div class="ci-row"><span class="ci-check">✓</span><span class="ci-text">Finalizando seu Protocolo Personalizado de Reconquista</span></div><div class="ci-bar"><div class="ci-fill"></div></div></div>
+    </div>
+    <div class="gerado" id="gerado">✅ Protocolo Personalizado Gerado!</div>
+  </div>
+
+  <!-- ===== RESTANTE (revelado após 6,33 min) ===== -->
+  <div id="rest">
+
+    <div style="text-align:center"><span class="reveal-badge">✅ Seu protocolo está pronto!</span></div>
+    <h2 class="reveal-title serif">Resgate agora e reconquiste ele 👇</h2>
+    <div class="cta-ring"><button class="btn-cta cta-pulse" onclick="comprar()">💕 CLIQUE AQUI PARA RECONQUISTAR SEU EX!</button></div>
+
+    <div class="box-green">
+      <div class="gh">
+        <span class="ico">🛡️</span>
+        <div><div class="gt">Garantia Inquebrável de 90 dias</div><div class="gs">100% do dinheiro de volta se não funcionar</div></div>
+      </div>
+      <p>Aplique o protocolo. Se em até 90 dias seu ex não voltar, eu devolvo cada centavo. Sem perguntas, sem burocracia. O risco é <strong>100% meu</strong>.</p>
+      <div class="secure">🔒 Compra segura • Acesso imediato • Suporte incluído</div>
+    </div>
+
+    <div class="box-white">
+      <h3>Eu sei o que está passando pela sua cabeça agora…</h3>
+      <div class="q">🤔 "E se eu comprar e nada acontecer?"</div>
+      <div class="q">🤔 "E se ele não voltar?"</div>
+      <div class="q">🤔 "E se for só mais uma promessa vazia?"</div>
+      <p>E é por isso que eu fiz algo que nenhuma outra especialista tem coragem de fazer: te dar uma <strong>garantia de 90 dias</strong>, sem pegadinhas.</p>
+    </div>
+
+    <div class="box-pink">
+      <h3>Funciona assim:</h3>
+      <ol>
+        <li>Você entra pro Código da Mensagem Magnética hoje…</li>
+        <li>Aplica o que eu ensino, envia as mensagens, segue o protocolo…</li>
+        <li>E se em até 90 dias seu ex não voltar — eu devolvo cada centavo.</li>
+      </ol>
+      <div class="ok">✅ Sem perguntas, sem burocracia. Se não funcionar, você não paga nada.</div>
+    </div>
+
+    <div class="cta-ring"><button class="btn-cta" onclick="comprar()">💕 CLIQUE AQUI PARA RECONQUISTAR SEU EX!</button></div>
+
+    <div class="divider">BÔNUS EXCLUSIVOS</div>
+
+    <div class="bonus-hero">
+      <span class="mini">⏰ Apenas nos próximos 15 minutos</span>
+      <div class="bt"><span class="em">🎁</span>+5 Presentes Exclusivos</div>
+      <div class="bs">100% GRÁTIS se você agir agora</div>
+      <div class="bn">Bônus só disponíveis nesta página</div>
+    </div>
+
+    <div class="bonus-card"><div class="bi">🔥</div><div><div class="lbl">🎁 BÔNUS EXCLUSIVO</div><div class="bt2">Manual da Reativação das Emoções Ocultas</div><div class="bd">5 gatilhos invisíveis pra ele sentir todo o tesão do começo do relacionamento.</div><div class="pr"><s>R$197</s><b>GRÁTIS ✓</b></div></div></div>
+    <div class="bonus-card"><div class="bi">💌</div><div><div class="lbl">🎁 BÔNUS EXCLUSIVO</div><div class="bt2">A Carta Proibida de Último Recurso</div><div class="bd">Envie hoje e veja ele desbloquear você e implorar pela sua atenção.</div><div class="pr"><s>R$997</s><b>GRÁTIS ✓</b></div></div></div>
+    <div class="bonus-card"><div class="bi">😍</div><div><div class="lbl">🎁 BÔNUS EXCLUSIVO</div><div class="bt2">Código do Ciúme Instantâneo</div><div class="bd">Use essa frase e faça ele sentir um ciúme absurdo de você.</div><div class="pr"><s>R$197</s><b>GRÁTIS ✓</b></div></div></div>
+    <div class="bonus-card"><div class="bi">🛡️</div><div><div class="lbl">🎁 BÔNUS EXCLUSIVO</div><div class="bt2">Checklist Anti-Rejeição</div><div class="bd">Evite os 7 erros da reconquista e volte com ele ainda essa semana.</div><div class="pr"><s>R$147</s><b>GRÁTIS ✓</b></div></div></div>
+    <div class="bonus-card"><div class="bi">♟️</div><div><div class="lbl">🎁 BÔNUS EXCLUSIVO</div><div class="bt2">Dossiê do Rival Descartável</div><div class="bd">Se ele estiver com outra, transforme isso em vantagem desleal.</div><div class="pr"><s>R$297</s><b>GRÁTIS ✓</b></div></div></div>
+
+    <div class="bonus-total">
+      <div class="l">Valor total dos bônus:</div>
+      <div class="s">R$1.835,00</div>
+      <div class="free">GRÁTIS para você hoje!</div>
+    </div>
+
+    <div class="countdown">
+      <div class="l">⏰ OS BÔNUS EXPIRAM EM:</div>
+      <div class="cd-digits"><span class="cd-box" id="cdMin">14</span><span class="cd-sep">:</span><span class="cd-box" id="cdSec">14</span></div>
+    </div>
+
+    <div class="cta-ring"><button class="btn-cta" onclick="comprar()">💕 CLIQUE AQUI PARA RECONQUISTAR SEU EX!</button></div>
+
+    <!-- DEPOIMENTOS -->
+    <div class="results-label">RESULTADOS REAIS</div>
+    <div class="depo-banner">
+      <div class="t">Essas mulheres estavam no mesmo barco que você 👇</div>
+      <div class="s">Olha o que aconteceu depois do <b>CÓDIGO DA MENSAGEM MAGNÉTICA</b> 💕</div>
+    </div>
+    <div class="chat">
+      <div class="bubble">Oii, vindo aqui te agradecer muitoooo por ter me ajudado, você não tem noção<span class="time">10:41</span></div>
+      <div class="bubble">Nossa sério, eu nem sei o que falar kkkkk eu comprei achando q era golpe, apliquei achando q era mentira<span class="time">10:42</span></div>
+      <div class="bubble">Mas realmente me surpreendeu, ele voltou a me seguir em tudo e curtir minhas coisas no dia 4 depois que comecei a aplicar tudo<span class="time">10:43</span></div>
+      <div class="enc-notice">🔒 As mensagens são protegidas com criptografia de ponta a ponta. <b>Saiba mais</b></div>
+      <div class="bubble">Eita nossa mulher que isso, parece magia isso, gostei mesmo<span class="time">16:10</span></div>
+      <div class="bubble">Muito obrigada mesmo visse, fiz tudinho aqui que vc passou nas aulas e misericórdia<span class="time">16:11</span></div>
+      <div class="bubble">O bixin acabou de me ligar aqui pra gente resolver isso, aí nós vai sair pra conversar<span class="time">16:12</span></div>
+      <div class="bubble">Vamo ver como vai ser, eu te mando tudin aqui depois visse<span class="time">16:12</span></div>
+      <div class="enc-notice">🔒 As mensagens são protegidas com criptografia de ponta a ponta. <b>Saiba mais</b></div>
+      <div class="bubble">oii, nossa mulher vc é 10 viu<span class="time">20:35</span></div>
+      <div class="bubble">eu comprei aqui e já assisti tudo na mesma hora, mandei a mensagem e ve nem sabe<span class="time">20:35</span></div>
+      <div class="bubble">ele tava sem me responder há 3 semanas, quando eu mandei a mensagem ele visualizou na hora e mandou um monte de coisa aqui<span class="time">20:37</span></div>
+      <div class="bubble">ainda nem consegui ler tudo de tão nervosa q eu tô kkkk mt obrigada<span class="time">20:37</span></div>
+    </div>
+
+    <!-- FINAL -->
+    <div class="final-box">
+      <p class="hl">E olha… você não está aqui por acaso.</p>
+      <p>Você está aqui porque sabe que ele ainda não te enxerga mais como antes.</p>
+      <p class="hl">E agora você só tem duas opções:</p>
+      <div class="opt no">❌ Continuar mandando mensagens aleatórias, vendo ele correr pros braços de outra.</div>
+      <div class="opt yes">✅ Ou aplicar mensagens cirúrgicas que fazem ele querer se comprometer de novo.</div>
+      <div class="tip">👉 O que dizer, quando dizer e como manter a mente dele viciada em você.</div>
+    </div>
+
+    <div class="cta-ring"><button class="btn-cta cta-pulse" onclick="comprar()">💕 CLIQUE AQUI PARA RECONQUISTAR SEU EX!</button></div>
+
+    <div class="footer">© Mensagem Magnética • Todos os direitos reservados</div>
+  </div>
+
+</div>
+
+<!-- Player VTurb (ConverteAI) -->
+<script type="text/javascript">
+  var s=document.createElement("script");
+  s.src="https://scripts.converteai.net/0b154649-6c10-4afb-870c-8854223d684c/players/6a41de6488e2c7a969bd7270/v4/player.js",
+  s.async=!0,document.head.appendChild(s);
+</script>
+
+<script>
+  /* ====== CONFIG ====== */
+  // Tempo até liberar o restante da página. 6,33 min = 380 segundos.
+  // (Se você quis dizer 6 min e 33 seg, troque para 393.)
+  var REVEAL_AT_SECONDS = 380;
+
+  // Link do checkout / oferta — TROQUE pelo seu checkout real
+  var CHECKOUT_URL = 'https://pay.hotmart.com/';
+  function comprar(){ window.location.href = CHECKOUT_URL; }
+
+  /* ====== CARREGAMENTOS (checklist) ====== */
+  (function(){
+    var items = document.querySelectorAll('#clItems .ci');
+    var count = document.getElementById('clCount');
+    var i = 0;
+    function step(){
+      if (i >= items.length){
+        document.getElementById('gerado').style.display = 'block';
+        return;
+      }
+      var it = items[i];
+      it.querySelector('.ci-fill').style.width = '100%';
+      setTimeout(function(){
+        it.classList.add('done');
+        i++; count.textContent = i + '/8';
+        setTimeout(step, 250);
+      }, 1200);
+    }
+    setTimeout(step, 600);
+  })();
+
+  /* ====== REVELAR RESTANTE após REVEAL_AT_SECONDS ====== */
+  var revealed = false;
+  function revealRest(){
+    if (revealed) return; revealed = true;
+    document.getElementById('rest').style.display = 'block';
+    startCountdown();
+  }
+  // dispara pelo tempo de página (a VSL inicia automaticamente)
+  setTimeout(revealRest, REVEAL_AT_SECONDS * 1000);
+  // best-effort: também sincroniza com o tempo real do player VTurb, se disponível
+  var _poll = setInterval(function(){
+    try {
+      var inst = window.smartplayer && window.smartplayer.instances && window.smartplayer.instances[0];
+      if (inst){
+        var t = (typeof inst.getCurrentTime==='function') ? inst.getCurrentTime()
+              : (inst.video && inst.video.currentTime) || inst.currentTime || 0;
+        if (t >= REVEAL_AT_SECONDS){ clearInterval(_poll); revealRest(); }
+      }
+    } catch(e){}
+  }, 1000);
+
+  /* ====== CONTADOR DOS BÔNUS (14:14) ====== */
+  function startCountdown(){
+    var total = 14*60 + 14; // 14:14
+    var min = document.getElementById('cdMin');
+    var sec = document.getElementById('cdSec');
+    function tick(){
+      if (total < 0) return;
+      var m = Math.floor(total/60), s = total%60;
+      min.textContent = (m<10?'0':'')+m;
+      sec.textContent = (s<10?'0':'')+s;
+      if (total === 0) return;
+      total--; setTimeout(tick, 1000);
+    }
+    tick();
+  }
+</script>
+
+</body>
+</html>
