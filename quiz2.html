@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Código da Mensagem Magnética</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fbf6f2;
+    --ink: #2a1a2a;
+    --ink-soft: #2d2438;
+    --pink: #cf3a7d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--cream); }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--ink); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+  .serif { font-family: 'Playfair Display', Georgia, serif; }
+
+  /* HEADER */
+  .header {
+    text-align: center; padding: 18px 16px 16px; background: #fff;
+    border-bottom: 1px solid #f3e8ee;
+  }
+  .header-logo {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 21px; font-weight: 800; color: var(--pink); letter-spacing: 0.2px;
+  }
+  .header-logo .heart { margin-right: 7px; }
+
+  /* QUESTION */
+  .question-wrap {
+    max-width: 600px; margin: 0 auto; padding: 50px 24px 60px; text-align: center;
+  }
+  .q-emoji { font-size: 46px; margin-bottom: 18px; display: block; line-height: 1; }
+  .q-title {
+    font-size: 27px; font-weight: 800; color: var(--ink); line-height: 1.32;
+    margin-bottom: 34px; letter-spacing: -0.2px;
+  }
+  .options { display: flex; flex-direction: column; gap: 16px; }
+  .option-btn {
+    display: flex; align-items: center; background: #fff; border: none;
+    border-radius: 18px; padding: 21px 24px; cursor: pointer;
+    font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; color: var(--ink-soft);
+    box-shadow: 0 4px 16px rgba(120,60,90,0.06);
+    transition: transform 0.12s, box-shadow 0.18s; text-align: left; width: 100%;
+  }
+  .option-btn:hover { box-shadow: 0 6px 22px rgba(207,58,125,0.16); transform: translateY(-1px); }
+  .option-btn:active { transform: scale(0.99); }
+  .option-btn .radio {
+    width: 22px; height: 22px; border-radius: 50%; border: 2px solid #e0d6dd;
+    flex-shrink: 0; margin-right: 16px; transition: border-color 0.15s;
+  }
+  .option-btn:hover .radio { border-color: var(--pink); }
+  .option-text { flex: 1; line-height: 1.4; }
+  .option-btn .arrow { color: #c8bcc8; font-size: 20px; flex-shrink: 0; margin-left: 10px; }
+
+  @media (max-width: 520px) {
+    .question-wrap { padding: 38px 18px 48px; }
+    .q-title { font-size: 23px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo"><span class="heart">💗</span>Código da Mensagem Magnética</div>
+</div>
+
+<div class="question-wrap">
+  <span class="q-emoji">🎯</span>
+  <h2 class="q-title serif">Se existisse um vídeo de 60 segundos mostrando o passo a passo exato pra fazer seu ex voltar nas próximas 72 horas, você se comprometeria a assistir até o final?</h2>
+  <div class="options">
+    <button class="option-btn" onclick="continuar()"><span class="radio"></span><span class="option-text">Sim, eu assistiria agora e aplicaria hoje.</span><span class="arrow">›</span></button>
+    <button class="option-btn" onclick="continuar()"><span class="radio"></span><span class="option-text">Sim, quero assistir agora mesmo.</span><span class="arrow">›</span></button>
+  </div>
+</div>
+
+<script>
+  // Próxima etapa do funil (vídeo de 60s / oferta / checkout)
+  const NEXT_URL = 'https://pay.hotmart.com/';
+  function continuar() { window.location.href = NEXT_URL; }
+</script>
+
+</body>
+</html>
