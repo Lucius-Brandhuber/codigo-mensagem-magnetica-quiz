@@ -316,7 +316,7 @@ function normVenda(r){
   const g=(...k)=>{for(const x of k){if(r[x]!=null&&r[x]!=='')return r[x];}return '';};
   return {
     t:toMs(g('data','t')), status:String(g('status')||''), metodo:String(g('metodo','method','pagamento')||''),
-    valor:Number(String(g('valor','value','amount')).replace(/[^\d.,-]/g,'').replace('.','').replace(',','.'))||0,
+    valor:(function(v){if(typeof v==='number')return v;v=String(v).replace(/[^\d.,-]/g,'');if(v.indexOf(',')>-1)v=v.replace(/\./g,'').replace(',','.');return Number(v)||0;})(g('valor','value','amount')),
     nome:g('nome','name'), email:g('email'), telefone:g('telefone','phone'),
     order_id:g('order_id','orderId','id'), raw:g('raw')
   };
