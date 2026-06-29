@@ -347,10 +347,11 @@
   var CHECKOUT_URL = 'https://pay.hotmart.com/';
   function comprar(){ window.location.href = CHECKOUT_URL; }
 
-  /* ====== CARREGAMENTOS (checklist) ====== */
+  /* ====== CARREGAMENTOS (checklist) — termina exatamente em REVEAL_AT_SECONDS (6,33 min) ====== */
   (function(){
     var items = document.querySelectorAll('#clItems .ci');
     var count = document.getElementById('clCount');
+    var per = (REVEAL_AT_SECONDS * 1000) / items.length; // tempo de cada item
     var i = 0;
     function step(){
       if (i >= items.length){
@@ -358,14 +359,16 @@
         return;
       }
       var it = items[i];
-      it.querySelector('.ci-fill').style.width = '100%';
+      var fill = it.querySelector('.ci-fill');
+      fill.style.transition = 'width ' + (per/1000) + 's linear';
+      requestAnimationFrame(function(){ fill.style.width = '100%'; });
       setTimeout(function(){
         it.classList.add('done');
         i++; count.textContent = i + '/8';
-        setTimeout(step, 250);
-      }, 1200);
+        step();
+      }, per);
     }
-    setTimeout(step, 600);
+    step();
   })();
 
   /* ====== REVELAR RESTANTE após REVEAL_AT_SECONDS ====== */
