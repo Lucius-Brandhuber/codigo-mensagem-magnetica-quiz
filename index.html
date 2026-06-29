@@ -370,11 +370,11 @@
 <!-- PROGRESS BAR -->
 <div class="progress-bar-wrap" id="progressWrap">
   <div class="progress-meta">
-    <span id="progressLabel">Pergunta 1 de 6</span>
-    <span id="progressPct">17% concluído</span>
+    <span id="progressLabel">Pergunta 1 de 5</span>
+    <span id="progressPct">20% concluído</span>
   </div>
   <div class="progress-track">
-    <div class="progress-fill" id="progressFill" style="width: 17%"></div>
+    <div class="progress-fill" id="progressFill" style="width: 20%"></div>
   </div>
 </div>
 
@@ -471,66 +471,21 @@
     <span class="q-emoji">⌛</span>
     <h2 class="q-title serif">Quanto tempo você acha que tem antes de ele te esquecer completamente?</h2>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Poucos dias, acho que já estou sendo substituída</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Algumas semanas, ainda consigo agir</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Uns meses, acho que ainda tem algo entre nós</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Não sei, mas tenho medo de descobrir</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="finish()"><span class="radio"></span><span class="option-text">Poucos dias, acho que já estou sendo substituída</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="finish()"><span class="radio"></span><span class="option-text">Algumas semanas, ainda consigo agir</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="finish()"><span class="radio"></span><span class="option-text">Uns meses, acho que ainda tem algo entre nós</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="finish()"><span class="radio"></span><span class="option-text">Não sei, mas tenho medo de descobrir</span><span class="arrow">›</span></button>
     </div>
-  </div>
-</div>
-
-<!-- ======== TELA 6: PERGUNTA 6 ======== -->
-<div class="screen" id="screen-6">
-  <div class="question-wrap">
-    <span class="q-emoji">💭</span>
-    <h2 class="q-title serif">O que você já tentou fazer para ele voltar?</h2>
-    <div class="options">
-      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Mandei mensagem pedindo pra voltar</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Fiz ciúmes pra ver se ele reagia</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Tentei o "no contact", mas não aguentei</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Nada ainda, mas quero fazer algo certo dessa vez</span><span class="arrow">›</span></button>
-    </div>
-  </div>
-</div>
-
-<!-- ======== TELA 7: RESULTADO ======== -->
-<div class="screen" id="screen-7">
-  <div class="result-wrap">
-    <div class="result-badge">✅ Análise concluída</div>
-    <h2 class="result-title serif">Você <span class="accent">ainda tem chances</span> de reconquistar ele — mas precisa agir agora</h2>
-    <p class="result-desc">
-      Com base nas suas respostas, identificamos o seu perfil de reconquista.
-      A boa notícia: existe uma sequência específica de mensagens que faz qualquer ex
-      voltar a sentir atração — mesmo que ele esteja frio, distante ou com outra.
-    </p>
-    <div class="result-box">
-      <h3>O que você vai descobrir:</h3>
-      <div class="result-item"><span class="check">✅</span><span>A mensagem exata que desperta o ciúme e faz ele te responder em minutos</span></div>
-      <div class="result-item"><span class="check">✅</span><span>O erro que 96% das mulheres cometem (e que empurra o ex pra sempre)</span></div>
-      <div class="result-item"><span class="check">✅</span><span>Como usar a psicologia para ele sentir que a perda foi dele — não sua</span></div>
-      <div class="result-item"><span class="check">✅</span><span>O protocolo de 72 horas pra fazer ele implorar pra voltar</span></div>
-    </div>
-    <div class="urgency">
-      <strong>⚠️ Atenção: o tempo está contra você</strong>
-      Quanto mais tempo passa sem agir, mais ele se desapega emocionalmente.
-      O método funciona melhor nas primeiras semanas — e você ainda está nessa janela.
-    </div>
-    <p class="price-note">De <s>R$197,00</s> por apenas <b>R$37,00</b> — acesso imediato</p>
-    <div class="cta-ring">
-      <button class="btn-main" onclick="window.location.href='vendas.html'">💕 QUERO RECONQUISTAR MEU EX AGORA</button>
-    </div>
-    <p class="trust-note">🔒 Pagamento 100% seguro • Acesso imediato • Garantia de 7 dias</p>
   </div>
 </div>
 
 <script>
   const progressData = {
-    1: { label: 'Pergunta 1 de 6', pct: 17 },
-    2: { label: 'Pergunta 2 de 6', pct: 33 },
-    3: { label: 'Pergunta 3 de 6', pct: 50 },
-    4: { label: 'Pergunta 4 de 6', pct: 67 },
-    5: { label: 'Pergunta 5 de 6', pct: 83 },
-    6: { label: 'Pergunta 6 de 6', pct: 100 },
+    1: { label: 'Pergunta 1 de 5', pct: 20 },
+    2: { label: 'Pergunta 2 de 5', pct: 40 },
+    3: { label: 'Pergunta 3 de 5', pct: 60 },
+    4: { label: 'Pergunta 4 de 5', pct: 80 },
+    5: { label: 'Pergunta 5 de 5', pct: 100 },
   };
 
   function showScreen(n) {
@@ -541,7 +496,7 @@
 
   function updateProgress(q) {
     const wrap = document.getElementById('progressWrap');
-    if (q >= 1 && q <= 6) {
+    if (progressData[q]) {
       wrap.classList.add('visible');
       const d = progressData[q];
       document.getElementById('progressLabel').textContent = d.label;
@@ -554,10 +509,9 @@
 
   function goToQuestion(q) { updateProgress(q); showScreen(q); }
 
-  function nextQ(next) {
-    if (next <= 6) { updateProgress(next); showScreen(next); }
-    else { updateProgress(0); showScreen(7); }
-  }
+  function nextQ(next) { updateProgress(next); showScreen(next); }
+
+  function finish() { window.location.href = 'vendas.html'; }
 </script>
 
 </body>
