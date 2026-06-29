@@ -335,16 +335,26 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   s.async=!0,document.head.appendChild(s);
 </script>
 
+<script src="track.js"></script>
 <script>
   /* ====== CONFIG ====== */
   // Tempo até liberar o restante da página. 6,33 min = 380 segundos.
   // (Se você quis dizer 6 min e 33 seg, troque para 393.)
   var REVEAL_AT_SECONDS = 380;
 
+  if(window.cmmTrack) cmmTrack.view('vsl2');
+
   // Link do checkout / oferta — TROQUE pelo seu checkout real
   var CHECKOUT_URL = 'https://checkout.payt.com.br/c/R3NZPZ';
   function comprar(){
     if (window.fbq) fbq('track', 'InitiateCheckout');
+    var label='CTA';
+    try{
+      var b = (window.event && window.event.target) ? window.event.target.closest('.btn-cta') : null;
+      if(b){ var all=[].slice.call(document.querySelectorAll('.btn-cta')); var i=all.indexOf(b);
+        label = ['Topo','Após Funciona','Após Contador','Final'][i] || ('CTA '+(i+1)); }
+    }catch(x){}
+    if(window.cmmTrack) cmmTrack.checkout(label);
     window.location.href = CHECKOUT_URL;
   }
 

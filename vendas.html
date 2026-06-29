@@ -387,7 +387,10 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 
 <div style="height:30px"></div>
 
+<script src="track.js"></script>
 <script>
+  if(window.cmmTrack) cmmTrack.view('vendas');
+
   // Carrossel de depoimentos — avança/volta um por vez
   function scrollDepo(dir) {
     var s = document.getElementById('depoScroll');

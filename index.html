@@ -495,6 +495,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   </div>
 </div>
 
+<script src="track.js"></script>
 <script>
   const progressData = {
     1: { label: 'Pergunta 1 de 5', pct: 20 },
@@ -523,14 +524,25 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     }
   }
 
-  function goToQuestion(q) { updateProgress(q); showScreen(q); }
+  function goToQuestion(q) { updateProgress(q); showScreen(q); if(window.cmmTrack) cmmTrack.view(q); }
 
-  function nextQ(next) { updateProgress(next); showScreen(next); }
+  function nextQ(next) { updateProgress(next); showScreen(next); if(window.cmmTrack) cmmTrack.view(next); }
 
   function finish() {
     if (window.fbq) fbq('track', 'Lead');
     window.location.href = 'vendas.html';
   }
+
+  // tracking: view da landing + answer ao clicar numa opção
+  if(window.cmmTrack) cmmTrack.view(0);
+  document.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.option-btn') : null;
+    if(!b) return;
+    var sc = b.closest('.screen'); if(!sc) return;
+    var step = sc.id.replace('screen-','');
+    var t = (b.querySelector('.option-text')||{}).textContent || '';
+    if(window.cmmTrack) cmmTrack.answer(step, t.trim());
+  });
 </script>
 
 </body>
