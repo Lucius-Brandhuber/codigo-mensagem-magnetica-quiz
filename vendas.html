@@ -412,6 +412,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 
   // Próxima etapa do funil: página de depoimentos em vídeo (VSL pós PV)
   function continuar() {
+    if(window.cmmTrack) cmmTrack.click('vendas','Continuar o Plano');
     window.location.href = 'vsl.html';
   }
 </script>

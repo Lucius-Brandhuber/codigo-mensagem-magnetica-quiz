@@ -105,6 +105,7 @@
   .badge-ev.view{background:#eef2ff;color:#4f6bed}
   .badge-ev.answer{background:#eafaef;color:var(--accent-d)}
   .badge-ev.checkout{background:#fdeef5;color:var(--primary)}
+  .badge-ev.click{background:#fff4e6;color:#d97706}
   .badge-ev.other{background:#f1f3f6;color:var(--muted)}
 
   /* bar groups (resumo/tráfego) */
@@ -331,17 +332,20 @@ function normCapi(r){
 function liveEv(){ return _ev.filter(e=>!isTest(e.s)); }
 function uSet(pred){ const s=new Set(); liveEv().forEach(e=>{if(pred(e)&&e.s)s.add(e.s);}); return s.size; }
 function uViews(step){ return uSet(e=>e.ev==='view'&&String(e.step)===String(step)); }
+function uClicks(step){ return uSet(e=>e.ev==='click'&&String(e.step)===String(step)); }
+function uAnswers(step){ return uSet(e=>e.ev==='answer'&&String(e.step)===String(step)); }
 
 function metrics(){
   const visitors = uViews(0);
   const leads    = uSet(e=>e.ev==='answer'&&String(e.step)==='1');
-  const salesV   = uViews('vendas');
+  const salesV   = uViews('vsl2');   // PV real = última VSL (vsl2.html)
+  const preVenda = uViews('vendas'); // página de pré-venda (história)
   const checkout = uSet(e=>e.ev==='checkout_click');
   const approved = _vendas.filter(v=>APPROVED.test(v.status));
   const purchases= approved.length;
   const revenue  = approved.reduce((a,v)=>a+(v.valor||PRICE),0);
   const ticket   = purchases>0 ? revenue/purchases : 0;
-  return {visitors,leads,salesV,checkout,purchases,revenue,ticket};
+  return {visitors,leads,salesV,preVenda,checkout,purchases,revenue,ticket};
 }
 
 /* ====================== AUTH ====================== */
@@ -445,7 +449,7 @@ function renderKPIs(){
   $('#kpis').innerHTML =
     kpi('👁️','#4A7AF5',fmt(m.visitors),'Visitantes','step 0')+
     kpi('🎯','#cf3a7d',fmt(m.leads),'Leads',pct(m.leads,m.visitors)+'% dos visit.')+
-    kpi('🛒','#a855f7',fmt(m.salesV),'Pág. Vendas',pct(m.salesV,m.visitors)+'% dos visit.')+
+    kpi('🛒','#a855f7',fmt(m.salesV),'PV / Oferta',pct(m.salesV,m.visitors)+'% dos visit. · VSL2')+
     kpi('💳','#f5a623',fmt(m.checkout),'Checkout',pct(m.checkout,m.salesV)+'% da PV')+
     kpi('✅','#2cbf52',fmt(m.purchases),'Compras',pct(m.purchases,m.checkout)+'% do checkout')+
     kpi('💰','#16a34a',fmtMoney(m.revenue),'Receita','Ticket '+fmtMoney(m.ticket));
@@ -456,9 +460,13 @@ function renderFunnelCard(){
   const steps=[
     {n:'Visitante',v:m.visitors},
     {n:'Lead',v:m.leads},
-    {n:'50% Quiz',v:uViews(QUIZ_MID_STEP)},
-    {n:'Resultado',v:uViews(QUIZ_FINAL_STEP)},
-    {n:'Pág. Vendas',v:m.salesV},
+    {n:'Pré-venda',v:uViews('vendas')},
+    {n:'Botão PV',v:uClicks('vendas')},
+    {n:'VSL Vídeos',v:uViews('vsl')},
+    {n:'Botão VSL',v:uClicks('vsl')},
+    {n:'Quiz 2',v:uViews('quiz2')},
+    {n:'Resp. Quiz 2',v:uAnswers('quiz2')},
+    {n:'PV Oferta',v:uViews('vsl2')},
     {n:'Checkout',v:m.checkout},
     {n:'Compra',v:m.purchases}
   ];
@@ -523,28 +531,44 @@ function renderTab(){
 
 /* ---- TAB: FUNIL (river passo a passo) ---- */
 function tabFunil(){
-  const stepsList=[];
-  for(let i=0;i<=QUIZ_FINAL_STEP;i++) stepsList.push(String(i));
-  stepsList.push('vendas');
-  const data=stepsList.map(s=>({s, v:uViews(s), label: s==='vendas'?'Pág. Vendas': (s==='0'?'Landing':'Pergunta '+s)}));
-  const max=Math.max(1,...data.map(d=>d.v));
+  var ap = _vendas.filter(function(v){ return APPROVED.test(v.status); }).length;
+  const J=[
+    {k:'Visitante (landing)',            v:uViews(0),                 tag:'view · index step 0'},
+    {k:'Quiz · Pergunta 1 (Lead)',       v:uAnswers(1),               tag:'answer · step 1'},
+    {k:'Quiz · Pergunta 2',              v:uAnswers(2),               tag:'answer · step 2'},
+    {k:'Quiz · Pergunta 3',              v:uAnswers(3),               tag:'answer · step 3'},
+    {k:'Quiz · Pergunta 4',              v:uAnswers(4),               tag:'answer · step 4'},
+    {k:'Quiz · Pergunta 5',              v:uAnswers(5),               tag:'answer · step 5'},
+    {k:'Pré-venda — abriu',              v:uViews('vendas'),          tag:'view · vendas.html'},
+    {k:'Pré-venda — clicou no botão',    v:uClicks('vendas'),         tag:'click · "Continuar o Plano"'},
+    {k:'VSL Vídeos — abriu',             v:uViews('vsl'),             tag:'view · vsl.html'},
+    {k:'VSL Vídeos — clicou no botão',   v:uClicks('vsl'),            tag:'click · "Continuar"'},
+    {k:'Quiz do meio — abriu',           v:uViews('quiz2'),           tag:'view · quiz2.html'},
+    {k:'Quiz do meio — respondeu',       v:uAnswers('quiz2'),         tag:'answer · quiz2'},
+    {k:'PV Real (VSL2) — abriu',         v:uViews('vsl2'),            tag:'view · vsl2.html'},
+    {k:'Checkout — clicou (→ Payt)',     v:uSet(function(e){return e.ev==='checkout_click';}), tag:'checkout_click · redireciona p/ Payt'},
+    {k:'Compra aprovada',                v:ap,                        tag:'venda · Payt'}
+  ];
+  const max=Math.max(1,...J.map(d=>d.v));
   let rows='';
-  data.forEach((d,i)=>{
-    const prev=i>0?data[i-1].v:d.v; const drop=i>0?(prev-d.v):0; const keep=i>0?pct(d.v,prev):100;
+  J.forEach((d,i)=>{
+    const prev=i>0?J[i-1].v:d.v; const keep=i>0?pct(d.v,prev):100; const drop=i>0?(prev-d.v):0;
     rows+=`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)">
-      <div style="width:96px;font-size:12px;color:var(--muted)">step ${d.s}</div>
-      <div style="width:120px;font-size:13px;font-weight:600">${d.label}</div>
-      <div style="flex:1;min-width:120px"><div class="bg-track" style="height:13px"><div class="bg-fill" style="width:${d.v/max*100}%"></div></div></div>
-      <div style="width:64px;text-align:right;font-weight:800">${fmt(d.v)}</div>
-      <div style="width:64px;text-align:right;font-size:12px;font-weight:700;color:${keep>=50?'var(--accent-d)':'var(--danger)'}">${i>0?keep+'%':'—'}</div>
-      <div style="width:90px;text-align:right;font-size:11.5px;color:var(--danger)">${i>0&&drop>0?'−'+fmt(drop):''}</div>
+      <div style="width:240px">
+        <div style="font-size:13px;font-weight:600">${d.k}</div>
+        <div style="font-size:10.5px;color:var(--muted)">${d.tag}</div>
+      </div>
+      <div style="flex:1;min-width:110px"><div class="bg-track" style="height:13px"><div class="bg-fill" style="width:${d.v/max*100}%"></div></div></div>
+      <div style="width:60px;text-align:right;font-weight:800">${fmt(d.v)}</div>
+      <div style="width:58px;text-align:right;font-size:12px;font-weight:700;color:${keep>=50?'var(--accent-d)':'var(--danger)'}">${i>0?keep+'%':'—'}</div>
+      <div style="width:78px;text-align:right;font-size:11.5px;color:var(--danger)">${i>0&&drop>0?'−'+fmt(drop):''}</div>
     </div>`;
   });
-  return `<div class="card"><h2>📊 Funil passo a passo <span class="badge">${QUIZ_TOTAL} telas</span></h2>
-    <div style="overflow-x:auto"><div style="min-width:640px">
+  return `<div class="card"><h2>📊 Jornada completa do funil <span class="badge">página a página</span></h2>
+    <div style="overflow-x:auto"><div style="min-width:700px">
     <div style="display:flex;gap:12px;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--line)">
-      <div style="width:96px">Step</div><div style="width:120px">Tela</div><div style="flex:1">Alcance</div>
-      <div style="width:64px;text-align:right">Sessões</div><div style="width:64px;text-align:right">Retém</div><div style="width:90px;text-align:right">Queda</div>
+      <div style="width:240px">Etapa</div><div style="flex:1">Alcance</div>
+      <div style="width:60px;text-align:right">Sessões</div><div style="width:58px;text-align:right">Retém</div><div style="width:78px;text-align:right">Queda</div>
     </div>${rows}</div></div></div>`;
 }
 
@@ -557,7 +581,7 @@ function tabEventos(){
   const slice=list.slice((evPage-1)*EV_PER, evPage*EV_PER);
   let rows='';
   slice.forEach(e=>{
-    const cls = e.ev==='view'?'view':e.ev==='answer'?'answer':e.ev==='checkout_click'?'checkout':'other';
+    const cls = e.ev==='view'?'view':e.ev==='answer'?'answer':e.ev==='checkout_click'?'checkout':e.ev==='click'?'click':'other';
     const ini=(e.s||'?').slice(-2).toUpperCase();
     rows+=`<tr>
       <td class="fix"><span class="avatar">${ini}</span>${(e.s||'').slice(0,10)}…</td>
@@ -627,7 +651,7 @@ function tabResumo(){
     <div class="card"><h2>💬 Top Respostas</h2>${barGroup(answers,10)}</div>
     <div class="card"><h2>💳 Checkout</h2>
       <div class="mini-kpis" style="grid-template-columns:repeat(3,1fr)">
-        <div class="mini-kpi"><div class="n">${fmt(m.salesV)}</div><div class="l">Visitas Vendas</div></div>
+        <div class="mini-kpi"><div class="n">${fmt(m.salesV)}</div><div class="l">Visitas PV (VSL2)</div></div>
         <div class="mini-kpi"><div class="n">${fmt(m.checkout)}</div><div class="l">Cliques</div></div>
         <div class="mini-kpi"><div class="n">${pct(m.checkout,m.salesV)}%</div><div class="l">Taxa Conv.</div></div>
       </div>

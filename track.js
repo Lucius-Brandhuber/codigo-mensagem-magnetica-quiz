@@ -26,6 +26,7 @@
   window.cmmTrack = {
     view:     function(step){ if(seen('v'+step)) return; send('view', {step:step}); },
     answer:   function(step,text){ send('answer', {step:step, ans:text}); },
+    click:    function(step,label){ send('click', {step:step, name:label||'Botão'}); },
     checkout: function(label){ send('checkout_click', {name:label||'CTA'}); }
   };
 })();

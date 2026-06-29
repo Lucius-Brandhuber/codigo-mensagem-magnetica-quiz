@@ -155,7 +155,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   if(window.cmmTrack) cmmTrack.view('vsl');
 
   // Próxima etapa do funil: quiz de micro-compromisso antes da oferta
-  function continuar() { window.location.href = 'quiz2.html'; }
+  function continuar() { if(window.cmmTrack) cmmTrack.click('vsl','Continuar'); window.location.href = 'quiz2.html'; }
 </script>
 
 </body>
