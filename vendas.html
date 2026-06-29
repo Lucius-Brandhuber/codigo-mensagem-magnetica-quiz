@@ -181,18 +181,33 @@
     margin: 8px 0 4px;
   }
   .stars { text-align: center; color: #f5b32a; font-size: 19px; letter-spacing: 2px; margin-bottom: 22px; }
+  .depo-carousel { position: relative; max-width: 380px; margin: 0 auto; padding: 0 6px; }
   .depo-scroll {
-    display: flex; gap: 16px; overflow-x: auto; padding: 4px 22px 18px;
-    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    display: flex; gap: 14px; overflow-x: auto; padding: 6px 4px 16px;
+    scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
   }
-  .depo-scroll::-webkit-scrollbar { height: 7px; }
+  .depo-scroll::-webkit-scrollbar { height: 6px; }
   .depo-scroll::-webkit-scrollbar-thumb { background: #e7d5de; border-radius: 99px; }
+  .depo-scroll::-webkit-scrollbar-track { background: transparent; }
   .depo-card {
-    flex: 0 0 auto; width: 270px; scroll-snap-align: center;
-    border-radius: 18px; overflow: hidden; box-shadow: 0 8px 24px rgba(120,60,90,0.14);
+    flex: 0 0 88%; scroll-snap-align: center;
+    border-radius: 18px; overflow: hidden; box-shadow: 0 10px 28px rgba(120,60,90,0.16);
     background: #fff;
   }
   .depo-card img { width: 100%; display: block; }
+  .depo-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 50%; border: none;
+    background: #fff; color: var(--pink); font-size: 26px; line-height: 1; font-weight: 700;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.16); cursor: pointer; z-index: 3;
+    display: flex; align-items: center; justify-content: center; padding-bottom: 3px;
+    transition: transform 0.12s;
+  }
+  .depo-nav.prev { left: -10px; }
+  .depo-nav.next { right: -10px; }
+  .depo-nav:hover { color: var(--pink-bright); }
+  .depo-nav:active { transform: translateY(-50%) scale(0.9); }
+  .depo-hint { text-align: center; font-size: 13px; color: #a99fa6; margin: 2px 0 10px; }
 
   /* CTA */
   .cta-ring { border: 1.6px solid #b9e6c4; border-radius: 22px; padding: 7px; margin: 30px 0 10px; }
@@ -217,7 +232,7 @@
   @media (max-width: 520px) {
     .intro-title { font-size: 27px; }
     .story p { font-size: 16px; }
-    .depo-card { width: 240px; }
+    .depo-carousel { max-width: 340px; }
   }
 </style>
 </head>
@@ -323,13 +338,18 @@
   <div class="stars">★★★★★</div>
 </div>
 
-<div class="depo-scroll">
-  <div class="depo-card"><img src="depoimentospv/dp1.jpg" alt="Depoimento 1"></div>
-  <div class="depo-card"><img src="depoimentospv/dp2.png" alt="Depoimento 2"></div>
-  <div class="depo-card"><img src="depoimentospv/dp3.png" alt="Depoimento 3"></div>
-  <div class="depo-card"><img src="depoimentospv/dp4.png" alt="Depoimento 4"></div>
-  <div class="depo-card"><img src="depoimentospv/dp5.png" alt="Depoimento 5"></div>
+<div class="depo-carousel">
+  <button class="depo-nav prev" aria-label="Anterior" onclick="scrollDepo(-1)">‹</button>
+  <div class="depo-scroll" id="depoScroll">
+    <div class="depo-card"><img src="depoimentospv/dp1.jpg" alt="Depoimento 1" loading="lazy"></div>
+    <div class="depo-card"><img src="depoimentospv/dp2.png" alt="Depoimento 2" loading="lazy"></div>
+    <div class="depo-card"><img src="depoimentospv/dp3.png" alt="Depoimento 3" loading="lazy"></div>
+    <div class="depo-card"><img src="depoimentospv/dp4.png" alt="Depoimento 4" loading="lazy"></div>
+    <div class="depo-card"><img src="depoimentospv/dp5.png" alt="Depoimento 5" loading="lazy"></div>
+  </div>
+  <button class="depo-nav next" aria-label="Próximo" onclick="scrollDepo(1)">›</button>
 </div>
+<div class="depo-hint">‹ deslize para ver mais ›</div>
 
 <div class="wrap">
   <div class="story" style="margin-top:14px">
@@ -351,6 +371,15 @@
 <div style="height:30px"></div>
 
 <script>
+  // Carrossel de depoimentos — avança/volta um por vez
+  function scrollDepo(dir) {
+    var s = document.getElementById('depoScroll');
+    var card = s.querySelector('.depo-card');
+    if (!card) return;
+    var step = card.getBoundingClientRect().width + 14; // largura do card + gap
+    s.scrollBy({ left: dir * step, behavior: 'smooth' });
+  }
+
   // Coloque aqui o link do checkout / próxima etapa do funil
   const CHECKOUT_URL = 'https://pay.hotmart.com/';
   function continuar() {
