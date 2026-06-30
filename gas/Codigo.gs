@@ -63,11 +63,33 @@ function db(){
 function doGet(e){
   var p = (e && e.parameter) || {};
   if (p.ping) return json({ ok:true, pixel:PIXEL_ID });
-  var d = db();
+
+  // Modo combinado: 1 requisição traz as 3 abas de uma vez (usado pelo admin).
+  // Evita 3 invocações do Apps Script (que enfileiram e somam ~3-4s cada).
+  if (p.all){
+    var cache = CacheService.getScriptCache();
+    if (!p.fresh){
+      var hit = cache.get(CACHE_KEY);
+      if (hit) return jsonRaw(hit);
+    }
+    var d = db();
+    var payload = JSON.stringify({
+      eventos:  rowsAsObjects(d.eventos),
+      vendas:   rowsAsObjects(d.vendas),
+      capi_log: rowsAsObjects(d.capi)
+    });
+    try { cache.put(CACHE_KEY, payload, 20); } catch(x){}
+    return jsonRaw(payload);
+  }
+
+  // Compatibilidade: leitura de uma aba só.
+  var d2 = db();
   var which = (p.sheet || 'eventos');
-  var sh = which === 'vendas' ? d.vendas : which === 'capi_log' ? d.capi : d.eventos;
+  var sh = which === 'vendas' ? d2.vendas : which === 'capi_log' ? d2.capi : d2.eventos;
   return json(rowsAsObjects(sh));
 }
+var CACHE_KEY = 'admin_all_v1';
+function invalidateCache(){ try { CacheService.getScriptCache().remove(CACHE_KEY); } catch(x){} }
 function rowsAsObjects(sh){
   var vals = sh.getDataRange().getValues();
   if (vals.length < 2) return [];
@@ -137,6 +159,7 @@ function saveEvent(b){
     logo_ab:  b.logo_ab || b.ab || ''
   };
   d.eventos.appendRow(EVENTOS_HEADERS.map(function(k){ return row[k]; }));
+  invalidateCache();
   return row;
 }
 
@@ -159,6 +182,7 @@ function saveVenda(b){
     raw:      JSON.stringify(b).slice(0, 4000)
   };
   d.vendas.appendRow(VENDAS_HEADERS.map(function(k){ return row[k]; }));
+  invalidateCache();
 
   // venda aprovada → Purchase no CAPI
   if (/finaliz|aprovad|paid|pago|approved|confirmed/i.test(row.status)){
@@ -174,6 +198,7 @@ function resetAll(){
     var sh = d.ss.getSheetByName(p[0]);
     if (sh){ sh.clear(); sh.getRange(1,1,1,p[1].length).setValues([p[1]]); sh.setFrozenRows(1); }
   });
+  invalidateCache();
 }
 
 /* ====================== META CAPI ====================== */
@@ -244,6 +269,10 @@ function logCAPI(ev, eventId, code, resp){
 /* ====================== HELPERS ====================== */
 function json(obj){
   return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+function jsonRaw(str){
+  return ContentService.createTextOutput(str)
     .setMimeType(ContentService.MimeType.JSON);
 }
 function newId(){ return Utilities.getUuid(); }

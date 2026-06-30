@@ -385,22 +385,37 @@ function mergeNoDup(base, extra){
 }
 function extract(j){ if(Array.isArray(j))return j; if(!j)return[]; return j.data||j.rows||j.eventos||j.vendas||j.items||[]; }
 
+let _syncing=false;
 async function sync(manual){
+  if(_syncing) return;              // evita chamadas sobrepostas
+  _syncing=true;
+  const t0=Date.now();
   if(manual) toast('Atualizando…');
   $('#syncTxt').textContent='sincronizando…';
   const ok = GAS && !/COLE_AQUI/.test(GAS);
   if(ok){
     try{
-      const [a,b,c] = await Promise.all([
-        fetch(GAS).then(r=>r.json()).catch(()=>[]),
-        fetch(GAS+'?sheet=vendas').then(r=>r.json()).catch(()=>[]),
-        fetch(GAS+'?sheet=capi_log').then(r=>r.json()).catch(()=>[])
-      ]);
-      _evAll     = mergeNoDup(extract(a).map(norm), localBackup());
-      _vendasAll = extract(b).map(normVenda);
-      _capiLogAll= extract(c).map(normCapi);
+      // 1 requisição traz as 3 abas (rápido). fresh=1 só no refresh manual.
+      const url = GAS+'?all=1'+(manual?'&fresh=1':'');
+      const j = await fetch(url).then(r=>r.json());
+      let evRaw, veRaw, caRaw;
+      if(j && !Array.isArray(j) && (j.eventos||j.vendas||j.capi_log)){
+        // modo combinado (GAS novo)
+        evRaw=j.eventos||[]; veRaw=j.vendas||[]; caRaw=j.capi_log||[];
+      }else{
+        // fallback: GAS antigo sem ?all — busca aba por aba
+        const [a,b,c] = await Promise.all([
+          Array.isArray(j)?Promise.resolve(j):fetch(GAS).then(r=>r.json()).catch(()=>[]),
+          fetch(GAS+'?sheet=vendas').then(r=>r.json()).catch(()=>[]),
+          fetch(GAS+'?sheet=capi_log').then(r=>r.json()).catch(()=>[])
+        ]);
+        evRaw=extract(a); veRaw=extract(b); caRaw=extract(c);
+      }
+      _evAll     = mergeNoDup(evRaw.map(norm), localBackup());
+      _vendasAll = veRaw.map(normVenda);
+      _capiLogAll= caRaw.map(normCapi);
       localStorage.setItem(CKEY, JSON.stringify({ev:_evAll,vendas:_vendasAll,capi:_capiLogAll,ts:Date.now()}));
-      $('#syncTxt').textContent='atualizado '+new Date().toLocaleTimeString('pt-BR');
+      $('#syncTxt').textContent='atualizado '+new Date().toLocaleTimeString('pt-BR')+' · '+((Date.now()-t0)/1000).toFixed(1)+'s';
     }catch(e){
       _evAll = mergeNoDup(_evAll, localBackup());
       $('#syncTxt').textContent='offline · usando cache';
@@ -409,8 +424,9 @@ async function sync(manual){
     _evAll = mergeNoDup(_evAll, localBackup());
     $('#syncTxt').textContent='GAS não configurado';
   }
+  _syncing=false;
   applyFilter(); renderAll();
-  toast('✓ '+fmt(_evAll.filter(e=>!isTest(e.s)).length)+' eventos · '+fmt(_vendasAll.length)+' vendas · '+fmt(_capiLogAll.length)+' CAPI');
+  if(manual) toast('✓ '+fmt(_evAll.filter(e=>!isTest(e.s)).length)+' eventos · '+fmt(_vendasAll.length)+' vendas · '+fmt(_capiLogAll.length)+' CAPI');
 }
 
 /* ====================== DAY FILTER ====================== */
