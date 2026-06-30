@@ -69,7 +69,7 @@ function doGet(e){
   if (p.all){
     var cache = CacheService.getScriptCache();
     if (!p.fresh){
-      var hit = cache.get(CACHE_KEY);
+      var hit = cacheGet(cache);
       if (hit) return jsonRaw(hit);
     }
     var d = db();
@@ -78,7 +78,7 @@ function doGet(e){
       vendas:   rowsAsObjects(d.vendas),
       capi_log: rowsAsObjects(d.capi)
     });
-    try { cache.put(CACHE_KEY, payload, 20); } catch(x){}
+    cachePut(cache, payload);          // grava em pedaços (CacheService limita 100KB/valor)
     return jsonRaw(payload);
   }
 
@@ -89,6 +89,26 @@ function doGet(e){
   return json(rowsAsObjects(sh));
 }
 var CACHE_KEY = 'admin_all_v1';
+var CACHE_TTL = 25;          // segundos
+var CACHE_CHUNK = 45000;     // chars por pedaço (~90KB UTF-8, abaixo do limite de 100KB)
+function cachePut(cache, str){
+  try {
+    var n = Math.ceil(str.length / CACHE_CHUNK) || 1;
+    var obj = {}; obj[CACHE_KEY] = String(n);
+    for (var i=0;i<n;i++){ obj[CACHE_KEY+'_'+i] = str.substr(i*CACHE_CHUNK, CACHE_CHUNK); }
+    cache.putAll(obj, CACHE_TTL);
+  } catch(x){}
+}
+function cacheGet(cache){
+  try {
+    var meta = cache.get(CACHE_KEY); var n = parseInt(meta,10);
+    if (!(n>0)) return null;
+    var keys = []; for (var i=0;i<n;i++) keys.push(CACHE_KEY+'_'+i);
+    var parts = cache.getAll(keys); var s = '';
+    for (var j=0;j<n;j++){ var c = parts[CACHE_KEY+'_'+j]; if (c==null) return null; s += c; }
+    return s;
+  } catch(x){ return null; }
+}
 function invalidateCache(){ try { CacheService.getScriptCache().remove(CACHE_KEY); } catch(x){} }
 function rowsAsObjects(sh){
   var vals = sh.getDataRange().getValues();
