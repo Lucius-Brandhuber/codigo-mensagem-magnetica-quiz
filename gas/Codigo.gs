@@ -204,8 +204,9 @@ function saveVenda(b){
   d.vendas.appendRow(VENDAS_HEADERS.map(function(k){ return row[k]; }));
   invalidateCache();
 
-  // venda aprovada → Purchase no CAPI
+  // venda aprovada → e-mail de acesso + Purchase no CAPI
   if (/finaliz|aprovad|paid|pago|approved|confirmed/i.test(row.status)){
+    try { sendAccessEmail(row); } catch(err){}
     try { sendPurchaseCAPI(row); } catch(err){}
   }
   return json({ ok:true, venda:true });
@@ -286,6 +287,36 @@ function logCAPI(ev, eventId, code, resp){
   }catch(e){}
 }
 
+/* ====================== EMAIL DE ACESSO ====================== */
+var MEMBROS_URL = 'https://area-membros-reconquista.vercel.app';
+
+function sendAccessEmail(venda){
+  var email = venda.email;
+  if (!email) return;
+  var nome = venda.nome || 'aluna';
+  var primeiro = nome.split(' ')[0];
+
+  var subject = '🔑 Seu acesso ao Código da Reconquista Magnética';
+  var html = '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f7f1f4;font-family:Arial,sans-serif">'
+    + '<div style="max-width:520px;margin:30px auto;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)">'
+    + '<div style="background:linear-gradient(135deg,#ec3a8b,#a855f7);padding:36px 28px;text-align:center;color:#fff">'
+    + '<div style="font-size:42px;margin-bottom:8px">💗</div>'
+    + '<h1 style="margin:0;font-size:22px">Parabéns, ' + primeiro + '!</h1>'
+    + '<p style="margin:8px 0 0;font-size:14px;opacity:.9">Sua compra foi confirmada</p>'
+    + '</div>'
+    + '<div style="padding:28px">'
+    + '<p style="font-size:15px;color:#333;line-height:1.6">Seu acesso ao <strong>Código da Reconquista Magnética</strong> já está liberado. Clique no botão abaixo para entrar na sua área de membros:</p>'
+    + '<div style="text-align:center;margin:24px 0">'
+    + '<a href="' + MEMBROS_URL + '" style="display:inline-block;background:linear-gradient(135deg,#ec3a8b,#d6246e);color:#fff;text-decoration:none;padding:14px 36px;border-radius:12px;font-size:16px;font-weight:700">Acessar Minha Área →</a>'
+    + '</div>'
+    + '<p style="font-size:13px;color:#888;line-height:1.5">Use o e-mail <strong>' + email + '</strong> para criar sua conta na área de membros.</p>'
+    + '<hr style="border:none;border-top:1px solid #eee;margin:20px 0">'
+    + '<p style="font-size:12px;color:#aaa;text-align:center">Código da Reconquista Magnética<br>Qualquer dúvida, responda este e-mail.</p>'
+    + '</div></div></body></html>';
+
+  GmailApp.sendEmail(email, subject, 'Seu acesso: ' + MEMBROS_URL, { htmlBody: html, name: 'Código da Reconquista Magnética' });
+}
+
 /* ====================== HELPERS ====================== */
 function json(obj){
   return ContentService.createTextOutput(JSON.stringify(obj))
@@ -318,6 +349,6 @@ function autorizar(){
 // Gera 1 evento e 1 venda de teste para validar o fluxo.
 function testeRapido(){
   saveEvent({ ev:'view', s:'TESTE_'+Date.now(), step:'0', ua:'teste', url:SITE_URL });
-  saveVenda({ status:'aprovada', payment_method:'pix', value:47, name:'Teste', email:'teste@x.com', order_id:'T1', __payt:true });
+  saveVenda({ status:'aprovada', payment_method:'pix', value:27.90, name:'Teste', email:'teste@x.com', order_id:'T1', __payt:true });
   Logger.log('Eventos/vendas de teste gravados. Planilha: ' + getSS().getUrl());
 }
