@@ -358,8 +358,9 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 
   if(window.cmmTrack) cmmTrack.view('vsl2');
 
-  // Link do checkout / oferta — TROQUE pelo seu checkout real
-  var CHECKOUT_URL = 'https://checkout.payt.com.br/c/R3NZPZ';
+  // Teste A/B de PREÇO — A: preço atual | B: R$ 34,90 (variante decidida no track.js)
+  var CHECKOUT_A = 'https://checkout.payt.com.br/c/R3NZPZ'; // preço atual
+  var CHECKOUT_B = 'https://payt.site/VqClrnk';             // R$ 34,90
   function comprar(){
     if (window.fbq) fbq('track', 'InitiateCheckout');
     var label='CTA';
@@ -369,7 +370,8 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
         label = ['Topo','Após Funciona','Após Contador','Final'][i] || ('CTA '+(i+1)); }
     }catch(x){}
     if(window.cmmTrack) cmmTrack.checkout(label);
-    window.location.href = CHECKOUT_URL;
+    var ab = (window.cmmTrack && cmmTrack.getAb) ? cmmTrack.getAb() : 'A';
+    window.location.href = (ab==='B') ? CHECKOUT_B : CHECKOUT_A;
   }
 
   /* ====== CARREGAMENTOS (checklist) — termina exatamente em REVEAL_AT_SECONDS (6,33 min) ====== */

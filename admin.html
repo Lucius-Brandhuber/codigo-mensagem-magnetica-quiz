@@ -308,6 +308,7 @@ function norm(r){
     event_id:g('event_id','eventId'),
     fbp:g('fbp'), fbc:g('fbc'),
     logo_ab:g('logo_ab','ab'),
+    price_ab:String(g('price_ab')||''),
     utm_source:qs.utm_source||'', utm_medium:qs.utm_medium||'', utm_campaign:qs.utm_campaign||'',
     utm_content:qs.utm_content||'', utm_adset:qs.utm_adset||'',
     device:deviceFrom(ua), browser:browserFrom(ua), os:osFrom(ua)
@@ -319,7 +320,8 @@ function normVenda(r){
     t:toMs(g('data','t')), status:String(g('status')||''), metodo:String(g('metodo','method','pagamento')||''),
     valor:(function(v){if(typeof v==='number')return v;v=String(v).replace(/[^\d.,-]/g,'');if(v.indexOf(',')>-1)v=v.replace(/\./g,'').replace(',','.');return Number(v)||0;})(g('valor','value','amount')),
     nome:g('nome','name'), email:g('email'), telefone:g('telefone','phone'),
-    order_id:g('order_id','orderId','id'), raw:g('raw')
+    order_id:g('order_id','orderId','id'), raw:g('raw'),
+    ab:String(g('ab')||'')
   };
 }
 function normCapi(r){
@@ -642,6 +644,44 @@ function barGroup(obj,limit){
     <div class="bg-track"><div class="bg-fill" style="width:${v/max*100}%"></div></div>
     <div class="bg-val">${fmt(v)}</div></div>`).join('')+'</div>';
 }
+function priceAbCard(){
+  const labels={A:'A · Preço atual', B:'B · R$ 34,90'};
+  const vis = uCountBy(e=>e.price_ab, e=>!!e.price_ab);           // acessos (sessões únicas) por variante
+  const chk = uCountBy(e=>e.price_ab, e=>e.ev==='checkout_click'&&e.price_ab); // cliques no checkout por variante
+  const buys={}, rev={};
+  _vendas.filter(v=>APPROVED.test(v.status)).forEach(v=>{ const k=v.ab; if(k==='A'||k==='B'){ buys[k]=(buys[k]||0)+1; rev[k]=(rev[k]||0)+(v.valor||0); } });
+  const variants=['A','B'];
+  const totalVis = variants.reduce((a,k)=>a+(vis[k]||0),0);
+  const totalBuys= variants.reduce((a,k)=>a+(buys[k]||0),0);
+  if(!totalVis && !totalBuys){
+    return `<div class="card"><h2>🧪 Teste A/B de Preço</h2><div class="empty">Ainda sem dados. Assim que o tráfego novo entrar, os acessos e as compras por variante aparecem aqui.</div></div>`;
+  }
+  const rows = variants.map(k=>{
+    const a=vis[k]||0, cl=chk[k]||0, c=buys[k]||0, conv=a>0?(c/a*100):0;
+    return `<tr style="border-top:1px solid var(--line)">
+      <td style="padding:9px 6px;font-weight:700">${labels[k]}</td>
+      <td style="padding:9px 6px;text-align:right">${fmt(a)}</td>
+      <td style="padding:9px 6px;text-align:right">${fmt(cl)}</td>
+      <td style="padding:9px 6px;text-align:right;font-weight:700">${fmt(c)}</td>
+      <td style="padding:9px 6px;text-align:right;color:var(--pink);font-weight:700">${conv.toFixed(1).replace('.',',')}%</td>
+      <td style="padding:9px 6px;text-align:right">${fmtMoney(rev[k]||0)}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="card"><h2>🧪 Teste A/B de Preço <span class="badge">A: preço atual · B: R$ 34,90</span></h2>
+    <table style="width:100%;border-collapse:collapse;font-size:13.5px">
+      <thead><tr style="color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em">
+        <th style="text-align:left;padding:0 6px 6px">Variante</th>
+        <th style="text-align:right;padding:0 6px 6px">Acessos</th>
+        <th style="text-align:right;padding:0 6px 6px">Checkout</th>
+        <th style="text-align:right;padding:0 6px 6px">Compras</th>
+        <th style="text-align:right;padding:0 6px 6px">Conversão</th>
+        <th style="text-align:right;padding:0 6px 6px">Receita</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="font-size:12px;color:var(--muted);margin-top:10px">Acessos = visitantes únicos por variante · Checkout = cliques no botão de compra · Compras = vendas aprovadas com <code>ab</code> correspondente (via postback do Payt).</div>
+  </div>`;
+}
 function tabResumo(){
   const m=metrics();
   const gender = uCountBy(e=>e.gender, e=>e.gender);
@@ -658,7 +698,7 @@ function tabResumo(){
     pvCard=`<div class="card"><h2>🛒 Botões da Página de Vendas <span class="badge">qual CTA levou ao checkout</span></h2>${barGroup(pvBtns)}</div>`;
   }
 
-  return abCard+pvCard+
+  return priceAbCard()+abCard+pvCard+
   `<div class="grid2">
     <div class="card"><h2>👥 Por Gênero</h2>${barGroup(gender)}</div>
     <div class="card"><h2>🌐 Por Origem</h2>${barGroup(origin)}</div>

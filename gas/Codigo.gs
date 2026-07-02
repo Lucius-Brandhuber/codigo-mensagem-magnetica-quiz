@@ -24,8 +24,8 @@ var SITE_URL   = 'https://codigo-mensagem-magnetica-quiz.vercel.app';
 
 var DB_NAME = 'Código da Mensagem Magnética — Analytics DB';
 
-var EVENTOS_HEADERS = ['data','evento','session','step','nome','genero','resposta','ms','referrer','ua','event_id','fbp','fbc','url','logo_ab'];
-var VENDAS_HEADERS  = ['data','status','metodo','valor','nome','email','telefone','order_id','raw'];
+var EVENTOS_HEADERS = ['data','evento','session','step','nome','genero','resposta','ms','referrer','ua','event_id','fbp','fbc','url','logo_ab','price_ab'];
+var VENDAS_HEADERS  = ['data','status','metodo','valor','nome','email','telefone','order_id','raw','ab'];
 var CAPILOG_HEADERS = ['data','evento','event_id','s','status_code','response'];
 
 /* ====================== PLANILHA (auto-cria) ====================== */
@@ -45,8 +45,10 @@ function ensureSheet(ss, name, headers){
   if (sh.getLastRow() === 0){
     sh.getRange(1,1,1,headers.length).setValues([headers]);
     sh.setFrozenRows(1);
+  } else if (sh.getLastColumn() < headers.length){
+    // migração: acrescenta as colunas novas (ex.: price_ab / ab) ao cabeçalho
+    sh.getRange(1,1,1,headers.length).setValues([headers]);
   }
-  // remove a "Sheet1"/"Página1" padrão se sobrar vazia
   return sh;
 }
 function db(){
@@ -137,6 +139,7 @@ function doPost(e){
     // Postback de venda da Payt
     if (p.src === 'payt' || p.sheet === 'vendas' || body.__payt){
       if (p.produto) body.__produto = p.produto;
+      if (p.ab) body.__ab = p.ab;
       return saveVenda(body);
     }
     // Reset (apaga eventos/vendas/capi)
@@ -177,7 +180,8 @@ function saveEvent(b){
     fbp:      b.fbp || '',
     fbc:      b.fbc || '',
     url:      b.url || '',
-    logo_ab:  b.logo_ab || b.ab || ''
+    logo_ab:  b.logo_ab || b.ab || '',
+    price_ab: b.price_ab || ''
   };
   d.eventos.appendRow(EVENTOS_HEADERS.map(function(k){ return row[k]; }));
   invalidateCache();
@@ -200,7 +204,8 @@ function saveVenda(b){
     email:    b.email || cust.email || '',
     telefone: b.phone || b.telefone || cust.phone || cust.phone_number || '',
     order_id: b.order_id || b.orderId || b.id || b.transaction_id || (b.transaction && b.transaction.id) || '',
-    raw:      JSON.stringify(b).slice(0, 4000)
+    raw:      JSON.stringify(b).slice(0, 4000),
+    ab:       b.ab || b.__ab || ''
   };
   d.vendas.appendRow(VENDAS_HEADERS.map(function(k){ return row[k]; }));
   invalidateCache();
