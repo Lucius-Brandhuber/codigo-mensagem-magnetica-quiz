@@ -136,6 +136,7 @@ function doPost(e){
 
     // Postback de venda da Payt
     if (p.src === 'payt' || p.sheet === 'vendas' || body.__payt){
+      if (p.produto) body.__produto = p.produto;
       return saveVenda(body);
     }
     // Reset (apaga eventos/vendas/capi)
@@ -206,7 +207,14 @@ function saveVenda(b){
 
   // venda aprovada → e-mail de acesso + Purchase no CAPI
   if (/finaliz|aprovad|paid|pago|approved|confirmed/i.test(row.status)){
-    try { sendAccessEmail(row); } catch(err){}
+    var produto = b.__produto || '';
+    if (produto === 'biblioteca'){
+      try { sendBibliotecaEmail(row); } catch(err){}
+    } else if (produto === 'reconstrucao'){
+      try { sendReconstrucaoEmail(row); } catch(err){}
+    } else {
+      try { sendAccessEmail(row); } catch(err){}
+    }
     try { sendPurchaseCAPI(row); } catch(err){}
   }
   return json({ ok:true, venda:true });
@@ -314,7 +322,65 @@ function sendAccessEmail(venda){
     + '<p style="font-size:12px;color:#aaa;text-align:center">Código da Reconquista Magnética<br>Qualquer dúvida, responda este e-mail.</p>'
     + '</div></div></body></html>';
 
-  GmailApp.sendEmail(email, subject, 'Seu acesso: ' + MEMBROS_URL, { htmlBody: html, name: 'Código da Reconquista Magnética' });
+  MailApp.sendEmail(email, subject, 'Seu acesso: ' + MEMBROS_URL, { htmlBody: html, name: 'Código da Reconquista Magnética' });
+}
+
+function sendBibliotecaEmail(venda){
+  var email = venda.email;
+  if (!email) return;
+  var nome = venda.nome || 'aluna';
+  var primeiro = nome.split(' ')[0];
+  var chave = sha256('biblio|' + email.toLowerCase());
+  var link = MEMBROS_URL + '?unlock=biblioteca&email=' + encodeURIComponent(email) + '&key=' + chave;
+
+  var subject = '📚 Sua Biblioteca das Respostas está liberada!';
+  var html = '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f7f1f4;font-family:Arial,sans-serif">'
+    + '<div style="max-width:520px;margin:30px auto;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)">'
+    + '<div style="background:linear-gradient(135deg,#a855f7,#ec3a8b);padding:36px 28px;text-align:center;color:#fff">'
+    + '<div style="font-size:42px;margin-bottom:8px">📚</div>'
+    + '<h1 style="margin:0;font-size:22px">Parabéns, ' + primeiro + '!</h1>'
+    + '<p style="margin:8px 0 0;font-size:14px;opacity:.9">Sua Biblioteca das Respostas foi liberada</p>'
+    + '</div>'
+    + '<div style="padding:28px">'
+    + '<p style="font-size:15px;color:#333;line-height:1.6">Clique no botão abaixo para desbloquear a <strong>Biblioteca das Respostas</strong> na sua área de membros:</p>'
+    + '<div style="text-align:center;margin:24px 0">'
+    + '<a href="' + link + '" style="display:inline-block;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;text-decoration:none;padding:14px 36px;border-radius:12px;font-size:16px;font-weight:700">Desbloquear Biblioteca →</a>'
+    + '</div>'
+    + '<p style="font-size:13px;color:#888;line-height:1.5">Use o mesmo e-mail <strong>' + email + '</strong> da sua conta na área de membros.</p>'
+    + '<hr style="border:none;border-top:1px solid #eee;margin:20px 0">'
+    + '<p style="font-size:12px;color:#aaa;text-align:center">Código da Reconquista Magnética<br>Qualquer dúvida, responda este e-mail.</p>'
+    + '</div></div></body></html>';
+
+  MailApp.sendEmail(email, subject, 'Desbloquear: ' + link, { htmlBody: html, name: 'Código da Reconquista Magnética' });
+}
+
+function sendReconstrucaoEmail(venda){
+  var email = venda.email;
+  if (!email) return;
+  var nome = venda.nome || 'aluna';
+  var primeiro = nome.split(' ')[0];
+  var chave = sha256('reconstrucao|' + email.toLowerCase());
+  var link = MEMBROS_URL + '?unlock=reconstrucao&email=' + encodeURIComponent(email) + '&key=' + chave;
+
+  var subject = '❤️‍🩹 Sua Reconstrução da Confiança está liberada!';
+  var html = '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f7f1f4;font-family:Arial,sans-serif">'
+    + '<div style="max-width:520px;margin:30px auto;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)">'
+    + '<div style="background:linear-gradient(135deg,#f97316,#ec3a8b);padding:36px 28px;text-align:center;color:#fff">'
+    + '<div style="font-size:42px;margin-bottom:8px">❤️‍🩹</div>'
+    + '<h1 style="margin:0;font-size:22px">Parabéns, ' + primeiro + '!</h1>'
+    + '<p style="margin:8px 0 0;font-size:14px;opacity:.9">Sua Reconstrução da Confiança foi liberada</p>'
+    + '</div>'
+    + '<div style="padding:28px">'
+    + '<p style="font-size:15px;color:#333;line-height:1.6">Clique no botão abaixo para desbloquear a <strong>Reconstrução da Confiança</strong> na sua área de membros:</p>'
+    + '<div style="text-align:center;margin:24px 0">'
+    + '<a href="' + link + '" style="display:inline-block;background:linear-gradient(135deg,#f97316,#ec3a8b);color:#fff;text-decoration:none;padding:14px 36px;border-radius:12px;font-size:16px;font-weight:700">Desbloquear agora →</a>'
+    + '</div>'
+    + '<p style="font-size:13px;color:#888;line-height:1.5">Use o mesmo e-mail <strong>' + email + '</strong> da sua conta na área de membros.</p>'
+    + '<hr style="border:none;border-top:1px solid #eee;margin:20px 0">'
+    + '<p style="font-size:12px;color:#aaa;text-align:center">Código da Reconquista Magnética<br>Qualquer dúvida, responda este e-mail.</p>'
+    + '</div></div></body></html>';
+
+  MailApp.sendEmail(email, subject, 'Desbloquear: ' + link, { htmlBody: html, name: 'Código da Reconquista Magnética' });
 }
 
 /* ====================== HELPERS ====================== */
@@ -344,11 +410,12 @@ function sha256(s){
 function autorizar(){
   db(); // cria a planilha e pede acesso ao Drive/Sheets
   UrlFetchApp.fetch('https://graph.facebook.com/', { muteHttpExceptions:true }); // pede script.external_request
+  MailApp.getRemainingDailyQuota(); // pede escopo de envio de email
   Logger.log('OK — planilha: ' + getSS().getUrl());
 }
 // Gera 1 evento e 1 venda de teste para validar o fluxo.
 function testeRapido(){
   saveEvent({ ev:'view', s:'TESTE_'+Date.now(), step:'0', ua:'teste', url:SITE_URL });
-  saveVenda({ status:'aprovada', payment_method:'pix', value:27.90, name:'Teste', email:'teste@x.com', order_id:'T1', __payt:true });
+  saveVenda({ status:'aprovada', payment_method:'pix', value:27.90, name:'Teste', email:'luciusbrandhuber2@gmail.com', order_id:'T1', __payt:true });
   Logger.log('Eventos/vendas de teste gravados. Planilha: ' + getSS().getUrl());
 }
