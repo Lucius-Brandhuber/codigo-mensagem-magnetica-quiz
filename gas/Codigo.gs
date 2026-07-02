@@ -419,3 +419,13 @@ function testeRapido(){
   saveVenda({ status:'aprovada', payment_method:'pix', value:27.90, name:'Teste', email:'luciusbrandhuber2@gmail.com', order_id:'T1', __payt:true });
   Logger.log('Eventos/vendas de teste gravados. Planilha: ' + getSS().getUrl());
 }
+// Simula uma compra da BIBLIOTECA (dispara o e-mail de desbloqueio). Troque o e-mail.
+function testeBiblioteca(){
+  saveVenda({ status:'aprovada', payment_method:'pix', value:14.90, name:'Teste', email:'luciusbrandhuber2@gmail.com', order_id:'TB1', __payt:true, __produto:'biblioteca' });
+  Logger.log('Venda de teste da Biblioteca gravada — confira o e-mail.');
+}
+// Simula uma compra da RECONSTRUÇÃO DA CONFIANÇA (dispara o e-mail de desbloqueio). Troque o e-mail.
+function testeReconstrucao(){
+  saveVenda({ status:'aprovada', payment_method:'pix', value:0, name:'Teste', email:'luciusbrandhuber2@gmail.com', order_id:'TR1', __payt:true, __produto:'reconstrucao' });
+  Logger.log('Venda de teste da Reconstrução gravada — confira o e-mail.');
+}
