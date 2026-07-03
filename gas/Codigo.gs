@@ -211,7 +211,7 @@ function saveVenda(b){
   d.vendas.appendRow(VENDAS_HEADERS.map(function(k){ return row[k]; }));
   invalidateCache();
 
-  // venda aprovada → e-mail de acesso + Purchase no CAPI
+  // venda aprovada → e-mail de acesso
   if (/finaliz|aprovad|paid|pago|approved|confirmed/i.test(row.status)){
     var produto = b.__produto || '';
     if (produto === 'biblioteca'){
@@ -221,7 +221,10 @@ function saveVenda(b){
     } else {
       try { sendAccessEmail(row); } catch(err){}
     }
-    try { sendPurchaseCAPI(row); } catch(err){}
+    // Purchase (Meta) é responsabilidade da Payt (Pixel + API de Conversões,
+    // deduplicados nativamente). Não disparamos aqui pra não duplicar o evento.
+    // Se um dia a Payt deixar de enviar o Purchase, reative a linha abaixo:
+    // try { sendPurchaseCAPI(row); } catch(err){}
   }
   return json({ ok:true, venda:true });
 }
