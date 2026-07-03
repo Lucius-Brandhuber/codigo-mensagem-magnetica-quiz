@@ -91,7 +91,7 @@ function doGet(e){
   return json(rowsAsObjects(sh));
 }
 var CACHE_KEY = 'admin_all_v1';
-var CACHE_TTL = 25;          // segundos
+var CACHE_TTL = 10;          // segundos (auto-refresh do admin é ~15s)
 var CACHE_CHUNK = 45000;     // chars por pedaço (~90KB UTF-8, abaixo do limite de 100KB)
 function cachePut(cache, str){
   try {
