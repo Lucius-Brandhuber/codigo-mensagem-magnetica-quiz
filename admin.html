@@ -694,12 +694,9 @@ const FUNIL_STEPS = [
   {k:'Quiz · Pergunta 4',            short:'Pergunta 4',     tag:'answer · step 4',            pred:e=>e.ev==='answer'&&String(e.step)==='4'},
   {k:'Quiz · Pergunta 5',            short:'Pergunta 5',     tag:'answer · step 5',            pred:e=>e.ev==='answer'&&String(e.step)==='5'},
   {k:'Diagnóstico (fim do quiz)',    short:'Diagnóstico',    tag:'view · resultado',           pred:e=>e.ev==='view'&&(String(e.step)==='resultado'||String(e.step)==='diagnostico'), clicks:()=>uSet(e=>e.ev==='click'&&String(e.step)==='diagnostico')},
-  {k:'Pré-venda — abriu',            short:'Pré-venda',      tag:'view · vendas.html',         pred:e=>e.ev==='view'&&String(e.step)==='vendas', clicks:()=>uClicks('vendas')},
-  {k:'Pré-venda — clicou no botão',  short:'Botão pré-venda',tag:'click · "Continuar o Plano"',pred:e=>e.ev==='click'&&String(e.step)==='vendas'},
-  {k:'VSL Vídeos — abriu',           short:'VSL vídeos',     tag:'view · vsl.html',            pred:e=>e.ev==='view'&&String(e.step)==='vsl', clicks:()=>uClicks('vsl')},
-  {k:'VSL Vídeos — clicou no botão', short:'Botão VSL',      tag:'click · "Continuar"',        pred:e=>e.ev==='click'&&String(e.step)==='vsl'},
+  {k:'Pré-venda — abriu',            short:'Pré-venda',      tag:'view · vendas.html',         pred:e=>e.ev==='view'&&String(e.step)==='vendas'},
+  {k:'VSL Vídeos — abriu',           short:'VSL vídeos',     tag:'view · vsl.html',            pred:e=>e.ev==='view'&&String(e.step)==='vsl'},
   {k:'Quiz do meio — abriu',         short:'Quiz 2',         tag:'view · quiz2.html',          pred:e=>e.ev==='view'&&String(e.step)==='quiz2'},
-  {k:'Quiz do meio — respondeu',     short:'Resposta quiz 2',tag:'answer · quiz2',             pred:e=>e.ev==='answer'&&String(e.step)==='quiz2'},
   {k:'PV Real (VSL2) — abriu',       short:'PV oferta',      tag:'view · vsl2.html',           pred:e=>e.ev==='view'&&String(e.step)==='vsl2', clicks:()=>uSet(e=>e.ev==='checkout_click')},
   {k:'Checkout — clicou (→ Payt)',   short:'Checkout',       tag:'checkout_click',             pred:e=>e.ev==='checkout_click'}
 ];
