@@ -114,13 +114,14 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 
 <script src="track.js"></script>
 <script>
+  var _qT0 = Date.now();   // tempo até responder
   if(window.cmmTrack) cmmTrack.view('quiz2');
   document.addEventListener('click', function(e){
     var b = e.target.closest ? e.target.closest('.option-btn') : null;
     if(!b) return;
     var t = (b.querySelector('.option-text')||{}).textContent || '';
-    if(window.cmmTrack) cmmTrack.answer('quiz2', t.trim());
-  });
+    if(window.cmmTrack) cmmTrack.answer('quiz2', t.trim(), Date.now() - _qT0);
+  }, true);
 
   // Próxima etapa do funil: VSL2 (vídeo + protocolo personalizado)
   function continuar() { window.location.href = 'vsl2.html'; }

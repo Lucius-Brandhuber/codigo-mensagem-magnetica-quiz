@@ -577,6 +577,9 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 
 <script src="track.js"></script>
 <script>
+  // cronômetros do tracking: tempo na landing, na pergunta atual e no diagnóstico
+  var _pageT0 = Date.now(), _qT0 = Date.now(), _diagT0 = 0;
+
   const progressData = {
     1: { label: 'Pergunta 1 de 5', pct: 20 },
     2: { label: 'Pergunta 2 de 5', pct: 40 },
@@ -589,6 +592,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + n).classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    _qT0 = Date.now();   // zera o cronômetro da tela atual (tempo pra responder)
   }
 
   function updateProgress(q) {
@@ -604,7 +608,11 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     }
   }
 
-  function goToQuestion(q) { updateProgress(q); showScreen(q); if(window.cmmTrack) cmmTrack.view(q); }
+  function goToQuestion(q) {
+    // clique de início na landing (mede quanto tempo levou pra decidir começar)
+    if (q === 1 && window.cmmTrack) cmmTrack.click(0, 'Começar o teste', Date.now() - _pageT0);
+    updateProgress(q); showScreen(q); if(window.cmmTrack) cmmTrack.view(q);
+  }
 
   function nextQ(next) { updateProgress(next); showScreen(next); if(window.cmmTrack) cmmTrack.view(next); }
 
@@ -622,17 +630,22 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     setTimeout(function () {
       document.getElementById('processing').style.display = 'none';
       document.getElementById('diagnostico').style.display = 'block';
+      _diagT0 = Date.now();
+      if (window.cmmTrack) cmmTrack.view('diagnostico');   // diagnóstico revelado
       if (window.fbq) fbq('track', 'Lead');   // completou o quiz = lead
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, items.length * 650 + 500);
   }
 
   function irParaVendas() {
+    // CTA do diagnóstico (mede o tempo lendo o diagnóstico antes de avançar)
+    if (window.cmmTrack) cmmTrack.click('diagnostico', 'QUERO VER MEU PLANO', _diagT0 ? Date.now() - _diagT0 : 0);
     // keepalive no track.js já garante o envio; pequeno atraso por segurança
     setTimeout(function () { window.location.href = 'vendas.html'; }, 120);
   }
 
   // tracking: view da landing + answer ao clicar numa opção
+  // (fase de captura: roda ANTES do onclick inline, que troca de tela e zera _qT0)
   if(window.cmmTrack) cmmTrack.view(0);
   document.addEventListener('click', function(e){
     var b = e.target.closest ? e.target.closest('.option-btn') : null;
@@ -640,8 +653,8 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     var sc = b.closest('.screen'); if(!sc) return;
     var step = sc.id.replace('screen-','');
     var t = (b.querySelector('.option-text')||{}).textContent || '';
-    if(window.cmmTrack) cmmTrack.answer(step, t.trim());
-  });
+    if(window.cmmTrack) cmmTrack.answer(step, t.trim(), Date.now() - _qT0);
+  }, true);
 </script>
 
 </body>

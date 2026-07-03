@@ -256,6 +256,7 @@
     <!-- TABS -->
     <div class="tabs" id="tabs">
       <button class="tab on" data-tab="funil"><span class="em">📊</span> Funil</button>
+      <button class="tab" data-tab="quiz"><span class="em">🧩</span> Quiz</button>
       <button class="tab" data-tab="eventos"><span class="em">📋</span> Eventos</button>
       <button class="tab" data-tab="resumo"><span class="em">📈</span> Resumo</button>
       <button class="tab" data-tab="trafego"><span class="em">🎯</span> Tráfego</button>
@@ -676,6 +677,7 @@ function goTab(name){
 function renderTab(){
   const c=$('#tabContent');
   if(activeTab==='funil') c.innerHTML=tabFunil();
+  else if(activeTab==='quiz') c.innerHTML=tabQuiz();
   else if(activeTab==='eventos'){ c.innerHTML=tabEventos(); bindEventosUI(); }
   else if(activeTab==='resumo') c.innerHTML=tabResumo();
   else if(activeTab==='trafego') c.innerHTML=tabTrafego();
@@ -691,6 +693,7 @@ const FUNIL_STEPS = [
   {k:'Quiz · Pergunta 3',            short:'Pergunta 3',     tag:'answer · step 3',            pred:e=>e.ev==='answer'&&String(e.step)==='3'},
   {k:'Quiz · Pergunta 4',            short:'Pergunta 4',     tag:'answer · step 4',            pred:e=>e.ev==='answer'&&String(e.step)==='4'},
   {k:'Quiz · Pergunta 5',            short:'Pergunta 5',     tag:'answer · step 5',            pred:e=>e.ev==='answer'&&String(e.step)==='5'},
+  {k:'Diagnóstico (fim do quiz)',    short:'Diagnóstico',    tag:'view · resultado',           pred:e=>e.ev==='view'&&(String(e.step)==='resultado'||String(e.step)==='diagnostico'), clicks:()=>uSet(e=>e.ev==='click'&&String(e.step)==='diagnostico')},
   {k:'Pré-venda — abriu',            short:'Pré-venda',      tag:'view · vendas.html',         pred:e=>e.ev==='view'&&String(e.step)==='vendas', clicks:()=>uClicks('vendas')},
   {k:'Pré-venda — clicou no botão',  short:'Botão pré-venda',tag:'click · "Continuar o Plano"',pred:e=>e.ev==='click'&&String(e.step)==='vendas'},
   {k:'VSL Vídeos — abriu',           short:'VSL vídeos',     tag:'view · vsl.html',            pred:e=>e.ev==='view'&&String(e.step)==='vsl', clicks:()=>uClicks('vsl')},
@@ -854,6 +857,204 @@ function openJourney(sid){
   closeModal();
   evSession=sid; evQuery=''; evType=''; evCamp=''; evPage=1;
   goTab('eventos');
+}
+
+/* ====================== QUIZ (análise pergunta a pergunta) ====================== */
+const QUIZ_QS = [
+  {step:'1',     emoji:'⏰', q:'Faz quanto tempo que vocês terminaram?'},
+  {step:'2',     emoji:'💬', q:'Vocês ainda têm contato hoje em dia?'},
+  {step:'3',     emoji:'💔', q:'O que você mais sofre desde o término?'},
+  {step:'4',     emoji:'💭', q:'Se ele te procurasse hoje, como você reagiria?'},
+  {step:'5',     emoji:'🔑', q:'Aplicaria um passo a passo testado?'},
+  {step:'quiz2', emoji:'🎯', q:'Quiz do meio — compromisso de assistir a VSL'}
+];
+// tempo por pergunta (ms), clique de início na landing e CTA do diagnóstico
+// passaram a ser coletados em 03/07/2026 — antes disso aparecem zerados/"—".
+const isDiagView  = e=>e.ev==='view' &&(String(e.step)==='resultado'||String(e.step)==='diagnostico');
+const isDiagClick = e=>e.ev==='click'&&String(e.step)==='diagnostico';
+
+function medianOf(a){ if(!a.length)return 0; const s=a.slice().sort((x,y)=>x-y), m=s.length>>1; return s.length%2?s[m]:(s[m-1]+s[m])/2; }
+const fmtSec = ms=>{ const s=ms/1000; return s>=60 ? Math.floor(s/60)+'m'+String(Math.round(s%60)).padStart(2,'0')+'s' : String(Math.round(s*10)/10).replace('.',',')+'s'; };
+
+function quizStatsIn(arr){
+  return {
+    vis:  uSetIn(arr,e=>e.ev==='view'&&String(e.step)==='0'),
+    start:uSetIn(arr,e=>e.ev==='view'&&String(e.step)==='1'),
+    done: uSetIn(arr,e=>e.ev==='answer'&&String(e.step)==='5'),
+    diag: uSetIn(arr,isDiagView),
+    cta:  uSetIn(arr,isDiagClick),
+    pv:   uSetIn(arr,e=>e.ev==='view'&&String(e.step)==='vendas')
+  };
+}
+/* distribuição de respostas (1 por sessão — a primeira) */
+function quizDist(step){
+  const seen=new Set(), out={};
+  liveEv().filter(e=>e.ev==='answer'&&String(e.step)===String(step)).sort((a,b)=>a.t-b.t)
+    .forEach(e=>{ if(!e.s||seen.has(e.s))return; seen.add(e.s); const k=String(e.ans||'—').trim()||'—'; out[k]=(out[k]||0)+1; });
+  return out;
+}
+/* tempo mediano de resposta de um step (descarta <0,25s e >10min) */
+function quizMs(step, ev){
+  const v=liveEv().filter(e=>e.ev===(ev||'answer')&&String(e.step)===String(step)&&e.ms>250&&e.ms<600000).map(e=>e.ms);
+  return {med:medianOf(v), n:v.length};
+}
+/* duração total do quiz por sessão (view P1 → answer P5) */
+function quizDuration(){
+  const t1={}, t5={};
+  liveEv().forEach(e=>{
+    if(!e.s||!e.t)return;
+    if(e.ev==='view'&&String(e.step)==='1'&&(!t1[e.s]||e.t<t1[e.s])) t1[e.s]=e.t;
+    if(e.ev==='answer'&&String(e.step)==='5'&&(!t5[e.s]||e.t<t5[e.s])) t5[e.s]=e.t;
+  });
+  const d=[]; Object.keys(t5).forEach(s=>{ if(t1[s]){ const x=t5[s]-t1[s]; if(x>5000&&x<1800000)d.push(x); } });
+  return {med:medianOf(d), n:d.length};
+}
+function ansBars(dist){
+  const ent=Object.entries(dist).sort((a,b)=>b[1]-a[1]);
+  if(!ent.length) return '<div class="empty">Sem respostas no período.</div>';
+  const tot=ent.reduce((a,e)=>a+e[1],0)||1, max=Math.max(1,...ent.map(e=>e[1]));
+  return ent.map(([k,v])=>`<div style="margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;gap:12px;font-size:12.5px;line-height:1.35;margin-bottom:4px">
+      <span style="flex:1">${esc(k)}</span><b style="white-space:nowrap">${fmt(v)} · ${(v/tot*100).toFixed(1).replace('.',',')}%</b></div>
+    <div class="bg-track"><div class="bg-fill" style="width:${(v/max*100).toFixed(1)}%"></div></div>
+  </div>`).join('');
+}
+function tabQuiz(){
+  const S=quizStatsIn(_ev), P=quizStatsIn(_evPrev);
+  const startRate=pct(S.start,S.vis), startRateP=pct(P.start,P.vis);
+  const doneRate=pct(S.done,S.start), doneRateP=pct(P.done,P.start);
+  const dur=quizDuration();
+
+  const kpis =
+    kpi('👁️','#4A7AF5',fmt(S.vis),'Visitantes','landing do quiz',deltaBadge(S.vis,P.vis))+
+    kpi('🚀','#cf3a7d',startRate+'%','Taxa de início',fmt(S.start)+' viram a P1',deltaBadge(startRate,startRateP))+
+    kpi('🏁','#a855f7',doneRate+'%','Conclusão',fmt(S.done)+' responderam a P5 · % de quem começou',deltaBadge(doneRate,doneRateP))+
+    kpi('🩺','#f5a623',fmt(S.diag),'Viram o diagnóstico',pct(S.diag,S.done)+'% de quem concluiu',deltaBadge(S.diag,P.diag))+
+    kpi('👉','#2cbf52',fmt(S.cta),'Clicaram "ver plano"',S.diag?pct(S.cta,S.diag)+'% do diagnóstico':'evento novo',deltaBadge(S.cta,P.cta))+
+    kpi('⏱️','#16a34a',dur.n?fmtSec(dur.med):'—','Tempo do quiz','mediana P1→P5 · n='+fmt(dur.n),'');
+
+  /* ---- escada de retenção ---- */
+  const base=Math.max(1,S.vis);
+  const lr=[{emoji:'🏠', label:'Landing — abriu a página', saw:S.vis, adv:S.start, keep:null}];
+  let prevAns=S.start;
+  QUIZ_QS.slice(0,5).forEach(q=>{
+    const saw=uViews(q.step), ans=uAnswers(q.step);
+    lr.push({emoji:q.emoji, label:'Pergunta '+q.step+' — '+q.q, saw, adv:ans, keep:pct(ans,prevAns)});
+    prevAns=ans;
+  });
+  lr.push({emoji:'🩺', label:'Diagnóstico — viu o resultado · avançou = clicou no CTA', saw:S.diag, adv:S.cta, keep:pct(S.diag,prevAns)});
+  lr.push({emoji:'🛍️', label:'Pré-venda — abriu vendas.html', saw:S.pv, adv:null, keep:pct(S.pv,S.diag)});
+  const ladderHead=`<div style="display:flex;gap:12px;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--line)">
+    <div style="width:280px;min-width:230px">Etapa</div><div style="flex:1;min-width:100px">Alcance</div>
+    <div style="width:64px;text-align:right">Viram</div><div style="width:82px;text-align:right">Avançaram</div>
+    <div style="width:58px;text-align:right">Taxa</div><div style="width:66px;text-align:right">Retenção</div></div>`;
+  const ladderRows=lr.map(r=>{
+    const rate=r.adv!=null?pct(r.adv,r.saw):null;
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)">
+      <div style="width:280px;min-width:230px;font-size:12.5px;font-weight:600;line-height:1.35">${r.emoji} ${esc(r.label)}</div>
+      <div style="flex:1;min-width:100px"><div class="bg-track" style="height:13px"><div class="bg-fill" style="width:${(r.saw/base*100).toFixed(1)}%"></div></div></div>
+      <div style="width:64px;text-align:right;font-weight:800">${fmt(r.saw)}</div>
+      <div style="width:82px;text-align:right">${r.adv!=null?fmt(r.adv):'—'}</div>
+      <div style="width:58px;text-align:right;font-weight:700;color:${rate==null?'var(--muted)':rate>=70?'var(--accent-d)':rate>=40?'#d97706':'var(--danger)'}">${rate!=null?rate+'%':'—'}</div>
+      <div style="width:66px;text-align:right;font-size:12px;color:var(--muted)">${r.keep!=null?r.keep+'%':'—'}</div>
+    </div>`;
+  }).join('');
+
+  /* ---- início/conclusão por dia (últimos 14 dias do período) ---- */
+  const days={};
+  liveEv().forEach(e=>{
+    if(!e.t||!e.s)return;
+    const k=dayKey(e.t); const d=days[k]=days[k]||{vis:new Set(),st:new Set(),dn:new Set()};
+    if(e.ev==='view'&&String(e.step)==='0')d.vis.add(e.s);
+    else if(e.ev==='view'&&String(e.step)==='1')d.st.add(e.s);
+    else if(e.ev==='answer'&&String(e.step)==='5')d.dn.add(e.s);
+  });
+  const dk=Object.keys(days).sort().slice(-14);
+  const dayRows=dk.slice().reverse().map(k=>{
+    const d=days[k], sr=pct(d.st.size,d.vis.size);
+    return `<tr><td>${k.split('-').reverse().slice(0,2).join('/')}</td>
+      <td style="text-align:right">${fmt(d.vis.size)}</td>
+      <td style="text-align:right">${fmt(d.st.size)}</td>
+      <td style="text-align:right;font-weight:700;color:${sr>=60?'var(--accent-d)':sr>=45?'#d97706':'var(--danger)'}">${sr}%</td>
+      <td style="text-align:right">${fmt(d.dn.size)}</td>
+      <td style="text-align:right;font-weight:700">${pct(d.dn.size,d.st.size)}%</td></tr>`;
+  }).join('') || '<tr><td colspan="6"><div class="empty">Sem dados no período.</div></td></tr>';
+  let chart='';
+  if(dk.length>=2){
+    const rates=dk.map(k=>pct(days[k].st.size,days[k].vis.size));
+    const W=1000,H=120,pad=10, dx=(W-2*pad)/(dk.length-1);
+    const y=v=>H-pad-(v/100)*(H-2*pad);
+    const line=rates.map((v,i)=>(i?'L':'M')+(pad+i*dx).toFixed(1)+' '+y(v).toFixed(1)).join(' ');
+    const dots=rates.map((v,i)=>`<circle cx="${(pad+i*dx).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3.5" fill="var(--primary)"><title>${dk[i].split('-').reverse().slice(0,2).join('/')} · ${v}%</title></circle>`).join('');
+    chart=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="120" preserveAspectRatio="none" style="margin-top:10px">
+      <line x1="${pad}" y1="${y(50)}" x2="${W-pad}" y2="${y(50)}" stroke="#e5e9f0" stroke-dasharray="4 4"/>
+      <path d="${line}" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linejoin="round"/>${dots}</svg>
+      <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:2px">
+        <span>${dk[0].split('-').reverse().slice(0,2).join('/')}</span><span>taxa de início por dia · linha pontilhada = 50%</span><span>${dk[dk.length-1].split('-').reverse().slice(0,2).join('/')}</span></div>`;
+  }
+
+  /* ---- tempo mediano por etapa ---- */
+  const timeRows=[['🏠 Landing → clicou em começar',quizMs('0','click')]]
+    .concat(QUIZ_QS.slice(0,5).map(q=>[q.emoji+' Pergunta '+q.step+' — tempo pra responder',quizMs(q.step)]))
+    .concat([['🎯 Quiz 2 (meio do funil)',quizMs('quiz2')],['🩺 Diagnóstico → clicou no CTA',quizMs('diagnostico','click')]])
+    .map(([l,o])=>`<tr><td>${l}</td>
+      <td style="text-align:right;font-weight:700">${o.n?fmtSec(o.med):'—'}</td>
+      <td style="text-align:right;color:var(--muted)">${fmt(o.n)}</td></tr>`).join('');
+
+  /* ---- quiz por dispositivo ---- */
+  const sdev={};
+  liveEv().forEach(e=>{ if(e.s&&e.device!=='—'&&!sdev[e.s]) sdev[e.s]=e.device; });
+  const dvm={};
+  liveEv().forEach(e=>{
+    if(!e.s)return; const dv=sdev[e.s]||'—';
+    const o=dvm[dv]=dvm[dv]||{vis:new Set(),st:new Set(),dn:new Set()};
+    if(e.ev==='view'&&String(e.step)==='0')o.vis.add(e.s);
+    else if(e.ev==='view'&&String(e.step)==='1')o.st.add(e.s);
+    else if(e.ev==='answer'&&String(e.step)==='5')o.dn.add(e.s);
+  });
+  const devRows=Object.entries(dvm).filter(([,o])=>o.vis.size>0).sort((a,b)=>b[1].vis.size-a[1].vis.size).map(([k,o])=>`<tr>
+    <td>${esc(k)}</td><td style="text-align:right">${fmt(o.vis.size)}</td>
+    <td style="text-align:right">${fmt(o.st.size)}</td>
+    <td style="text-align:right;font-weight:700">${pct(o.st.size,o.vis.size)}%</td>
+    <td style="text-align:right">${fmt(o.dn.size)}</td>
+    <td style="text-align:right;font-weight:700">${pct(o.dn.size,o.st.size)}%</td></tr>`).join('')
+    || '<tr><td colspan="6"><div class="empty">Sem dados no período.</div></td></tr>';
+
+  /* ---- cards de distribuição de respostas ---- */
+  const qCards=QUIZ_QS.map(q=>{
+    const saw=uViews(q.step), dist=quizDist(q.step);
+    const tot=Object.values(dist).reduce((a,b)=>a+b,0);
+    const t=quizMs(q.step);
+    return `<div class="card"><h2>${q.emoji} ${q.step==='quiz2'?'Quiz 2':'Pergunta '+q.step} <span class="badge">${fmt(tot)} respostas</span></h2>
+      <div style="font-size:12.5px;color:var(--muted);margin:-6px 0 14px;line-height:1.4">${esc(q.q)} · viram ${fmt(saw)} · responderam ${pct(tot,saw)}%${t.n?' · tempo mediano '+fmtSec(t.med):''}</div>
+      ${ansBars(dist)}</div>`;
+  }).join('');
+
+  return `<div class="kpis" style="margin-bottom:16px">${kpis}</div>
+  <div class="card"><h2>🪜 Retenção pergunta a pergunta <span class="badge">sessões únicas no período</span></h2>
+    <div style="overflow-x:auto"><div style="min-width:700px">${ladderHead}${ladderRows}</div></div>
+    <div class="note">Viram = view da tela · Avançaram = resposta (no diagnóstico, clique no CTA) · Taxa = avançaram ÷ viram · Retenção = vs etapa anterior.
+    O clique no CTA do diagnóstico é evento novo (03/07/2026) — histórico anterior aparece zerado.</div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h2>📅 Início e conclusão por dia <span class="badge">últimos 14 dias do período</span></h2>
+      <div class="tbl-wrap"><table style="min-width:440px">
+        <thead><tr><th>Dia</th><th style="text-align:right">Visitantes</th><th style="text-align:right">Começaram</th><th style="text-align:right">Início</th><th style="text-align:right">Concluíram</th><th style="text-align:right">Conclusão</th></tr></thead>
+        <tbody>${dayRows}</tbody></table></div>
+      ${chart}
+    </div>
+    <div class="card"><h2>⏱️ Tempo mediano por etapa</h2>
+      <div class="tbl-wrap"><table style="min-width:380px">
+        <thead><tr><th>Etapa</th><th style="text-align:right">Mediana</th><th style="text-align:right">Amostra</th></tr></thead>
+        <tbody>${timeRows}</tbody></table></div>
+      <div class="note">Tempo por pergunta, clique de início na landing e CTA do diagnóstico são coletados desde 03/07/2026 — eventos antigos não têm esse dado ("—" = ainda sem amostra).</div>
+    </div>
+  </div>
+  <div class="card"><h2>📱 Quiz por dispositivo</h2>
+    <div class="tbl-wrap"><table style="min-width:440px">
+      <thead><tr><th>Dispositivo</th><th style="text-align:right">Visitantes</th><th style="text-align:right">Começaram</th><th style="text-align:right">Início</th><th style="text-align:right">Concluíram</th><th style="text-align:right">Conclusão</th></tr></thead>
+      <tbody>${devRows}</tbody></table></div></div>
+  <div class="grid2">${qCards}</div>`;
 }
 
 /* ====================== EVENTOS (log + filtros + payload) ====================== */

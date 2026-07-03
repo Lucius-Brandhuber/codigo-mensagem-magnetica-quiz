@@ -29,8 +29,8 @@
 
   window.cmmTrack = {
     view:     function(step){ if(seen('v'+step)) return; send('view', {step:step}); },
-    answer:   function(step,text){ send('answer', {step:step, ans:text}); },
-    click:    function(step,label){ send('click', {step:step, name:label||'Botão'}); },
+    answer:   function(step,text,ms){ send('answer', {step:step, ans:text, ms:ms}); },
+    click:    function(step,label,ms){ send('click', {step:step, name:label||'Botão', ms:ms}); },
     checkout: function(label){ send('checkout_click', {name:label||'CTA'}); },
     getAb:    function(){ return priceAb(); }   // variante de preço do visitante (A|B)
   };
