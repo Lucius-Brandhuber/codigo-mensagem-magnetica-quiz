@@ -265,7 +265,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   </div>
 
   <!-- CARREGAMENTOS (some quando o protocolo é revelado) -->
-  <div class="checklist" id="checklist">
+  <div class="checklist" id="checklist" style="display:none">
     <div class="checklist-head">
       <span class="t">Criando seu Protocolo... ✏️</span>
       <span class="c" id="clCount">0/8</span>
@@ -475,21 +475,36 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     if (el) el.textContent = precos[ab] || precos.A;
   })();
 
-  /* ====== CARREGAMENTOS (checklist) — ritmo natural (~25s), independente do reveal ====== */
-  (function(){
+  /* ====== REVELAR RESTANTE após REVEAL_AT_SECONDS ====== */
+  var revealed = false;
+  function revealRest(){
+    if (revealed) return; revealed = true;
+    // Mostra o checklist e anima item a item (~25s total)
+    var cl = document.getElementById('checklist');
+    if (cl) cl.style.display = 'block';
     var items = document.querySelectorAll('#clItems .ci');
     var count = document.getElementById('clCount');
-    var per = 3200; // ~3,2s por item → ~25s no total (dá tempo de ler cada linha)
+    var per = 3200;
     var i = 0;
     function step(){
       if (i >= items.length){
         document.getElementById('gerado').style.display = 'block';
+        // Após o "Protocolo Gerado", esconde o checklist e revela a oferta
+        setTimeout(function(){
+          cl.style.display = 'none';
+          document.getElementById('rest').style.display = 'block';
+          startCountdown();
+          setTimeout(function(){
+            var badge = document.querySelector('.reveal-badge');
+            if (badge) badge.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }, 1800);
         return;
       }
       var it = items[i];
       var fill = it.querySelector('.ci-fill');
       fill.style.transition = 'width ' + (per/1000) + 's linear';
-      void fill.offsetWidth;            // força o reflow p/ a transição pegar (evita barra "instantânea")
+      void fill.offsetWidth;
       fill.style.width = '100%';
       setTimeout(function(){
         it.classList.add('done');
@@ -498,21 +513,6 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
       }, per);
     }
     step();
-  })();
-
-  /* ====== REVELAR RESTANTE após REVEAL_AT_SECONDS ====== */
-  var revealed = false;
-  function revealRest(){
-    if (revealed) return; revealed = true;
-    var cl = document.getElementById('checklist');
-    if (cl) cl.style.display = 'none';
-    document.getElementById('rest').style.display = 'block';
-    startCountdown();
-    // Leva a pessoa direto ao botão, sem precisar rolar
-    setTimeout(function(){
-      var badge = document.querySelector('.reveal-badge');
-      if (badge) badge.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
   }
   // atalho de PREVIEW: ?rev=1 revela a oferta na hora (invisível pro tráfego real)
   if (/[?&]rev=1/.test(location.search)) revealRest();
