@@ -234,6 +234,11 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     font-weight: 500;
   }
 
+  /* Primeira pergunta embutida na landing */
+  .landing-q { margin-top: 4px; }
+  .landing-q .q-emoji { font-size: 34px; margin-bottom: 10px; display: block; line-height: 1; }
+  .landing-q .q-title { font-size: 22px; margin-bottom: 20px; line-height: 1.3; }
+
   /* ===== QUESTION ===== */
   .question-wrap {
     max-width: 600px;
@@ -448,34 +453,28 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
       Descubra em 1 minuto se <span class="accent">ainda dá pra reconquistar o seu ex</span>
     </h1>
 
-    <img src="imgquiz/img1.png" alt="Mensagens no WhatsApp" class="whatsapp-img">
-
-    <p class="landing-desc">
-      Responda o teste rápido e receba um <strong>diagnóstico personalizado</strong> das suas chances reais de reverter —
+    <p class="landing-desc" style="margin-bottom:20px">
+      Responda 5 perguntas rápidas e receba um <strong>diagnóstico personalizado</strong> das suas chances reais —
       não importa se ele te bloqueou, sumiu ou já tá com outra.
     </p>
 
-    <div class="cta-ring">
-      <button class="btn-main" onclick="goToQuestion(1)">Fazer o teste rápido →</button>
+    <div class="landing-q">
+      <span class="q-emoji">⏰</span>
+      <h2 class="q-title serif">Pra começar: faz quanto tempo que vocês terminaram?</h2>
+      <div class="options">
+        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Menos de 1 semana</span><span class="arrow">›</span></button>
+        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Esse mês</span><span class="arrow">›</span></button>
+        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Entre 1 e 6 meses</span><span class="arrow">›</span></button>
+        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Entre 6 meses e 1 ano</span><span class="arrow">›</span></button>
+        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Mais de 1 ano</span><span class="arrow">›</span></button>
+      </div>
     </div>
+    <img src="imgquiz/img1.png" alt="Print de conversa no WhatsApp" class="whatsapp-img" style="max-width:230px;margin:8px auto 18px">
     <p class="trust-note">🔒 100% gratuito e anônimo • Leva menos de 1 minuto</p>
   </div>
 </div>
 
-<!-- ======== TELA 1: PERGUNTA 1 ======== -->
-<div class="screen" id="screen-1">
-  <div class="question-wrap">
-    <span class="q-emoji">⏰</span>
-    <h2 class="q-title serif">Faz quanto tempo que vocês terminaram?</h2>
-    <div class="options">
-      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Menos de 1 semana</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Esse mês</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Entre 1 e 6 meses</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Entre 6 meses e 1 ano</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Mais de 1 ano</span><span class="arrow">›</span></button>
-    </div>
-  </div>
-</div>
+<!-- TELA 1 (P1) agora embutida na landing (screen-0) para reduzir o atrito de começar -->
 
 <!-- ======== TELA 2: PERGUNTA 2 ======== -->
 <div class="screen" id="screen-2">
@@ -617,6 +616,19 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 
   function nextQ(next) { updateProgress(next); showScreen(next); if(window.cmmTrack) cmmTrack.view(next); }
 
+  // P1 embutida na landing: registra início (view 1 = start) + resposta da P1 (answer 1 = Lead) e avança pra P2
+  function iniciarQuiz(btn){
+    var t = ((btn.querySelector('.option-text')||{}).textContent||'').trim();
+    respostas['1'] = t;
+    if (window.cmmTrack){
+      cmmTrack.click(0, 'Começar o teste', Date.now() - _pageT0);
+      cmmTrack.view(1);                              // "start" do quiz
+      cmmTrack.answer(1, t, Date.now() - _pageT0);   // Lead + resposta da P1
+    }
+    updateProgress(2); showScreen(2);
+    if (window.cmmTrack) cmmTrack.view(2);
+  }
+
   // Etapa 04 — tela de diagnóstico: processa, revela e transfere o desejo pra pré-venda
   function showResult() {
     updateProgress(6);              // esconde a barra (não há step 6 em progressData)
@@ -690,6 +702,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     if(!b) return;
     var sc = b.closest('.screen'); if(!sc) return;
     var step = sc.id.replace('screen-','');
+    if (step === '0') return;   // landing (P1) é tratada pelo iniciarQuiz — evita answer duplicado
     var t = (b.querySelector('.option-text')||{}).textContent || '';
     respostas[step] = t.trim();
     if(window.cmmTrack) cmmTrack.answer(step, t.trim(), Date.now() - _qT0);
