@@ -295,6 +295,19 @@ const PRICE = 27.90;         // fallback de valor (BRL)
 const CURRENCY = 'BRL';
 const AB_MIN_BUYS = 10;      // mínimo de compras por variante p/ significância
 const PRODUTOS = { curso:'Curso principal', biblioteca:'Biblioteca das Respostas', reconstrucao:'Reconstrução da Confiança' };
+const PRICE_B = 34.90;       // variante B do curso
+const PRICE_BIBLIO = 14.90;  // Biblioteca das Respostas
+// Valor real da venda. Usa o valor do postback da Payt quando vem preenchido;
+// senão cai no preço conhecido por produto + variante A/B (evita computar tudo
+// como 27,90 quando o postback não traz o valor).
+function vValor(v){
+  if(v && v.valor>0) return v.valor;
+  const prod=String(v&&v.produto||'').toLowerCase();
+  const ab=String(v&&v.ab||'').toUpperCase();
+  if(prod==='biblioteca')   return PRICE_BIBLIO;
+  if(prod==='reconstrucao') return 0;               // preço definido na Payt; sem valor no postback
+  return ab==='B' ? PRICE_B : PRICE;                // curso (ou antiga s/ produto): A=27,90 | B=34,90
+}
 
 /* ====================== STATE ====================== */
 let _evAll = [], _vendasAll = [], _capiLogAll = [];
@@ -426,7 +439,7 @@ function metricsFor(evArr, vendasArr){
   const checkout = uSetIn(evArr, e=>e.ev==='checkout_click');
   const approved = vendasArr.filter(v=>APPROVED.test(v.status));
   const purchases= approved.length;
-  const revenue  = approved.reduce((a,v)=>a+(v.valor||PRICE),0);
+  const revenue  = approved.reduce((a,v)=>a+vValor(v),0);
   const ticket   = purchases>0 ? revenue/purchases : 0;
   return {visitors,leads,quizDone,salesV,checkout,purchases,revenue,ticket};
 }
@@ -1211,7 +1224,7 @@ function priceAbCard(){
   const vis = uCountBy(e=>e.price_ab, e=>!!e.price_ab);
   const chk = uCountBy(e=>e.price_ab, e=>e.ev==='checkout_click'&&e.price_ab);
   const buys={}, rev={};
-  _vendas.filter(v=>APPROVED.test(v.status)).forEach(v=>{ const k=v.ab; if(k==='A'||k==='B'){ buys[k]=(buys[k]||0)+1; rev[k]=(rev[k]||0)+(v.valor||0); } });
+  _vendas.filter(v=>APPROVED.test(v.status)).forEach(v=>{ const k=v.ab; if(k==='A'||k==='B'){ buys[k]=(buys[k]||0)+1; rev[k]=(rev[k]||0)+vValor(v); } });
   const variants=['A','B'];
   const totalVis = variants.reduce((a,k)=>a+(vis[k]||0),0);
   const totalBuys= variants.reduce((a,k)=>a+(buys[k]||0),0);
@@ -1360,7 +1373,7 @@ function tabVendas(){
   let list = all.filter(v=> vStatus==='all' ? true : vendaStatus(v)===vStatus);
   if(vProd!=='all') list=list.filter(v=> (v.produto||'') === (vProd==='antigo'?'':vProd));
   const appr=list.filter(x=>APPROVED.test(x.status));
-  const rev=appr.reduce((a,x)=>a+(x.valor||PRICE),0);
+  const rev=appr.reduce((a,x)=>a+vValor(x),0);
   const stChip=(k,lbl)=>`<button class="chip ${vStatus===k?'on':''}" onclick="vStatus='${k}';renderTab()">${lbl} (${fmt(stCount[k]||0)})</button>`;
   const prods=[['all','Todos'],['curso','Curso'],['biblioteca','Biblioteca'],['reconstrucao','Reconstrução'],['antigo','(antigas s/ produto)']];
   const prodChip=([k,lbl])=>`<button class="chip ${vProd===k?'on':''}" onclick="vProd='${k}';renderTab()">${lbl}</button>`;
@@ -1374,7 +1387,7 @@ function tabVendas(){
     <td>${stBadge(x)}</td>
     <td>${esc(PRODUTOS[x.produto]||x.produto||'— antiga')}</td>
     <td>${esc(x.metodo||'—')}</td>
-    <td>${fmtMoney(x.valor||PRICE)}</td>
+    <td>${fmtMoney(vValor(x))}</td>
     <td>${x.ab?('<b>'+esc(x.ab)+'</b>'):'—'}</td>
     <td>${esc(x.nome||'—')}</td>
     <td>${esc(x.email||'—')}</td>
@@ -1408,7 +1421,7 @@ function tabHorarios(){
   const dCount=new Array(7).fill(0),  dRev=new Array(7).fill(0);
   const heat={}; let maxCell=0;
   appr.forEach(v=>{
-    const dt=new Date(v.t), h=dt.getHours(), d=dt.getDay(), val=v.valor||PRICE;
+    const dt=new Date(v.t), h=dt.getHours(), d=dt.getDay(), val=vValor(v);
     hCount[h]++; hRev[h]+=val; dCount[d]++; dRev[d]+=val;
     const k=d+'_'+h; heat[k]=(heat[k]||0)+1; if(heat[k]>maxCell) maxCell=heat[k];
   });
