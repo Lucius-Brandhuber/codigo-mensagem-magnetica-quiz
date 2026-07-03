@@ -753,6 +753,7 @@ function tabFunil(){
   let rows='';
   J.forEach((d,i)=>{
     const prev=i>0?J[i-1].v:d.v; const keep=i>0?pct(d.v,prev):100; const drop=i>0?(prev-d.v):0;
+    const dropPct=i>0?pct(drop,prev):0;
     const click = d.noDrill?'':`onclick="openDrill(${i})" title="Clique para ver as sessões desta etapa"`;
     rows+=`<div ${click} class="funil-row" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);${d.noDrill?'':'cursor:pointer'}">
       <div style="width:240px">
@@ -762,7 +763,7 @@ function tabFunil(){
       <div style="flex:1;min-width:110px"><div class="bg-track" style="height:13px"><div class="bg-fill" style="width:${d.v/max*100}%"></div></div></div>
       <div style="width:60px;text-align:right;font-weight:800">${fmt(d.v)}</div>
       <div style="width:58px;text-align:right;font-size:12px;font-weight:700;color:${keep>=50?'var(--accent-d)':'var(--danger)'}">${i>0?keep+'%':'—'}</div>
-      <div style="width:78px;text-align:right;font-size:11.5px;color:var(--danger)">${i>0&&drop>0?'−'+fmt(drop):''}</div>
+      <div style="width:104px;text-align:right;font-size:11.5px;color:var(--danger)">${i===0?'':(drop>0?'<b>−'+dropPct+'%</b> <span style="color:var(--muted)">−'+fmt(drop)+'</span>':'<span style="color:var(--accent-d)">0%</span>')}</div>
     </div>`;
   });
   return `<div class="card"><h2>🌊 Análise de Conversão <span class="badge">passe o mouse · clique p/ ver as sessões</span></h2>${river}</div>
@@ -770,7 +771,7 @@ function tabFunil(){
     <div style="overflow-x:auto"><div style="min-width:700px">
     <div style="display:flex;gap:12px;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--line)">
       <div style="width:240px">Etapa</div><div style="flex:1">Alcance</div>
-      <div style="width:60px;text-align:right">Sessões</div><div style="width:58px;text-align:right">Retém</div><div style="width:78px;text-align:right">Queda</div>
+      <div style="width:60px;text-align:right">Sessões</div><div style="width:58px;text-align:right">Retém</div><div style="width:104px;text-align:right">Queda</div>
     </div>${rows}</div></div></div>`;
 }
 /* rio de conversão estilo analytics — afunila suave entre os passos */
@@ -805,7 +806,7 @@ function riverFunnel(J){
     if(!o.src&&e.utm_source)o.src=e.utm_source; if((!o.dev||o.dev==='—')&&e.device!=='—')o.dev=e.device; });
   _river=J.map((d,i)=>{
     const prev=i>0?J[i-1].v:d.v;
-    const info={name:d.k, v:d.v, keep:i>0?pct(d.v,prev):100, drop:i>0?prev-d.v:0, clicks:d.clicks?d.clicks():null, noDrill:!!d.noDrill, src:[], dev:[]};
+    const info={name:d.k, v:d.v, keep:i>0?pct(d.v,prev):100, drop:i>0?prev-d.v:0, dropPct:i>0?pct(prev-d.v,prev):0, clicks:d.clicks?d.clicks():null, noDrill:!!d.noDrill, src:[], dev:[]};
     if(!d.noDrill&&d.pred){
       const sids=new Set(); liveEv().forEach(e=>{ if(d.pred(e)&&e.s)sids.add(e.s); });
       const sc={}, dc={};
@@ -842,7 +843,7 @@ function riverTip(evt,i){
     <div class="rt-nums">
       <div><div class="l">${d.noDrill?'Compras':'Sessões'}</div><div class="n">${fmt(d.v)}</div></div>
       <div><div class="l">Retenção</div><div class="n" style="color:${d.keep>=50?'var(--accent-d)':'var(--danger)'}">${d.keep}%</div></div>
-      ${d.drop>0?`<div><div class="l">Queda</div><div class="n" style="color:var(--danger)">−${fmt(d.drop)}</div></div>`:''}
+      ${d.drop>0?`<div><div class="l">Queda</div><div class="n" style="color:var(--danger)">−${d.dropPct}% <span style="font-size:11px;color:var(--muted)">(−${fmt(d.drop)})</span></div></div>`:''}
       ${d.clicks!=null?`<div><div class="l">Cliques</div><div class="n">${fmt(d.clicks)}</div></div>`:''}
     </div>`;
   if(d.src.length||d.dev.length){
