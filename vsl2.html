@@ -229,8 +229,8 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     <vturb-smartplayer id="vid-6a41de6488e2c7a969bd7270" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"><div class="vturb-player-placeholder" style="position: relative; width: 100%; padding: 177.77777777777777% 0 0; z-index: 0; background-color: black;"></div></vturb-smartplayer>
   </div>
 
-  <!-- CARREGAMENTOS (sempre visível) -->
-  <div class="checklist">
+  <!-- CARREGAMENTOS (some quando o protocolo é revelado) -->
+  <div class="checklist" id="checklist">
     <div class="checklist-head">
       <span class="t">Criando seu Protocolo... ✏️</span>
       <span class="c" id="clCount">0/8</span>
@@ -401,8 +401,15 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   var revealed = false;
   function revealRest(){
     if (revealed) return; revealed = true;
+    var cl = document.getElementById('checklist');
+    if (cl) cl.style.display = 'none';
     document.getElementById('rest').style.display = 'block';
     startCountdown();
+    // Leva a pessoa direto ao botão, sem precisar rolar
+    setTimeout(function(){
+      var badge = document.querySelector('.reveal-badge');
+      if (badge) badge.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   }
   // dispara pelo tempo de página (a VSL inicia automaticamente)
   setTimeout(revealRest, REVEAL_AT_SECONDS * 1000);
