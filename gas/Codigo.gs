@@ -261,8 +261,23 @@ function sendPurchaseCAPI(venda){
   var user = {};
   if (venda.email)    user.em = sha256(String(venda.email).trim().toLowerCase());
   if (venda.telefone) user.ph = sha256(String(venda.telefone).replace(/\D/g,''));
-  var custom = { currency:'BRL', value: toNumber(venda.valor) || 0 };
-  postCAPI('Purchase', user, custom, 'purchase_' + (venda.order_id || Date.now()), SITE_URL);
+  var custom = { currency:'BRL', value: purchaseValue(venda) };
+  // event_id = order_id CRU (sem prefixo) para desduplicar com o Purchase do
+  // navegador que a Payt dispara. Os dois PRECISAM usar a mesma chave.
+  var eid = venda.order_id ? String(venda.order_id) : ('purchase_' + Date.now());
+  postCAPI('Purchase', user, custom, eid, SITE_URL);
+}
+// Preço real da venda para o CAPI. O curso é o preço da variante A/B (fonte da
+// verdade, já que definimos 27,90/34,90 no site); demais produtos usam o valor
+// do postback da Payt e, se vier vazio, o preço conhecido.
+function purchaseValue(venda){
+  var prod = String(venda.produto||'curso').toLowerCase();
+  var ab   = String(venda.ab||'').toUpperCase();
+  if (prod === 'curso' || prod === '') return ab === 'B' ? 34.90 : 27.90;
+  var v = toNumber(venda.valor);
+  if (v > 0) return v;
+  if (prod === 'biblioteca') return 14.90;
+  return 0;
 }
 function postCAPI(eventName, userData, customData, eventId, sourceUrl){
   if (!CAPI_TOKEN || /COLE_AQUI/.test(CAPI_TOKEN)) {
