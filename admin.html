@@ -464,6 +464,21 @@ function init(){
   bindPeriod(); bindTabs();
   applyFilter(); renderAll();
   sync(false);
+  startAutoSync();
+}
+
+/* Auto-atualização em segundo plano — mantém o painel vivo sem clicar em "Atualizar".
+   Usa sync(false) (cache-friendly no GAS), pausa quando a aba está oculta e
+   dispara na hora ao voltar pra aba. */
+let _autoTimer=null, _visBound=false;
+const AUTO_MS=15000;
+function startAutoSync(){
+  if(_autoTimer) clearInterval(_autoTimer);
+  _autoTimer = setInterval(()=>{ if(!document.hidden) sync(false); }, AUTO_MS);
+  if(!_visBound){
+    _visBound=true;
+    document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) sync(false); });
+  }
 }
 
 function localBackup(){
