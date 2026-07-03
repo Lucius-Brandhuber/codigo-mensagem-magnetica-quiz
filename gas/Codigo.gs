@@ -25,7 +25,7 @@ var SITE_URL   = 'https://codigo-mensagem-magnetica-quiz.vercel.app';
 var DB_NAME = 'Código da Mensagem Magnética — Analytics DB';
 
 var EVENTOS_HEADERS = ['data','evento','session','step','nome','genero','resposta','ms','referrer','ua','event_id','fbp','fbc','url','logo_ab','price_ab'];
-var VENDAS_HEADERS  = ['data','status','metodo','valor','nome','email','telefone','order_id','raw','ab'];
+var VENDAS_HEADERS  = ['data','status','metodo','valor','nome','email','telefone','order_id','raw','ab','produto'];
 var CAPILOG_HEADERS = ['data','evento','event_id','s','status_code','response'];
 
 /* ====================== PLANILHA (auto-cria) ====================== */
@@ -205,7 +205,8 @@ function saveVenda(b){
     telefone: b.phone || b.telefone || cust.phone || cust.phone_number || '',
     order_id: b.order_id || b.orderId || b.id || b.transaction_id || (b.transaction && b.transaction.id) || '',
     raw:      JSON.stringify(b).slice(0, 4000),
-    ab:       b.ab || b.__ab || ''
+    ab:       b.ab || b.__ab || '',
+    produto:  b.__produto || b.produto || 'curso'
   };
   d.vendas.appendRow(VENDAS_HEADERS.map(function(k){ return row[k]; }));
   invalidateCache();

@@ -45,33 +45,40 @@
   .capi-pill.bad .capi-dot{background:var(--danger)}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
   .sync-txt{font-size:12px;color:var(--muted);white-space:nowrap}
-  .period-pill{font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:99px;background:#f3eef7;color:var(--primary-d);border:1px solid #ecdcf0;white-space:nowrap}
   .btn-refresh{font-size:13px;font-weight:600;padding:7px 13px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink)}
   .btn-refresh:hover{border-color:var(--primary);color:var(--primary)}
+  .btn-exit{font-size:13px;font-weight:600;padding:7px 11px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--muted)}
+  .btn-exit:hover{border-color:var(--danger);color:var(--danger)}
 
   .wrap{max-width:1240px;margin:0 auto;padding:18px}
 
-  /* ===== DAY FILTER ===== */
-  .dayfilter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:16px}
-  .dayfilter label{font-size:13px;font-weight:600;color:var(--muted)}
-  .dayfilter input[type=date]{padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px;outline:none}
-  .dayfilter input[type=date]:focus{border-color:var(--primary)}
-  .df-btn{font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink)}
-  .df-btn.on{background:var(--primary);color:#fff;border-color:var(--primary)}
-  .df-info{margin-left:auto;font-size:12.5px;color:var(--muted)}
+  /* ===== PERIOD FILTER (global) ===== */
+  .periodbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:16px}
+  .periodbar label{font-size:13px;font-weight:600;color:var(--muted)}
+  .pf-btn{font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+  .pf-btn.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .periodbar input[type=date]{padding:7px 9px;border:1px solid var(--line);border-radius:9px;font-size:12.5px;outline:none}
+  .periodbar input[type=date]:focus{border-color:var(--primary)}
+  .pf-info{margin-left:auto;font-size:12.5px;color:var(--muted)}
+  #customRange{display:none;align-items:center;gap:6px}
+  #customRange.show{display:flex}
 
   /* ===== KPIs ===== */
   .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
   .kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;transition:transform .15s,box-shadow .15s}
   .kpi:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.07)}
   .kpi .ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:12px}
-  .kpi .num{font-size:26px;font-weight:900;line-height:1}
+  .kpi .num{font-size:24px;font-weight:900;line-height:1}
   .kpi .lbl{font-size:10.5px;font-weight:700;letter-spacing:.6px;color:var(--muted);text-transform:uppercase;margin-top:6px}
   .kpi .sub{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .delta{font-size:11px;font-weight:800;padding:2px 7px;border-radius:99px;margin-left:6px;vertical-align:middle}
+  .delta.up{background:#eafaef;color:var(--accent-d)}
+  .delta.dn{background:#fdecec;color:var(--danger)}
+  .delta.eq{background:#f1f3f6;color:var(--muted)}
 
   /* ===== CARD ===== */
   .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
-  .card h2{font-size:15px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .card h2{font-size:15px;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .card h2 .badge{font-size:11px;font-weight:700;color:var(--primary);background:#fdeef5;border-radius:99px;padding:3px 10px}
 
   /* ===== FUNNEL MINI ===== */
@@ -89,7 +96,6 @@
   .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
   .tab{font-size:13px;font-weight:600;padding:9px 15px;border-radius:99px;border:1px solid var(--line);background:#fff;color:var(--muted)}
   .tab.on{background:#fff;color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.08);border-color:#fff}
-  .tab.on .em{filter:none}
 
   /* ===== TABLE ===== */
   .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
@@ -100,6 +106,9 @@
   th.fix{background:#f8fafc}
   tbody tr:hover td{background:#fafbfd}
   tbody tr:hover td.fix{background:#fafbfd}
+  tbody tr.expandable{cursor:pointer}
+  tr.payload-row td{background:#0f172a!important;padding:0}
+  tr.payload-row pre{color:#a5f3b4;font-size:11px;line-height:1.5;padding:12px 16px;max-height:260px;overflow:auto;white-space:pre-wrap;word-break:break-all;font-family:ui-monospace,Menlo,monospace}
   .avatar{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;background:var(--primary);margin-right:8px;vertical-align:middle}
   .badge-ev{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px}
   .badge-ev.view{background:#eef2ff;color:#4f6bed}
@@ -107,8 +116,14 @@
   .badge-ev.checkout{background:#fdeef5;color:var(--primary)}
   .badge-ev.click{background:#fff4e6;color:#d97706}
   .badge-ev.other{background:#f1f3f6;color:var(--muted)}
+  .badge-st{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px}
+  .badge-st.ap{background:#eafaef;color:var(--accent-d)}
+  .badge-st.pe{background:#fff4e6;color:#d97706}
+  .badge-st.re{background:#fdecec;color:var(--danger)}
+  .badge-st.rf{background:#f3e8ff;color:#7c3aed}
+  .badge-st.ou{background:#f1f3f6;color:var(--muted)}
 
-  /* bar groups (resumo/tráfego) */
+  /* bar groups */
   .barGroup{display:flex;flex-direction:column;gap:9px}
   .bg-row{display:grid;grid-template-columns:130px 1fr 46px;gap:10px;align-items:center;font-size:12.5px}
   .bg-name{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -124,21 +139,53 @@
 
   .pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:12px;font-size:12.5px;color:var(--muted)}
   .pager button{padding:6px 11px;border:1px solid var(--line);border-radius:8px;background:#fff}
-  .row-actions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .row-actions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
   .btn-soft{font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink)}
   .btn-soft:hover{border-color:var(--primary);color:var(--primary)}
   .btn-danger{font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:9px;border:1px solid #f6c5c5;background:#fff;color:var(--danger)}
   .btn-danger:hover{background:var(--danger);color:#fff}
+  .flt{font-size:12.5px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;outline:none;background:#fff}
+  .flt:focus{border-color:var(--primary)}
+  .chip{font-size:12px;font-weight:600;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:#fff;color:var(--muted)}
+  .chip.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .journey-banner{display:flex;align-items:center;gap:10px;background:#fdeef5;border:1px solid #f2b7d5;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:12px}
+  .journey-banner b{color:var(--primary-d)}
 
   .empty{padding:30px;text-align:center;color:var(--muted);font-size:13px}
+  .note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
 
-  /* toast */
-  #toast{position:fixed;bottom:18px;right:18px;background:#1a1a2e;color:#fff;padding:11px 16px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(10px);transition:.25s;z-index:200;pointer-events:none}
+  /* ===== RIVER FUNNEL (análise de conversão) ===== */
+  .river-wrap{overflow-x:auto;background:#f8fafc;border:1px solid var(--line);border-radius:14px;position:relative}
+  .river-inner{position:relative;width:max-content}
+  .river-inner svg{display:block}
+  .rv-col{fill:transparent;cursor:pointer}
+  .rv-col:hover{fill:rgba(91,155,246,.07)}
+  .river-tip{position:absolute;top:12px;z-index:6;background:#fff;border-radius:14px;box-shadow:0 14px 34px rgba(15,23,42,.16);
+    padding:14px 16px;min-width:240px;max-width:300px;pointer-events:none;display:none;font-size:12.5px}
+  .river-tip .rt-nums{display:flex;gap:22px;margin-bottom:4px}
+  .river-tip .rt-nums .l{font-size:11.5px;color:var(--muted)}
+  .river-tip .rt-nums .n{font-size:17px;font-weight:800}
+  .river-tip .rt-sec{display:flex;gap:22px;border-top:1px solid var(--line);margin-top:9px;padding-top:9px}
+  .river-tip .rt-h{font-size:10px;font-weight:700;letter-spacing:.8px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+  .river-tip .rt-row{display:flex;justify-content:space-between;gap:12px;font-size:12px;margin-bottom:4px}
+  .river-tip .rt-row b{font-weight:700}
+
+  /* drill-down modal */
+  #modal{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:300;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+  #modal.show{display:flex}
+  .modal-card{background:#fff;border-radius:16px;max-width:760px;width:100%;padding:20px}
+  .modal-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .modal-head h3{font-size:15px;flex:1}
+  .modal-close{border:none;background:#f1f3f6;border-radius:8px;width:30px;height:30px;font-size:15px}
+  .sig{font-size:12px;font-weight:700;padding:6px 12px;border-radius:9px;display:inline-block;margin-top:10px}
+  .sig.ok{background:#eafaef;color:var(--accent-d)}
+  .sig.small{background:#fff4e6;color:#d97706}
+  .sig.ns{background:#f1f3f6;color:var(--muted)}
+
+  #toast{position:fixed;bottom:18px;right:18px;background:#1a1a2e;color:#fff;padding:11px 16px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(10px);transition:.25s;z-index:400;pointer-events:none}
   #toast.show{opacity:1;transform:translateY(0)}
-
   .hidden{display:none!important}
 
-  /* ===== RESPONSIVE ===== */
   @media(max-width:880px){
     .kpis{grid-template-columns:repeat(2,1fr)}
     .grid2{grid-template-columns:1fr}
@@ -151,7 +198,6 @@
     .kpis{grid-template-columns:1fr 1fr}
     .wrap{padding:12px}
     .bg-row{grid-template-columns:96px 1fr 40px}
-    .period-pill{display:none}
   }
 </style>
 </head>
@@ -176,18 +222,25 @@
     <div class="spacer"></div>
     <div class="capi-pill" id="capiPill"><span class="capi-dot"></span><span class="t" id="capiTxt">CAPI…</span></div>
     <div class="sync-txt" id="syncTxt">sincronizando…</div>
-    <div class="period-pill" id="periodPill">📅 Todos os dias</div>
     <button class="btn-refresh" onclick="sync(true)">↻ Atualizar</button>
+    <button class="btn-exit" onclick="logout()" title="Sair">⎋</button>
   </div>
 
   <div class="wrap">
-    <!-- DAY FILTER -->
-    <div class="dayfilter">
-      <label>📅 Filtrar por dia:</label>
-      <input type="date" id="dayInput" onchange="onDayPick(this.value)">
-      <button class="df-btn" onclick="setToday()">Hoje</button>
-      <button class="df-btn on" id="btnAll" onclick="setAllDays()">Todos os dias</button>
-      <span class="df-info" id="dfInfo"></span>
+    <!-- PERIOD FILTER (global — vale para todas as abas) -->
+    <div class="periodbar">
+      <label>📅 Período:</label>
+      <button class="pf-btn" data-p="today">Hoje</button>
+      <button class="pf-btn" data-p="yesterday">Ontem</button>
+      <button class="pf-btn" data-p="7d">7 dias</button>
+      <button class="pf-btn" data-p="30d">30 dias</button>
+      <button class="pf-btn on" data-p="all">Tudo</button>
+      <button class="pf-btn" data-p="custom">Personalizado</button>
+      <span id="customRange">
+        <input type="date" id="pfFrom"> <span style="font-size:12px;color:var(--muted)">até</span> <input type="date" id="pfTo">
+        <button class="pf-btn" onclick="applyCustom()">OK</button>
+      </span>
+      <span class="pf-info" id="pfInfo"></span>
     </div>
 
     <!-- KPIs -->
@@ -214,47 +267,61 @@
   </div>
 </div>
 
+<!-- drill-down -->
+<div id="modal"><div class="modal-card">
+  <div class="modal-head"><h3 id="modalTitle"></h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+  <div id="modalBody"></div>
+</div></div>
+
 <div id="toast"></div>
 
 <script>
 /* ====================== CONFIG ====================== */
-const PWD   = 'L3c1U64&5';                 // senha do admin (troque aqui)
+// Senha: hash SHA-256 de 'cmm-admin|<senha>'. Para trocar, rode no console:
+//   sha256hex('cmm-admin|SUA_NOVA_SENHA').then(console.log)  e cole o hash aqui.
+const PWD_HASH = '419ef8aebd6c963e6143a7e645caf4378ce057ce30dc512403d16bb40a69d80b';
+const SESSION_HOURS = 12;                   // sessão expira em 12h
 const PFX   = 'cmm';
 const KEY   = PFX+'_ev';                    // backup local de eventos
 const CKEY  = PFX+'_admin_cache';           // cache do painel
-const SIDK  = PFX+'_sid';
-const DAYK  = PFX+'_dayfilter';
-const SESSK = PFX+'_admin_auth';
-// Cole aqui a URL /exec do seu Google Apps Script (termina em /exec):
+const PERIODK = PFX+'_period';
+const SESSK = PFX+'_admin_sess';
 const GAS   = 'https://script.google.com/macros/s/AKfycbwtTZCubt04EaR0WJxD8RvVnlUtYnwLkiN2k2cPhyqsu4FzyJusEa86CsVJdyG3geEQ6Q/exec';
 
 const QUIZ_TOTAL = 6;        // telas do quiz (step 0..5)
-const QUIZ_FINAL_STEP = 5;   // tela de resultado/última pergunta
-const QUIZ_MID_STEP   = 3;   // ~50% do quiz
-const PRICE = 27.90;         // preço do produto (BRL)
+const PRICE = 27.90;         // fallback de valor (BRL)
 const CURRENCY = 'BRL';
-
-const SHOW_AB = false;       // card de teste A/B
-const SHOW_PV_BUTTONS = true;// card "Botões da Página de Vendas"
+const AB_MIN_BUYS = 10;      // mínimo de compras por variante p/ significância
+const PRODUTOS = { curso:'Curso principal', biblioteca:'Biblioteca das Respostas', reconstrucao:'Reconstrução da Confiança' };
 
 /* ====================== STATE ====================== */
 let _evAll = [], _vendasAll = [], _capiLogAll = [];
-let _ev = [], _vendas = [], _capiLog = [];
-let dayFilter = null;        // null = todos os dias; senão 'YYYY-MM-DD'
+let _ev = [], _vendas = [], _capiLog = [];         // período atual
+let _evPrev = [], _vendasPrev = [];                 // período anterior equivalente
+let period = { mode:'all', from:null, to:null };    // filtro global
 let activeTab = 'funil';
 let evPage = 1; const EV_PER = 25;
+let evQuery = '', evType = '', evCamp = '', evSession = '';
+let vStatus = 'all', vProd = 'all';
 
 /* ====================== HELPERS ====================== */
 const $  = s => document.querySelector(s);
 const fmt = n => (n||0).toLocaleString('pt-BR');
 const fmtMoney = n => (n||0).toLocaleString('pt-BR',{style:'currency',currency:CURRENCY});
 const pct = (a,b) => b>0 ? Math.round(a/b*100) : 0;
+const pct1 = (a,b) => b>0 ? (a/b*100).toFixed(1).replace('.',',') : '0';
 const isTest = s => /^teste/i.test(String(s||''));
 const APPROVED = /finaliz|aprovad|paid|pago|approved|confirmed/i;
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function sha256hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
 
 function toMs(v){
   if(v==null||v==='') return 0;
-  if(typeof v==='number') return v<2e10 ? v*1000 : v; // segundos→ms
+  if(typeof v==='number') return v<2e10 ? v*1000 : v;
   const n = Number(v); if(!isNaN(n)) return n<2e10 ? n*1000 : n;
   const d = new Date(v); return isNaN(d)?0:d.getTime();
 }
@@ -263,8 +330,9 @@ function dayKey(ms){
   const d = new Date(ms);
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+function startOfDay(ms){ const d=new Date(ms); d.setHours(0,0,0,0); return d.getTime(); }
 
-/* ---- normalização de evento ---- */
+/* ---- normalização ---- */
 function parseQS(url){
   const o={}; if(!url) return o;
   try{ const q=String(url).split('?')[1]||''; q.split('&').forEach(p=>{const[k,v]=p.split('=');if(k)o[decodeURIComponent(k)]=decodeURIComponent((v||'').replace(/\+/g,' '));}); }catch(e){}
@@ -290,7 +358,6 @@ function osFrom(ua){
   if(/linux/i.test(ua))return'Linux'; return ua?'Outro':'—';
 }
 function norm(r){
-  // aceita chaves PT (planilha) ou já normalizadas
   const g=(...k)=>{for(const x of k){if(r[x]!=null&&r[x]!=='')return r[x];}return '';};
   const url=g('url','URL'); const ua=g('ua','UA','user_agent');
   const qs=parseQS(url);
@@ -307,7 +374,7 @@ function norm(r){
     ua, url,
     event_id:g('event_id','eventId'),
     fbp:g('fbp'), fbc:g('fbc'),
-    logo_ab:g('logo_ab','ab'),
+    logo_ab:g('logo_ab'),
     price_ab:String(g('price_ab')||''),
     utm_source:qs.utm_source||'', utm_medium:qs.utm_medium||'', utm_campaign:qs.utm_campaign||'',
     utm_content:qs.utm_content||'', utm_adset:qs.utm_adset||'',
@@ -321,7 +388,8 @@ function normVenda(r){
     valor:(function(v){if(typeof v==='number')return v;v=String(v).replace(/[^\d.,-]/g,'');if(v.indexOf(',')>-1)v=v.replace(/\./g,'').replace(',','.');return Number(v)||0;})(g('valor','value','amount')),
     nome:g('nome','name'), email:g('email'), telefone:g('telefone','phone'),
     order_id:g('order_id','orderId','id'), raw:g('raw'),
-    ab:String(g('ab')||'')
+    ab:String(g('ab')||''),
+    produto:String(g('produto')||'')   // vazio = venda antiga (antes da coluna)
   };
 }
 function normCapi(r){
@@ -329,34 +397,57 @@ function normCapi(r){
   return { t:toMs(g('data','t')), ev:g('evento','ev'), event_id:g('event_id'), s:g('s','session'),
     status_code:Number(g('status_code','status'))||0, response:String(g('response','resp')||'') };
 }
+/* status da venda → classe */
+function vendaStatus(v){
+  const s = String(v.status||'');
+  if(/reembols|refund|estorn|chargeback/i.test(s)) return 'reembolsada';
+  if(APPROVED.test(s)) return 'aprovada';
+  if(/recus|refus|negad|declin|cancel/i.test(s)) return 'recusada';
+  if(/pendent|aguard|waiting|gerad|criad|process|expir/i.test(s)) return 'pendente';
+  return 'outro';
+}
 
-/* ---- contagem ---- */
-function liveEv(){ return _ev.filter(e=>!isTest(e.s)); }
-function uSet(pred){ const s=new Set(); liveEv().forEach(e=>{if(pred(e)&&e.s)s.add(e.s);}); return s.size; }
-function uViews(step){ return uSet(e=>e.ev==='view'&&String(e.step)===String(step)); }
-function uClicks(step){ return uSet(e=>e.ev==='click'&&String(e.step)===String(step)); }
-function uAnswers(step){ return uSet(e=>e.ev==='answer'&&String(e.step)===String(step)); }
+/* ---- contagem (parametrizada p/ período atual e anterior) ---- */
+function liveIn(arr){ return arr.filter(e=>!isTest(e.s)); }
+function liveEv(){ return liveIn(_ev); }
+function uSetIn(arr,pred){ const s=new Set(); liveIn(arr).forEach(e=>{if(pred(e)&&e.s)s.add(e.s);}); return s.size; }
+function uSet(pred){ return uSetIn(_ev,pred); }
+const uViews  = step => uSet(e=>e.ev==='view'&&String(e.step)===String(step));
+const uClicks = step => uSet(e=>e.ev==='click'&&String(e.step)===String(step));
+const uAnswers= step => uSet(e=>e.ev==='answer'&&String(e.step)===String(step));
 
-function metrics(){
-  const visitors = uViews(0);
-  const leads    = uSet(e=>e.ev==='answer'&&String(e.step)==='1');
-  const salesV   = uViews('vsl2');   // PV real = última VSL (vsl2.html)
-  const preVenda = uViews('vendas'); // página de pré-venda (história)
-  const checkout = uSet(e=>e.ev==='checkout_click');
-  const approved = _vendas.filter(v=>APPROVED.test(v.status));
+function metricsFor(evArr, vendasArr){
+  const visitors = uSetIn(evArr, e=>e.ev==='view'&&String(e.step)==='0');
+  const leads    = uSetIn(evArr, e=>e.ev==='answer'&&String(e.step)==='1');
+  const quizDone = uSetIn(evArr, e=>e.ev==='answer'&&String(e.step)==='5');
+  const salesV   = uSetIn(evArr, e=>e.ev==='view'&&String(e.step)==='vsl2');
+  const checkout = uSetIn(evArr, e=>e.ev==='checkout_click');
+  const approved = vendasArr.filter(v=>APPROVED.test(v.status));
   const purchases= approved.length;
   const revenue  = approved.reduce((a,v)=>a+(v.valor||PRICE),0);
   const ticket   = purchases>0 ? revenue/purchases : 0;
-  return {visitors,leads,salesV,preVenda,checkout,purchases,revenue,ticket};
+  return {visitors,leads,quizDone,salesV,checkout,purchases,revenue,ticket};
 }
+function metrics(){ return metricsFor(_ev,_vendas); }
+function metricsPrev(){ return metricsFor(_evPrev,_vendasPrev); }
 
-/* ====================== AUTH ====================== */
-if(sessionStorage.getItem(SESSK)==='1'){ openDash(); }
+/* ====================== AUTH (hash + expiração 12h) ====================== */
+(function checkSession(){
+  try{
+    const s = JSON.parse(localStorage.getItem(SESSK)||'null');
+    if(s && s.h===PWD_HASH && s.exp>Date.now()){ openDash(); return; }
+  }catch(e){}
+  localStorage.removeItem(SESSK);
+})();
 $('#pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
-function login(){
-  if($('#pwd').value===PWD){ sessionStorage.setItem(SESSK,'1'); openDash(); }
-  else { $('#gateErr').textContent='Senha incorreta. Tente novamente.'; }
+async function login(){
+  const h = await sha256hex('cmm-admin|'+$('#pwd').value);
+  if(h===PWD_HASH){
+    localStorage.setItem(SESSK, JSON.stringify({h:PWD_HASH, exp:Date.now()+SESSION_HOURS*3600*1000}));
+    openDash();
+  } else { $('#gateErr').textContent='Senha incorreta. Tente novamente.'; }
 }
+function logout(){ localStorage.removeItem(SESSK); location.reload(); }
 function openDash(){
   $('#gate').classList.add('hidden'); $('#dash').style.display='block';
   init();
@@ -364,15 +455,13 @@ function openDash(){
 
 /* ====================== INIT / SYNC ====================== */
 function init(){
-  // filtro de dia salvo
-  const sd = localStorage.getItem(DAYK); if(sd){ dayFilter=sd; }
-  // cache local imediato
+  try{ const p=JSON.parse(localStorage.getItem(PERIODK)||'null'); if(p&&p.mode) period=p; }catch(e){}
   try{
     const c = JSON.parse(localStorage.getItem(CKEY)||'{}');
     _evAll = c.ev||[]; _vendasAll = c.vendas||[]; _capiLogAll = c.capi||[];
   }catch(e){}
+  bindPeriod(); bindTabs();
   applyFilter(); renderAll();
-  bindTabs();
   sync(false);
 }
 
@@ -389,7 +478,7 @@ function extract(j){ if(Array.isArray(j))return j; if(!j)return[]; return j.data
 
 let _syncing=false;
 async function sync(manual){
-  if(_syncing) return;              // evita chamadas sobrepostas
+  if(_syncing) return;
   _syncing=true;
   const t0=Date.now();
   if(manual) toast('Atualizando…');
@@ -397,15 +486,12 @@ async function sync(manual){
   const ok = GAS && !/COLE_AQUI/.test(GAS);
   if(ok){
     try{
-      // 1 requisição traz as 3 abas (rápido). fresh=1 só no refresh manual.
       const url = GAS+'?all=1'+(manual?'&fresh=1':'');
       const j = await fetch(url).then(r=>r.json());
       let evRaw, veRaw, caRaw;
       if(j && !Array.isArray(j) && (j.eventos||j.vendas||j.capi_log)){
-        // modo combinado (GAS novo)
         evRaw=j.eventos||[]; veRaw=j.vendas||[]; caRaw=j.capi_log||[];
       }else{
-        // fallback: GAS antigo sem ?all — busca aba por aba
         const [a,b,c] = await Promise.all([
           Array.isArray(j)?Promise.resolve(j):fetch(GAS).then(r=>r.json()).catch(()=>[]),
           fetch(GAS+'?sheet=vendas').then(r=>r.json()).catch(()=>[]),
@@ -431,26 +517,66 @@ async function sync(manual){
   if(manual) toast('✓ '+fmt(_evAll.filter(e=>!isTest(e.s)).length)+' eventos · '+fmt(_vendasAll.length)+' vendas · '+fmt(_capiLogAll.length)+' CAPI');
 }
 
-/* ====================== DAY FILTER ====================== */
-function applyFilter(){
-  if(dayFilter){
-    _ev = _evAll.filter(e=>dayKey(e.t)===dayFilter);
-    _vendas = _vendasAll.filter(v=>dayKey(v.t)===dayFilter);
-    _capiLog = _capiLogAll.filter(c=>dayKey(c.t)===dayFilter);
-  }else{ _ev=_evAll.slice(); _vendas=_vendasAll.slice(); _capiLog=_capiLogAll.slice(); }
+/* ====================== PERIOD FILTER (global) ====================== */
+function rangeMs(){
+  const now = Date.now();
+  const m = period.mode;
+  if(m==='today')     return [startOfDay(now), now+1];
+  if(m==='yesterday') { const t=startOfDay(now); return [t-864e5, t]; }
+  if(m==='7d')        return [startOfDay(now-6*864e5), now+1];
+  if(m==='30d')       return [startOfDay(now-29*864e5), now+1];
+  if(m==='custom' && period.from) {
+    const a=startOfDay(new Date(period.from+'T12:00:00').getTime());
+    const b=period.to ? startOfDay(new Date(period.to+'T12:00:00').getTime())+864e5 : a+864e5;
+    return [a,b];
+  }
+  return null; // tudo
 }
-function onDayPick(v){ dayFilter=v||null; localStorage.setItem(DAYK,dayFilter||''); $('#btnAll').classList.remove('on'); applyFilter(); renderAll(); }
-function setToday(){ const d=dayKey(Date.now()); $('#dayInput').value=d; onDayPick(d); }
-function setAllDays(){ dayFilter=null; localStorage.removeItem(DAYK); $('#dayInput').value=''; $('#btnAll').classList.add('on'); applyFilter(); renderAll(); }
+function applyFilter(){
+  const r = rangeMs();
+  if(r){
+    const [a,b]=r, len=b-a, pa=a-len, pb=a;
+    _ev      = _evAll.filter(e=>e.t>=a&&e.t<b);
+    _vendas  = _vendasAll.filter(v=>v.t>=a&&v.t<b);
+    _capiLog = _capiLogAll.filter(c=>c.t>=a&&c.t<b);
+    _evPrev     = _evAll.filter(e=>e.t>=pa&&e.t<pb);
+    _vendasPrev = _vendasAll.filter(v=>v.t>=pa&&v.t<pb);
+  }else{
+    _ev=_evAll.slice(); _vendas=_vendasAll.slice(); _capiLog=_capiLogAll.slice();
+    _evPrev=[]; _vendasPrev=[];
+  }
+}
+function bindPeriod(){
+  document.querySelectorAll('.pf-btn[data-p]').forEach(b=>b.onclick=()=>{
+    const m=b.dataset.p;
+    if(m==='custom'){ $('#customRange').classList.add('show'); return; }
+    $('#customRange').classList.remove('show');
+    period={mode:m,from:null,to:null};
+    localStorage.setItem(PERIODK,JSON.stringify(period));
+    markPeriodBtn(); applyFilter(); renderAll();
+  });
+  if(period.mode==='custom'){ $('#customRange').classList.add('show'); $('#pfFrom').value=period.from||''; $('#pfTo').value=period.to||''; }
+  markPeriodBtn();
+}
+function applyCustom(){
+  const f=$('#pfFrom').value, t=$('#pfTo').value;
+  if(!f){ toast('Escolha a data inicial'); return; }
+  period={mode:'custom',from:f,to:t||f};
+  localStorage.setItem(PERIODK,JSON.stringify(period));
+  markPeriodBtn(); applyFilter(); renderAll();
+}
+function markPeriodBtn(){
+  document.querySelectorAll('.pf-btn[data-p]').forEach(b=>b.classList.toggle('on', b.dataset.p===period.mode));
+}
+const PERIOD_LABEL = {today:'Hoje',yesterday:'Ontem','7d':'Últimos 7 dias','30d':'Últimos 30 dias',all:'Todos os dias',custom:'Personalizado'};
 
 /* ====================== RENDER ====================== */
 function renderAll(){ renderTopbar(); renderKPIs(); renderFunnelCard(); renderTab(); }
 
 function renderTopbar(){
-  // período
-  $('#periodPill').textContent = '📅 '+(dayFilter? dayFilter.split('-').reverse().join('/') : 'Todos os dias');
-  $('#dfInfo').textContent = fmt(liveEv().length)+' eventos no período · '+fmt(_vendas.length)+' vendas';
-  // CAPI pill
+  let lbl = PERIOD_LABEL[period.mode]||'—';
+  if(period.mode==='custom'&&period.from) lbl = period.from.split('-').reverse().join('/')+' → '+(period.to||period.from).split('-').reverse().join('/');
+  $('#pfInfo').textContent = lbl+' · '+fmt(liveEv().length)+' eventos · '+fmt(_vendas.length)+' vendas';
   const tot=_capiLogAll.length, okN=_capiLogAll.filter(c=>c.status_code===200).length;
   const pill=$('#capiPill'), txt=$('#capiTxt');
   if(!tot){ pill.className='capi-pill'; txt.textContent='CAPI sem dados'; }
@@ -458,19 +584,27 @@ function renderTopbar(){
   else { pill.className='capi-pill bad'; txt.textContent='CAPI c/ erros'; }
 }
 
-function kpi(ic,bg,num,lbl,sub){
+function deltaBadge(cur, prev){
+  if(period.mode==='all' || (!prev && !cur)) return '';
+  if(!prev) return '<span class="delta up">novo</span>';
+  const d = Math.round((cur-prev)/prev*100);
+  if(d>0)  return '<span class="delta up">▲ '+d+'%</span>';
+  if(d<0)  return '<span class="delta dn">▼ '+Math.abs(d)+'%</span>';
+  return '<span class="delta eq">=</span>';
+}
+function kpi(ic,bg,num,lbl,sub,delta){
   return `<div class="kpi"><div class="ic" style="background:${bg}33;color:${bg}">${ic}</div>
-    <div class="num">${num}</div><div class="lbl">${lbl}</div><div class="sub">${sub||''}</div></div>`;
+    <div class="num">${num}${delta||''}</div><div class="lbl">${lbl}</div><div class="sub">${sub||''}</div></div>`;
 }
 function renderKPIs(){
-  const m=metrics();
+  const m=metrics(), p=metricsPrev();
   $('#kpis').innerHTML =
-    kpi('👁️','#4A7AF5',fmt(m.visitors),'Visitantes','step 0')+
-    kpi('🎯','#cf3a7d',fmt(m.leads),'Leads',pct(m.leads,m.visitors)+'% dos visit.')+
-    kpi('🛒','#a855f7',fmt(m.salesV),'PV / Oferta',pct(m.salesV,m.visitors)+'% dos visit. · VSL2')+
-    kpi('💳','#f5a623',fmt(m.checkout),'Checkout',pct(m.checkout,m.salesV)+'% da PV')+
-    kpi('✅','#2cbf52',fmt(m.purchases),'Compras',pct(m.purchases,m.checkout)+'% do checkout')+
-    kpi('💰','#16a34a',fmtMoney(m.revenue),'Receita','Ticket '+fmtMoney(m.ticket));
+    kpi('👁️','#4A7AF5',fmt(m.visitors),'Visitantes','step 0',deltaBadge(m.visitors,p.visitors))+
+    kpi('🎯','#cf3a7d',fmt(m.leads),'Leads',pct(m.leads,m.visitors)+'% dos visit.',deltaBadge(m.leads,p.leads))+
+    kpi('🛒','#a855f7',fmt(m.salesV),'PV / Oferta',pct(m.salesV,m.visitors)+'% dos visit. · VSL2',deltaBadge(m.salesV,p.salesV))+
+    kpi('💳','#f5a623',fmt(m.checkout),'Checkout',pct(m.checkout,m.salesV)+'% da PV',deltaBadge(m.checkout,p.checkout))+
+    kpi('✅','#2cbf52',fmt(m.purchases),'Compras',pct(m.purchases,m.checkout)+'% do checkout',deltaBadge(m.purchases,p.purchases))+
+    kpi('💰','#16a34a',fmtMoney(m.revenue),'Receita','Ticket '+fmtMoney(m.ticket),deltaBadge(m.revenue,p.revenue));
 }
 
 function renderFunnelCard(){
@@ -479,11 +613,8 @@ function renderFunnelCard(){
     {n:'Visitante',v:m.visitors},
     {n:'Lead',v:m.leads},
     {n:'Pré-venda',v:uViews('vendas')},
-    {n:'Botão PV',v:uClicks('vendas')},
     {n:'VSL Vídeos',v:uViews('vsl')},
-    {n:'Botão VSL',v:uClicks('vsl')},
     {n:'Quiz 2',v:uViews('quiz2')},
-    {n:'Resp. Quiz 2',v:uAnswers('quiz2')},
     {n:'PV Oferta',v:uViews('vsl2')},
     {n:'Checkout',v:m.checkout},
     {n:'Compra',v:m.purchases}
@@ -501,16 +632,16 @@ function renderFunnelCard(){
     if(i<steps.length-1) h+=`<div class="fm-arrow">›</div>`;
   });
   $('#funnelMini').innerHTML=h;
-  $('#areaChart').innerHTML=areaChart();
+  $('#areaChart').innerHTML=lineChart(liveEv().filter(e=>e.ev==='view'&&String(e.step)==='0'), 'visitas/dia');
 }
 
-/* SVG area chart — visitas (view step 0) ao longo do tempo */
-function areaChart(){
-  const views = liveEv().filter(e=>e.ev==='view'&&String(e.step)==='0'&&e.t);
-  if(views.length<2) return '<div class="empty" style="padding:14px">Sem dados suficientes para o gráfico.</div>';
+/* SVG line/area chart genérico por dia */
+function lineChart(events, label){
+  if(events.length<2) return '<div class="empty" style="padding:14px">Sem dados suficientes para o gráfico.</div>';
   const buckets={};
-  views.forEach(e=>{ const k=dayKey(e.t); buckets[k]=(buckets[k]||0)+1; });
+  events.forEach(e=>{ if(e.t){ const k=dayKey(e.t); buckets[k]=(buckets[k]||0)+1; } });
   const keys=Object.keys(buckets).sort();
+  if(keys.length<2) return '<div class="empty" style="padding:14px">Sem dados suficientes para o gráfico.</div>';
   const pts=keys.map(k=>buckets[k]);
   const W=1000,H=160,pad=8;
   const max=Math.max(...pts), dx=(W-pad*2)/Math.max(1,pts.length-1);
@@ -526,7 +657,7 @@ function areaChart(){
   </svg>
   <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:4px">
     <span>${keys[0].split('-').reverse().slice(0,2).join('/')}</span>
-    <span>visitas/dia · pico ${max}</span>
+    <span>${label} · pico ${max}</span>
     <span>${keys[keys.length-1].split('-').reverse().slice(0,2).join('/')}</span></div>`;
 }
 
@@ -537,43 +668,51 @@ function bindTabs(){
     t.classList.add('on'); activeTab=t.dataset.tab; evPage=1; renderTab();
   });
 }
+function goTab(name){
+  activeTab=name; evPage=1;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab===name));
+  renderTab();
+}
 function renderTab(){
   const c=$('#tabContent');
   if(activeTab==='funil') c.innerHTML=tabFunil();
-  else if(activeTab==='eventos') c.innerHTML=tabEventos();
+  else if(activeTab==='eventos'){ c.innerHTML=tabEventos(); bindEventosUI(); }
   else if(activeTab==='resumo') c.innerHTML=tabResumo();
   else if(activeTab==='trafego') c.innerHTML=tabTrafego();
   else if(activeTab==='vendas') c.innerHTML=tabVendas();
   else if(activeTab==='capi') c.innerHTML=tabCapi();
 }
 
-/* ---- TAB: FUNIL (river passo a passo) ---- */
+/* ====================== FUNIL (etapas clicáveis + drill-down) ====================== */
+const FUNIL_STEPS = [
+  {k:'Visitante (landing)',          short:'Landing',        tag:'view · index step 0',        pred:e=>e.ev==='view'&&String(e.step)==='0'},
+  {k:'Quiz · Pergunta 1 (Lead)',     short:'Pergunta 1',     tag:'answer · step 1',            pred:e=>e.ev==='answer'&&String(e.step)==='1'},
+  {k:'Quiz · Pergunta 2',            short:'Pergunta 2',     tag:'answer · step 2',            pred:e=>e.ev==='answer'&&String(e.step)==='2'},
+  {k:'Quiz · Pergunta 3',            short:'Pergunta 3',     tag:'answer · step 3',            pred:e=>e.ev==='answer'&&String(e.step)==='3'},
+  {k:'Quiz · Pergunta 4',            short:'Pergunta 4',     tag:'answer · step 4',            pred:e=>e.ev==='answer'&&String(e.step)==='4'},
+  {k:'Quiz · Pergunta 5',            short:'Pergunta 5',     tag:'answer · step 5',            pred:e=>e.ev==='answer'&&String(e.step)==='5'},
+  {k:'Pré-venda — abriu',            short:'Pré-venda',      tag:'view · vendas.html',         pred:e=>e.ev==='view'&&String(e.step)==='vendas', clicks:()=>uClicks('vendas')},
+  {k:'Pré-venda — clicou no botão',  short:'Botão pré-venda',tag:'click · "Continuar o Plano"',pred:e=>e.ev==='click'&&String(e.step)==='vendas'},
+  {k:'VSL Vídeos — abriu',           short:'VSL vídeos',     tag:'view · vsl.html',            pred:e=>e.ev==='view'&&String(e.step)==='vsl', clicks:()=>uClicks('vsl')},
+  {k:'VSL Vídeos — clicou no botão', short:'Botão VSL',      tag:'click · "Continuar"',        pred:e=>e.ev==='click'&&String(e.step)==='vsl'},
+  {k:'Quiz do meio — abriu',         short:'Quiz 2',         tag:'view · quiz2.html',          pred:e=>e.ev==='view'&&String(e.step)==='quiz2'},
+  {k:'Quiz do meio — respondeu',     short:'Resposta quiz 2',tag:'answer · quiz2',             pred:e=>e.ev==='answer'&&String(e.step)==='quiz2'},
+  {k:'PV Real (VSL2) — abriu',       short:'PV oferta',      tag:'view · vsl2.html',           pred:e=>e.ev==='view'&&String(e.step)==='vsl2', clicks:()=>uSet(e=>e.ev==='checkout_click')},
+  {k:'Checkout — clicou (→ Payt)',   short:'Checkout',       tag:'checkout_click',             pred:e=>e.ev==='checkout_click'}
+];
 function tabFunil(){
-  var ap = _vendas.filter(function(v){ return APPROVED.test(v.status); }).length;
-  const J=[
-    {k:'Visitante (landing)',            v:uViews(0),                 tag:'view · index step 0'},
-    {k:'Quiz · Pergunta 1 (Lead)',       v:uAnswers(1),               tag:'answer · step 1'},
-    {k:'Quiz · Pergunta 2',              v:uAnswers(2),               tag:'answer · step 2'},
-    {k:'Quiz · Pergunta 3',              v:uAnswers(3),               tag:'answer · step 3'},
-    {k:'Quiz · Pergunta 4',              v:uAnswers(4),               tag:'answer · step 4'},
-    {k:'Quiz · Pergunta 5',              v:uAnswers(5),               tag:'answer · step 5'},
-    {k:'Pré-venda — abriu',              v:uViews('vendas'),          tag:'view · vendas.html'},
-    {k:'Pré-venda — clicou no botão',    v:uClicks('vendas'),         tag:'click · "Continuar o Plano"'},
-    {k:'VSL Vídeos — abriu',             v:uViews('vsl'),             tag:'view · vsl.html'},
-    {k:'VSL Vídeos — clicou no botão',   v:uClicks('vsl'),            tag:'click · "Continuar"'},
-    {k:'Quiz do meio — abriu',           v:uViews('quiz2'),           tag:'view · quiz2.html'},
-    {k:'Quiz do meio — respondeu',       v:uAnswers('quiz2'),         tag:'answer · quiz2'},
-    {k:'PV Real (VSL2) — abriu',         v:uViews('vsl2'),            tag:'view · vsl2.html'},
-    {k:'Checkout — clicou (→ Payt)',     v:uSet(function(e){return e.ev==='checkout_click';}), tag:'checkout_click · redireciona p/ Payt'},
-    {k:'Compra aprovada',                v:ap,                        tag:'venda · Payt'}
-  ];
+  const ap = _vendas.filter(v=>APPROVED.test(v.status)).length;
+  const J = FUNIL_STEPS.map(st=>({...st, v:uSet(st.pred)}));
+  J.push({k:'Compra aprovada', short:'Compra', tag:'venda · Payt', v:ap, noDrill:true});
+  const river = riverFunnel(J);
   const max=Math.max(1,...J.map(d=>d.v));
   let rows='';
   J.forEach((d,i)=>{
     const prev=i>0?J[i-1].v:d.v; const keep=i>0?pct(d.v,prev):100; const drop=i>0?(prev-d.v):0;
-    rows+=`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)">
+    const click = d.noDrill?'':`onclick="openDrill(${i})" title="Clique para ver as sessões desta etapa"`;
+    rows+=`<div ${click} class="funil-row" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);${d.noDrill?'':'cursor:pointer'}">
       <div style="width:240px">
-        <div style="font-size:13px;font-weight:600">${d.k}</div>
+        <div style="font-size:13px;font-weight:600">${d.k} ${d.noDrill?'':'<span style="color:var(--muted);font-size:10px">🔍</span>'}</div>
         <div style="font-size:10.5px;color:var(--muted)">${d.tag}</div>
       </div>
       <div style="flex:1;min-width:110px"><div class="bg-track" style="height:13px"><div class="bg-fill" style="width:${d.v/max*100}%"></div></div></div>
@@ -582,72 +721,252 @@ function tabFunil(){
       <div style="width:78px;text-align:right;font-size:11.5px;color:var(--danger)">${i>0&&drop>0?'−'+fmt(drop):''}</div>
     </div>`;
   });
-  return `<div class="card"><h2>📊 Jornada completa do funil <span class="badge">página a página</span></h2>
+  return `<div class="card"><h2>🌊 Análise de Conversão <span class="badge">passe o mouse · clique p/ ver as sessões</span></h2>${river}</div>
+  <div class="card"><h2>📊 Jornada completa do funil <span class="badge">clique numa etapa p/ ver as sessões</span></h2>
     <div style="overflow-x:auto"><div style="min-width:700px">
     <div style="display:flex;gap:12px;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--line)">
       <div style="width:240px">Etapa</div><div style="flex:1">Alcance</div>
       <div style="width:60px;text-align:right">Sessões</div><div style="width:58px;text-align:right">Retém</div><div style="width:78px;text-align:right">Queda</div>
     </div>${rows}</div></div></div>`;
 }
+/* rio de conversão estilo analytics — afunila suave entre os passos */
+let _river = [];
+function riverFunnel(J){
+  const n=J.length, W=210, RH=230, cy=125, LABELS=86, H=RH+LABELS, TOT=n*W;
+  const maxV=Math.max(1,...J.map(d=>d.v));
+  const hs=J.map(d=>Math.max(5, d.v/maxV*(RH-50)));
+  const xm=i=>i*W+W*0.55;
+  const top=i=>cy-hs[i]/2, bot=i=>cy+hs[i]/2;
+  function path(pad){
+    const t=i=>top(i)-pad, b=i=>bot(i)+pad;
+    let d='M 0 '+t(0);
+    for(let i=0;i<n;i++){
+      d+=' L '+xm(i)+' '+t(i);
+      if(i<n-1){ const c=xm(i)+(( (i+1)*W)-xm(i))*0.5;
+        d+=' C '+c+' '+t(i)+', '+c+' '+t(i+1)+', '+((i+1)*W)+' '+t(i+1); }
+      else d+=' L '+TOT+' '+t(i);
+    }
+    d+=' L '+TOT+' '+b(n-1)+' L '+xm(n-1)+' '+b(n-1);
+    for(let i=n-2;i>=0;i--){
+      d+=' L '+((i+1)*W)+' '+b(i+1);
+      const c=xm(i)+(((i+1)*W)-xm(i))*0.5;
+      d+=' C '+c+' '+b(i+1)+', '+c+' '+b(i)+', '+xm(i)+' '+b(i);
+    }
+    d+=' L 0 '+b(0)+' Z';
+    return d;
+  }
+  // dados do tooltip por passo (origens e dispositivos das sessões do passo)
+  const sidInfo={};
+  liveEv().forEach(e=>{ if(!e.s)return; const o=sidInfo[e.s]=sidInfo[e.s]||{src:'',dev:''};
+    if(!o.src&&e.utm_source)o.src=e.utm_source; if((!o.dev||o.dev==='—')&&e.device!=='—')o.dev=e.device; });
+  _river=J.map((d,i)=>{
+    const prev=i>0?J[i-1].v:d.v;
+    const info={name:d.k, v:d.v, keep:i>0?pct(d.v,prev):100, drop:i>0?prev-d.v:0, clicks:d.clicks?d.clicks():null, noDrill:!!d.noDrill, src:[], dev:[]};
+    if(!d.noDrill&&d.pred){
+      const sids=new Set(); liveEv().forEach(e=>{ if(d.pred(e)&&e.s)sids.add(e.s); });
+      const sc={}, dc={};
+      sids.forEach(s=>{ const o=sidInfo[s]||{}; const k1=o.src||'direto', k2=o.dev||'—';
+        sc[k1]=(sc[k1]||0)+1; dc[k2]=(dc[k2]||0)+1; });
+      const tot=Math.max(1,sids.size);
+      info.src=Object.entries(sc).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>[k,(v/tot*100).toFixed(1).replace('.',',')]);
+      info.dev=Object.entries(dc).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>[k,(v/tot*100).toFixed(1).replace('.',',')]);
+    }
+    return info;
+  });
+  let seps='', cols='', labels='';
+  for(let i=0;i<n;i++){
+    if(i>0) seps+=`<line x1="${i*W}" y1="14" x2="${i*W}" y2="${RH-8}" stroke="#e5e9f0" stroke-width="1.5"/>`;
+    labels+=`<text x="${i*W+W/2}" y="${RH+24}" text-anchor="middle" style="font-size:10px;font-weight:700;letter-spacing:1.2px;fill:#9aa3b2">PASSO ${i+1}</text>
+      <text x="${i*W+W/2}" y="${RH+42}" text-anchor="middle" style="font-size:11px;fill:#6b7280">${esc(J[i].short||'')}</text>
+      <text x="${i*W+W/2}" y="${RH+64}" text-anchor="middle"><tspan style="font-size:15px;font-weight:800;fill:#1a1a2e">${fmt(J[i].v)}</tspan><tspan style="font-size:11px;fill:#6b7280"> ${i===n-1?'compras':'sessões'}</tspan></text>`;
+    cols+=`<rect class="rv-col" x="${i*W}" y="0" width="${W}" height="${H}" data-i="${i}"
+      onmousemove="riverTip(event,${i})" onmouseleave="riverTipHide()" onclick="${J[i].noDrill?'':'openDrill('+i+')'}"/>`;
+  }
+  return `<div class="river-wrap"><div class="river-inner">
+    <svg width="${TOT}" height="${H}" viewBox="0 0 ${TOT} ${H}">
+      ${seps}
+      <path d="${path(9)}" fill="#c3d9fb"/>
+      <path d="${path(0)}" fill="#5b9bf6"/>
+      ${labels}${cols}
+    </svg>
+    <div class="river-tip" id="riverTip"></div>
+  </div></div>`;
+}
+function riverTip(evt,i){
+  const d=_river[i]; const tip=$('#riverTip'); if(!d||!tip) return;
+  let h=`<div style="font-size:12px;font-weight:700;margin-bottom:8px">${esc(d.name)}</div>
+    <div class="rt-nums">
+      <div><div class="l">${d.noDrill?'Compras':'Sessões'}</div><div class="n">${fmt(d.v)}</div></div>
+      <div><div class="l">Retenção</div><div class="n" style="color:${d.keep>=50?'var(--accent-d)':'var(--danger)'}">${d.keep}%</div></div>
+      ${d.drop>0?`<div><div class="l">Queda</div><div class="n" style="color:var(--danger)">−${fmt(d.drop)}</div></div>`:''}
+      ${d.clicks!=null?`<div><div class="l">Cliques</div><div class="n">${fmt(d.clicks)}</div></div>`:''}
+    </div>`;
+  if(d.src.length||d.dev.length){
+    h+=`<div class="rt-sec">
+      <div style="flex:1"><div class="rt-h">Top origens</div>${d.src.map(([k,p])=>`<div class="rt-row"><span>${esc(k)}</span><b>${p}%</b></div>`).join('')}</div>
+      <div style="flex:1"><div class="rt-h">Dispositivos</div>${d.dev.map(([k,p])=>`<div class="rt-row"><span>${esc(k)}</span><b>${p}%</b></div>`).join('')}</div>
+    </div>`;
+  }
+  if(d.noDrill) h+=`<div style="font-size:11px;color:var(--muted);margin-top:8px">Vendas via postback Payt (sem sessão vinculada).</div>`;
+  tip.innerHTML=h;
+  tip.style.display='block';
+  const W=210, wrap=tip.parentElement;
+  const tw=tip.offsetWidth||260;
+  let x=i*W+W/2-tw/2;
+  x=Math.max(8, Math.min(x, wrap.scrollWidth-tw-8));
+  tip.style.left=x+'px';
+}
+function riverTipHide(){ const t=$('#riverTip'); if(t) t.style.display='none'; }
 
-/* ---- TAB: EVENTOS ---- */
+function openDrill(idx){
+  const st = FUNIL_STEPS[idx]; if(!st) return;
+  const bySid = new Map();
+  liveEv().forEach(e=>{
+    if(!st.pred(e)||!e.s) return;
+    if(!bySid.has(e.s)) bySid.set(e.s,{s:e.s,t:e.t,camp:'',src:'',dev:e.device});
+  });
+  // enriquece com utm/dispositivo de qualquer evento da sessão
+  liveEv().forEach(e=>{
+    const o=bySid.get(e.s); if(!o) return;
+    if(!o.camp&&e.utm_campaign) o.camp=e.utm_campaign;
+    if(!o.src&&e.utm_source) o.src=e.utm_source;
+    if((!o.dev||o.dev==='—')&&e.device!=='—') o.dev=e.device;
+  });
+  const list=[...bySid.values()].sort((a,b)=>b.t-a.t);
+  let rows=list.slice(0,300).map(o=>`<tr>
+    <td><button class="btn-soft" style="padding:4px 9px;font-size:11px" onclick="openJourney('${esc(o.s)}')">🧭 jornada</button></td>
+    <td>${esc((o.s||'').slice(0,14))}…</td>
+    <td>${o.t?new Date(o.t).toLocaleString('pt-BR'):'—'}</td>
+    <td>${esc(o.src||'direto')}</td>
+    <td>${esc(o.camp||'—')}</td>
+    <td>${esc(o.dev||'—')}</td></tr>`).join('');
+  if(!list.length) rows='<tr><td colspan="6"><div class="empty">Nenhuma sessão nesta etapa no período.</div></td></tr>';
+  $('#modalTitle').textContent = st.k+' · '+fmt(list.length)+' sessões';
+  $('#modalBody').innerHTML = `<div class="tbl-wrap"><table style="min-width:600px">
+    <thead><tr><th></th><th>Sessão</th><th>Quando</th><th>Origem</th><th>Campanha</th><th>Disp.</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    ${list.length>300?'<div class="note">Mostrando as 300 mais recentes de '+fmt(list.length)+'.</div>':''}`;
+  $('#modal').classList.add('show');
+}
+function closeModal(){ $('#modal').classList.remove('show'); }
+$('#modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
+function openJourney(sid){
+  closeModal();
+  evSession=sid; evQuery=''; evType=''; evCamp=''; evPage=1;
+  goTab('eventos');
+}
+
+/* ====================== EVENTOS (log + filtros + payload) ====================== */
 function evOrigin(e){ return e.utm_source || (e.ref? (''+e.ref).replace(/^https?:\/\//,'').split('/')[0] : 'direto'); }
+function eventosFiltered(){
+  let list;
+  if(evSession){
+    list = _ev.filter(e=>e.s===evSession).sort((a,b)=>a.t-b.t); // jornada em ordem cronológica
+  }else{
+    list = liveEv().slice().sort((a,b)=>b.t-a.t);
+    if(evType) list=list.filter(e=>e.ev===evType);
+    if(evCamp) list=list.filter(e=>e.utm_campaign===evCamp);
+    if(evQuery){
+      const q=evQuery.toLowerCase();
+      list=list.filter(e=>(e.s||'').toLowerCase().includes(q)||(e.name||'').toLowerCase().includes(q)||(e.ans||'').toLowerCase().includes(q));
+    }
+  }
+  return list;
+}
 function tabEventos(){
-  const list = liveEv().slice().sort((a,b)=>b.t-a.t);
+  const types=[...new Set(liveEv().map(e=>e.ev))].filter(Boolean).sort();
+  const camps=[...new Set(liveEv().map(e=>e.utm_campaign))].filter(Boolean).sort();
+  const list = eventosFiltered();
   const pages=Math.max(1,Math.ceil(list.length/EV_PER));
   evPage=Math.min(evPage,pages);
   const slice=list.slice((evPage-1)*EV_PER, evPage*EV_PER);
   let rows='';
-  slice.forEach(e=>{
+  slice.forEach((e,i)=>{
     const cls = e.ev==='view'?'view':e.ev==='answer'?'answer':e.ev==='checkout_click'?'checkout':e.ev==='click'?'click':'other';
     const ini=(e.s||'?').slice(-2).toUpperCase();
-    rows+=`<tr>
-      <td class="fix"><span class="avatar">${ini}</span>${(e.s||'').slice(0,10)}…</td>
-      <td><span class="badge-ev ${cls}">${e.ev||'—'}</span></td>
-      <td>${e.step??'—'}</td>
-      <td>${e.name||e.ans||'—'}</td>
-      <td>${e.gender||'—'}</td>
-      <td>${evOrigin(e)}</td>
-      <td>${e.device}</td>
+    const gi=(evPage-1)*EV_PER+i;
+    rows+=`<tr class="expandable" data-idx="${gi}">
+      <td class="fix"><span class="avatar">${esc(ini)}</span>${esc((e.s||'').slice(0,10))}…</td>
+      <td><span class="badge-ev ${cls}">${esc(e.ev||'—')}</span></td>
+      <td>${esc(e.step??'—')}</td>
+      <td>${esc(e.name||e.ans||'—')}</td>
+      <td>${esc(evOrigin(e))}</td>
+      <td>${esc(e.utm_campaign||'—')}</td>
+      <td>${esc(e.device)}</td>
       <td>${e.t?new Date(e.t).toLocaleString('pt-BR'):'—'}</td>
     </tr>`;
   });
-  if(!slice.length) rows=`<tr><td colspan="8"><div class="empty">Nenhum evento ainda.</div></td></tr>`;
+  if(!slice.length) rows=`<tr><td colspan="8"><div class="empty">Nenhum evento com esses filtros.</div></td></tr>`;
+  const banner = evSession?`<div class="journey-banner">🧭 Jornada da sessão <b>${esc(evSession.slice(0,18))}…</b> (${fmt(list.length)} eventos, em ordem cronológica)
+    <button class="btn-soft" style="margin-left:auto" onclick="evSession='';renderTab()">✕ limpar</button></div>`:'';
   return `<div class="card">
+    ${banner}
     <div class="row-actions">
-      <button class="btn-soft" onclick="exportCSV()">⬇️ Exportar CSV</button>
-      <button class="btn-danger" onclick="resetData()">🗑️ Resetar dados</button>
+      <input class="flt" id="evQ" placeholder="🔎 buscar sessão / nome / resposta" value="${esc(evQuery)}" style="min-width:220px">
+      <select class="flt" id="evT"><option value="">Todos os eventos</option>${types.map(t=>`<option ${t===evType?'selected':''}>${esc(t)}</option>`).join('')}</select>
+      <select class="flt" id="evC"><option value="">Todas as campanhas</option>${camps.map(c=>`<option ${c===evCamp?'selected':''}>${esc(c)}</option>`).join('')}</select>
+      <button class="btn-soft" onclick="exportCSV()">⬇️ CSV</button>
+      <button class="btn-danger" onclick="resetData()">🗑️ Resetar</button>
     </div>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th class="fix">Sessão</th><th>Evento</th><th>Step</th><th>Nome/Resposta</th><th>Gênero</th><th>Origem</th><th>Disp.</th><th>Quando</th></tr></thead>
+    <div class="tbl-wrap"><table id="evTable">
+      <thead><tr><th class="fix">Sessão</th><th>Evento</th><th>Step</th><th>Nome/Resposta</th><th>Origem</th><th>Campanha</th><th>Disp.</th><th>Quando</th></tr></thead>
       <tbody>${rows}</tbody></table></div>
+    <div class="note">Clique numa linha para ver o payload completo do evento.</div>
     <div class="pager">
       <button onclick="evPage=Math.max(1,evPage-1);renderTab()">‹</button>
       <span>${evPage} / ${pages} · ${fmt(list.length)} eventos</span>
       <button onclick="evPage=Math.min(${pages},evPage+1);renderTab()">›</button>
     </div></div>`;
 }
+function bindEventosUI(){
+  const q=$('#evQ'), t=$('#evT'), c=$('#evC');
+  if(q) q.addEventListener('input',()=>{ evQuery=q.value; evPage=1; refreshEvTableOnly(); });
+  if(t) t.addEventListener('change',()=>{ evType=t.value; evPage=1; renderTab(); });
+  if(c) c.addEventListener('change',()=>{ evCamp=c.value; evPage=1; renderTab(); });
+  const tb=$('#evTable');
+  if(tb) tb.addEventListener('click',ev=>{
+    const tr=ev.target.closest('tr.expandable'); if(!tr) return;
+    const next=tr.nextElementSibling;
+    if(next&&next.classList.contains('payload-row')){ next.remove(); return; }
+    document.querySelectorAll('tr.payload-row').forEach(r=>r.remove());
+    const gi=Number(tr.dataset.idx);
+    const e=eventosFiltered()[gi]; if(!e) return;
+    const pr=document.createElement('tr'); pr.className='payload-row';
+    pr.innerHTML='<td colspan="8"><pre>'+esc(JSON.stringify(e,null,2))+'</pre></td>';
+    tr.after(pr);
+  });
+}
+function refreshEvTableOnly(){ // busca sem perder o foco do input
+  const html=tabEventos();
+  const tmp=document.createElement('div'); tmp.innerHTML=html;
+  const newTb=tmp.querySelector('#evTable tbody');
+  const newPg=tmp.querySelector('.pager');
+  const tb=$('#evTable tbody'), pg=$('#tabContent .pager');
+  if(tb&&newTb) tb.innerHTML=newTb.innerHTML;
+  if(pg&&newPg) pg.innerHTML=newPg.innerHTML;
+}
 
-/* ---- TAB: RESUMO ---- */
+/* ====================== RESUMO (KPIs + comparação + A/B) ====================== */
 function countBy(arr,keyFn){ const m={}; arr.forEach(x=>{const k=keyFn(x)||'—'; m[k]=(m[k]||0)+1;}); return m; }
-function uCountBy(keyFn,pred){ // sessões únicas por chave
-  const m={}; const seen={};
-  liveEv().forEach(e=>{ if(pred&&!pred(e))return; const k=keyFn(e)||'—'; seen[k]=seen[k]||new Set(); if(e.s){seen[k].add(e.s);} });
-  Object.keys(seen).forEach(k=>m[k]=seen[k].size); return m;
+function uCountBy(keyFn,pred){
+  const seen={};
+  liveEv().forEach(e=>{ if(pred&&!pred(e))return; const k=keyFn(e)||'—'; (seen[k]=seen[k]||new Set()); if(e.s)seen[k].add(e.s); });
+  const m={}; Object.keys(seen).forEach(k=>m[k]=seen[k].size); return m;
 }
 function barGroup(obj,limit){
   const ent=Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,limit||8);
   const max=Math.max(1,...ent.map(e=>e[1]));
   if(!ent.length) return '<div class="empty">Sem dados.</div>';
   return '<div class="barGroup">'+ent.map(([k,v])=>`<div class="bg-row">
-    <div class="bg-name" title="${k}">${k}</div>
+    <div class="bg-name" title="${esc(k)}">${esc(k)}</div>
     <div class="bg-track"><div class="bg-fill" style="width:${v/max*100}%"></div></div>
     <div class="bg-val">${fmt(v)}</div></div>`).join('')+'</div>';
 }
+/* teste A/B de preço com significância */
 function priceAbCard(){
-  const labels={A:'A · Preço atual', B:'B · R$ 34,90'};
-  const vis = uCountBy(e=>e.price_ab, e=>!!e.price_ab);           // acessos (sessões únicas) por variante
-  const chk = uCountBy(e=>e.price_ab, e=>e.ev==='checkout_click'&&e.price_ab); // cliques no checkout por variante
+  const labels={A:'A · R$ 27,90 (atual)', B:'B · R$ 34,90'};
+  const vis = uCountBy(e=>e.price_ab, e=>!!e.price_ab);
+  const chk = uCountBy(e=>e.price_ab, e=>e.ev==='checkout_click'&&e.price_ab);
   const buys={}, rev={};
   _vendas.filter(v=>APPROVED.test(v.status)).forEach(v=>{ const k=v.ab; if(k==='A'||k==='B'){ buys[k]=(buys[k]||0)+1; rev[k]=(rev[k]||0)+(v.valor||0); } });
   const variants=['A','B'];
@@ -663,11 +982,24 @@ function priceAbCard(){
       <td style="padding:9px 6px;text-align:right">${fmt(a)}</td>
       <td style="padding:9px 6px;text-align:right">${fmt(cl)}</td>
       <td style="padding:9px 6px;text-align:right;font-weight:700">${fmt(c)}</td>
-      <td style="padding:9px 6px;text-align:right;color:var(--pink);font-weight:700">${conv.toFixed(1).replace('.',',')}%</td>
+      <td style="padding:9px 6px;text-align:right;color:var(--primary);font-weight:700">${conv.toFixed(1).replace('.',',')}%</td>
       <td style="padding:9px 6px;text-align:right">${fmtMoney(rev[k]||0)}</td>
     </tr>`;
   }).join('');
-  return `<div class="card"><h2>🧪 Teste A/B de Preço <span class="badge">A: preço atual · B: R$ 34,90</span></h2>
+  // significância (duas proporções: compras/acessos)
+  let sig='';
+  const nA=vis.A||0, nB=vis.B||0, cA=buys.A||0, cB=buys.B||0;
+  if(cA<AB_MIN_BUYS||cB<AB_MIN_BUYS){
+    sig=`<div class="sig small">⏳ Amostra ainda pequena — colete pelo menos ${AB_MIN_BUYS} compras por variante antes de decidir (A: ${cA} · B: ${cB}).</div>`;
+  }else if(nA>0&&nB>0){
+    const p1=cA/nA, p2=cB/nB, p=(cA+cB)/(nA+nB);
+    const se=Math.sqrt(p*(1-p)*(1/nA+1/nB));
+    const z=se>0?Math.abs(p1-p2)/se:0;
+    const winner = (rev.B||0)/(nB||1) > (rev.A||0)/(nA||1) ? 'B' : 'A';
+    if(z>=1.96) sig=`<div class="sig ok">✅ Diferença significativa (95%) — variante <b>${winner}</b> gera mais receita por visitante (z=${z.toFixed(2)}).</div>`;
+    else sig=`<div class="sig ns">📊 Ainda sem significância estatística (z=${z.toFixed(2)} &lt; 1,96) — continue o teste.</div>`;
+  }
+  return `<div class="card"><h2>🧪 Teste A/B de Preço <span class="badge">A: R$ 27,90 · B: R$ 34,90</span></h2>
     <table style="width:100%;border-collapse:collapse;font-size:13.5px">
       <thead><tr style="color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em">
         <th style="text-align:left;padding:0 6px 6px">Variante</th>
@@ -679,27 +1011,34 @@ function priceAbCard(){
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>
-    <div style="font-size:12px;color:var(--muted);margin-top:10px">Acessos = visitantes únicos por variante · Checkout = cliques no botão de compra · Compras = vendas aprovadas com <code>ab</code> correspondente (via postback do Payt).</div>
+    ${sig}
+    <div class="note">Acessos = visitantes únicos por variante · Compras = vendas aprovadas com <code>ab</code> (postback Payt). Significância via teste z de duas proporções (compras/acessos).</div>
   </div>`;
 }
 function tabResumo(){
-  const m=metrics();
+  const m=metrics(), p=metricsPrev();
+  const quizRate  = pct(m.quizDone,m.visitors), quizRateP = pct(p.quizDone,p.visitors);
+  const convQuiz  = m.visitors>0 ? m.purchases/m.visitors*100 : 0;
+  const convQuizP = p.visitors>0 ? p.purchases/p.visitors*100 : 0;
+  const convPV    = m.salesV>0 ? m.purchases/m.salesV*100 : 0;
+  const convPVP   = p.salesV>0 ? p.purchases/p.salesV*100 : 0;
   const gender = uCountBy(e=>e.gender, e=>e.gender);
   const origin = uCountBy(e=>evOrigin(e), e=>e.ev==='view'&&String(e.step)==='0');
   const answers= countBy(liveEv().filter(e=>e.ev==='answer'&&e.ans), e=>e.ans);
   const pvBtns = uCountBy(e=>e.name||'(sem rótulo)', e=>e.ev==='checkout_click');
-
-  let abCard='';
-  if(SHOW_AB){
-    abCard=`<div class="card"><h2>🧪 Teste A/B</h2>${barGroup(uCountBy(e=>e.logo_ab||'—',e=>e.ev==='view'&&String(e.step)==='0'&&e.logo_ab))}</div>`;
-  }
-  let pvCard='';
-  if(SHOW_PV_BUTTONS){
-    pvCard=`<div class="card"><h2>🛒 Botões da Página de Vendas <span class="badge">qual CTA levou ao checkout</span></h2>${barGroup(pvBtns)}</div>`;
-  }
-
-  return priceAbCard()+abCard+pvCard+
-  `<div class="grid2">
+  const kpis =
+    kpi('🧩','#4A7AF5',fmt(m.visitors),'Sessões no quiz','landing (step 0)',deltaBadge(m.visitors,p.visitors))+
+    kpi('🏁','#a855f7',quizRate+'%','Conclusão do quiz',fmt(m.quizDone)+' concluíram',deltaBadge(quizRate,quizRateP))+
+    kpi('🛒','#cf3a7d',fmt(m.salesV),'Views da PV','vsl2.html',deltaBadge(m.salesV,p.salesV))+
+    kpi('🎯','#f5a623',convQuiz.toFixed(1).replace('.',',')+'%','Conv. quiz → venda',fmt(m.purchases)+' compras',deltaBadge(convQuiz,convQuizP))+
+    kpi('📈','#2cbf52',convPV.toFixed(1).replace('.',',')+'%','Conv. PV → venda','sobre views da PV',deltaBadge(convPV,convPVP))+
+    kpi('💰','#16a34a',fmtMoney(m.revenue),'Faturamento','Ticket '+fmtMoney(m.ticket),deltaBadge(m.revenue,p.revenue));
+  const cmpNote = period.mode==='all' ? '<div class="note">Escolha um período (Hoje, 7 dias…) para ver a comparação com o período anterior equivalente.</div>'
+    : '<div class="note">Setas comparam com o período anterior equivalente ('+PERIOD_LABEL[period.mode].toLowerCase()+' anterior).</div>';
+  return `<div class="kpis" style="margin-bottom:4px">${kpis}</div>${cmpNote}<div style="height:12px"></div>`+
+  priceAbCard()+
+  `<div class="card"><h2>🛒 Botões da Página de Vendas <span class="badge">qual CTA levou ao checkout</span></h2>${barGroup(pvBtns)}</div>
+  <div class="grid2">
     <div class="card"><h2>👥 Por Gênero</h2>${barGroup(gender)}</div>
     <div class="card"><h2>🌐 Por Origem</h2>${barGroup(origin)}</div>
   </div>
@@ -716,7 +1055,7 @@ function tabResumo(){
   </div>`;
 }
 
-/* ---- TAB: TRÁFEGO ---- */
+/* ====================== TRÁFEGO ====================== */
 function tabTrafego(){
   const withUtm = new Set(liveEv().filter(e=>e.utm_source).map(e=>e.s)).size;
   const totalS  = new Set(liveEv().map(e=>e.s)).size;
@@ -726,6 +1065,21 @@ function tabTrafego(){
   const cont= uCountBy(e=>e.utm_content, e=>e.utm_content);
   const adset=uCountBy(e=>e.utm_adset, e=>e.utm_adset);
   const dev = uCountBy(e=>e.device); const brw=uCountBy(e=>e.browser); const os=uCountBy(e=>e.os);
+  // ranking de campanhas: sessões x checkouts
+  const cSess = uCountBy(e=>e.utm_campaign, e=>e.utm_campaign);
+  const cChk  = uCountBy(e=>e.utm_campaign, e=>e.utm_campaign&&e.ev==='checkout_click');
+  const rank = Object.keys(cSess).map(k=>({k, s:cSess[k]||0, c:cChk[k]||0}))
+    .sort((a,b)=>b.c-a.c||b.s-a.s).slice(0,12);
+  let rankRows = rank.map(r=>`<tr>
+    <td style="max-width:280px;overflow:hidden;text-overflow:ellipsis">${esc(r.k)}</td>
+    <td style="text-align:right">${fmt(r.s)}</td>
+    <td style="text-align:right;font-weight:700">${fmt(r.c)}</td>
+    <td style="text-align:right;color:var(--primary);font-weight:700">${pct1(r.c,r.s)}%</td></tr>`).join('');
+  if(!rank.length) rankRows='<tr><td colspan="4"><div class="empty">Nenhuma campanha com UTM no período.</div></td></tr>';
+  // sessões por dia (primeiro evento de cada sessão no período)
+  const firstBySid={};
+  liveEv().forEach(e=>{ if(e.s&&e.t&&(!firstBySid[e.s]||e.t<firstBySid[e.s])) firstBySid[e.s]=e.t; });
+  const sessEvents=Object.values(firstBySid).map(t=>({t}));
   return `<div class="card"><h2>🎯 Origem do Tráfego</h2>
     <div class="mini-kpis">
       <div class="mini-kpi"><div class="n">${fmt(totalS)}</div><div class="l">Sessões totais</div></div>
@@ -733,6 +1087,13 @@ function tabTrafego(){
       <div class="mini-kpi"><div class="n">${fmt(organic)}</div><div class="l">Orgânico/direto</div></div>
       <div class="mini-kpi"><div class="n">${pct(withUtm,totalS)}%</div><div class="l">% rastreado</div></div>
     </div></div>
+    <div class="card"><h2>📅 Sessões por dia</h2>${lineChart(sessEvents,'sessões/dia')}</div>
+    <div class="card"><h2>🏆 Ranking de campanhas <span class="badge">por cliques no checkout</span></h2>
+      <div class="tbl-wrap"><table style="min-width:520px">
+        <thead><tr><th>Campanha (utm_campaign)</th><th style="text-align:right">Sessões</th><th style="text-align:right">Checkouts</th><th style="text-align:right">Taxa</th></tr></thead>
+        <tbody>${rankRows}</tbody></table></div>
+      <div class="note">⚠️ O postback do Payt não carrega a sessão/UTM, então a venda não é atribuível à campanha por aqui — use os cliques de checkout como proxy e a atribuição de vendas na Utmify. Gasto/ROAS do Meta Ads fica fora deste painel (sem API do Gerenciador).</div>
+    </div>
     <div class="grid2">
       <div class="card"><h2>📡 utm_source</h2>${barGroup(src)}</div>
       <div class="card"><h2>📣 utm_campaign</h2>${barGroup(camp)}</div>
@@ -748,49 +1109,79 @@ function tabTrafego(){
     </div>`;
 }
 
-/* ---- TAB: VENDAS ---- */
+/* ====================== VENDAS (status + produto) ====================== */
 function tabVendas(){
-  const v=_vendas;
-  const appr=v.filter(x=>APPROVED.test(x.status));
+  const all=_vendas;
+  const stCount = {all:all.length, aprovada:0, pendente:0, recusada:0, reembolsada:0, outro:0};
+  all.forEach(v=>{ stCount[vendaStatus(v)]++; });
+  let list = all.filter(v=> vStatus==='all' ? true : vendaStatus(v)===vStatus);
+  if(vProd!=='all') list=list.filter(v=> (v.produto||'') === (vProd==='antigo'?'':vProd));
+  const appr=list.filter(x=>APPROVED.test(x.status));
   const rev=appr.reduce((a,x)=>a+(x.valor||PRICE),0);
-  const byMethod=k=>appr.filter(x=>new RegExp(k,'i').test(x.metodo)).length;
-  const cancel=v.filter(x=>/cancel|recus|refus|estorn|reembols|chargeback|expir/i.test(x.status)).length;
-  let rows=v.slice().sort((a,b)=>b.t-a.t).slice(0,200).map(x=>`<tr>
+  const stChip=(k,lbl)=>`<button class="chip ${vStatus===k?'on':''}" onclick="vStatus='${k}';renderTab()">${lbl} (${fmt(stCount[k]||0)})</button>`;
+  const prods=[['all','Todos'],['curso','Curso'],['biblioteca','Biblioteca'],['reconstrucao','Reconstrução'],['antigo','(antigas s/ produto)']];
+  const prodChip=([k,lbl])=>`<button class="chip ${vProd===k?'on':''}" onclick="vProd='${k}';renderTab()">${lbl}</button>`;
+  const stBadge=v=>{
+    const s=vendaStatus(v);
+    const map={aprovada:['ap','✅ aprovada'],pendente:['pe','⏳ '+(/expir/i.test(v.status)?'expirada':'pendente')],recusada:['re','✕ recusada'],reembolsada:['rf','↩ reembolso'],outro:['ou',esc(v.status||'—')]};
+    const [c,l]=map[s]; return `<span class="badge-st ${c}">${l}</span>`;
+  };
+  let rows=list.slice().sort((a,b)=>b.t-a.t).slice(0,300).map(x=>`<tr>
     <td class="fix">${x.t?new Date(x.t).toLocaleString('pt-BR'):'—'}</td>
-    <td>${APPROVED.test(x.status)?'✅ ':''}${x.status||'—'}</td>
-    <td>${x.metodo||'—'}</td>
+    <td>${stBadge(x)}</td>
+    <td>${esc(PRODUTOS[x.produto]||x.produto||'— antiga')}</td>
+    <td>${esc(x.metodo||'—')}</td>
     <td>${fmtMoney(x.valor||PRICE)}</td>
-    <td>${x.nome||'—'}</td>
-    <td>${x.email||'—'}</td>
-    <td>${x.order_id||'—'}</td></tr>`).join('');
-  if(!v.length) rows=`<tr><td colspan="7"><div class="empty">Nenhuma venda registrada ainda.</div></td></tr>`;
-  return `<div class="card"><h2>💰 Vendas</h2>
+    <td>${x.ab?('<b>'+esc(x.ab)+'</b>'):'—'}</td>
+    <td>${esc(x.nome||'—')}</td>
+    <td>${esc(x.email||'—')}</td>
+    <td>${esc(x.order_id||'—')}</td></tr>`).join('');
+  if(!list.length) rows=`<tr><td colspan="9"><div class="empty">Nenhuma venda com esses filtros.</div></td></tr>`;
+  return `<div class="card"><h2>💰 Vendas <span class="badge">gateway: Payt</span></h2>
+    <div class="row-actions">${stChip('all','Todas')}${stChip('aprovada','Aprovadas')}${stChip('pendente','Pendentes/Pix')}${stChip('recusada','Recusadas')}${stChip('reembolsada','Reembolsadas')}</div>
+    <div class="row-actions"><span style="font-size:12px;color:var(--muted)">Produto:</span>${prods.map(prodChip).join('')}</div>
     <div class="mini-kpis">
-      <div class="mini-kpi"><div class="n">${fmtMoney(rev)}</div><div class="l">Receita aprovada</div></div>
-      <div class="mini-kpi"><div class="n">${fmt(appr.length)}</div><div class="l">Aprovadas</div></div>
-      <div class="mini-kpi"><div class="n">${fmt(byMethod('pix'))}</div><div class="l">Pix</div></div>
-      <div class="mini-kpi"><div class="n">${fmt(byMethod('boleto'))}</div><div class="l">Boleto</div></div>
-    </div>
-    <div class="mini-kpis" style="grid-template-columns:repeat(2,1fr)">
-      <div class="mini-kpi"><div class="n">${fmt(byMethod('cart|credit|card'))}</div><div class="l">Cartão</div></div>
-      <div class="mini-kpi"><div class="n">${fmt(cancel)}</div><div class="l">Canceladas/recusadas</div></div>
+      <div class="mini-kpi"><div class="n">${fmtMoney(rev)}</div><div class="l">Receita aprovada (filtro)</div></div>
+      <div class="mini-kpi"><div class="n">${fmt(appr.length)}</div><div class="l">Aprovadas (filtro)</div></div>
+      <div class="mini-kpi"><div class="n">${fmt(appr.filter(x=>/pix/i.test(x.metodo)).length)}</div><div class="l">Pix</div></div>
+      <div class="mini-kpi"><div class="n">${fmt(appr.filter(x=>/cart|credit|card/i.test(x.metodo)).length)}</div><div class="l">Cartão</div></div>
     </div>
     <div class="tbl-wrap"><table>
-      <thead><tr><th class="fix">Quando</th><th>Status</th><th>Método</th><th>Valor</th><th>Nome</th><th>Email</th><th>Pedido</th></tr></thead>
-      <tbody>${rows}</tbody></table></div></div>`;
+      <thead><tr><th class="fix">Quando</th><th>Status</th><th>Produto</th><th>Método</th><th>Valor</th><th>A/B</th><th>Nome</th><th>Email</th><th>Pedido</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+    <div class="note">Vendas chegam pelo postback do Payt (server-side) e não carregam sessão/UTM — a jornada individual não é linkável à venda. "(antigas s/ produto)" = registradas antes da coluna produto.</div></div>`;
 }
 
-/* ---- TAB: CAPI ---- */
+/* ====================== META CAPI ====================== */
 function tabCapi(){
   const l=_capiLog;
   const okN=l.filter(c=>c.status_code===200).length;
   const rate=l.length?Math.round(okN/l.length*100):0;
-  const byEv=countBy(l,c=>c.ev||'—');
+  // por tipo de evento: enviados ok / erro
+  const types={};
+  l.forEach(c=>{ const k=c.ev||'—'; types[k]=types[k]||{ok:0,err:0}; c.status_code===200?types[k].ok++:types[k].err++; });
+  const typeRows=Object.entries(types).sort((a,b)=>(b[1].ok+b[1].err)-(a[1].ok+a[1].err)).map(([k,v])=>`<tr>
+    <td>${esc(k)}</td>
+    <td style="text-align:right;color:var(--accent-d);font-weight:700">${fmt(v.ok)}</td>
+    <td style="text-align:right;color:${v.err?'var(--danger)':'var(--muted)'};font-weight:700">${fmt(v.err)}</td>
+    <td style="text-align:right">${pct(v.ok,v.ok+v.err)}%</td></tr>`).join('')
+    || '<tr><td colspan="4"><div class="empty">Nenhum envio.</div></td></tr>';
+  // últimos erros
+  const errs=l.filter(c=>c.status_code!==200).sort((a,b)=>b.t-a.t).slice(0,10);
+  const errRows=errs.map(c=>`<tr>
+    <td class="fix">${c.t?new Date(c.t).toLocaleString('pt-BR'):'—'}</td>
+    <td>${esc(c.ev||'—')}</td>
+    <td><span class="badge-ev checkout">${c.status_code||'erro'}</span></td>
+    <td style="max-width:420px;white-space:normal;color:var(--muted);font-size:11.5px">${esc((c.response||'').slice(0,300))}</td></tr>`).join('')
+    || '<tr><td colspan="4"><div class="empty">Nenhum erro registrado 🎉</div></td></tr>';
+  // dedup: nossos eventos do navegador têm event_id (Pixel usa o mesmo id)
+  const evWithId = liveEv().filter(e=>e.event_id).length;
+  const evTotal  = liveEv().length;
   let rows=l.slice().sort((a,b)=>b.t-a.t).slice(0,80).map(c=>`<tr>
     <td class="fix">${c.t?new Date(c.t).toLocaleString('pt-BR'):'—'}</td>
-    <td>${c.ev||'—'}</td>
+    <td>${esc(c.ev||'—')}</td>
     <td>${c.status_code===200?'<span class="badge-ev answer">200</span>':'<span class="badge-ev checkout">'+(c.status_code||'erro')+'</span>'}</td>
-    <td style="max-width:340px;white-space:normal;color:var(--muted)">${(c.response||'').slice(0,160)}</td></tr>`).join('');
+    <td style="max-width:340px;white-space:normal;color:var(--muted)">${esc((c.response||'').slice(0,160))}</td></tr>`).join('');
   if(!l.length) rows=`<tr><td colspan="4"><div class="empty">Nenhum envio CAPI registrado.</div></td></tr>`;
   return `<div class="card"><h2>⚡ Meta Conversions API</h2>
     <div class="mini-kpis">
@@ -799,7 +1190,26 @@ function tabCapi(){
       <div class="mini-kpi"><div class="n">${fmt(okN)}</div><div class="l">Status 200</div></div>
       <div class="mini-kpi"><div class="n">${fmt(l.length-okN)}</div><div class="l">Com erro</div></div>
     </div>
-    <div class="card" style="background:#f8fafc"><h2 style="font-size:13px">Por tipo de evento</h2>${barGroup(byEv)}</div>
+    <div class="grid2">
+      <div class="card" style="background:#f8fafc;margin-bottom:0"><h2 style="font-size:13px">Enviados × erros por tipo de evento</h2>
+        <div class="tbl-wrap"><table style="min-width:380px">
+          <thead><tr><th>Evento</th><th style="text-align:right">OK</th><th style="text-align:right">Erros</th><th style="text-align:right">Sucesso</th></tr></thead>
+          <tbody>${typeRows}</tbody></table></div>
+      </div>
+      <div class="card" style="background:#f8fafc;margin-bottom:0"><h2 style="font-size:13px">Deduplicação (Pixel × CAPI)</h2>
+        <div class="mini-kpis" style="grid-template-columns:1fr 1fr;margin-bottom:8px">
+          <div class="mini-kpi"><div class="n">${pct(evWithId,evTotal)}%</div><div class="l">eventos c/ event_id</div></div>
+          <div class="mini-kpi"><div class="n">${fmt(evWithId)}</div><div class="l">de ${fmt(evTotal)} eventos</div></div>
+        </div>
+        <div class="note">O mesmo <code>event_id</code> é enviado no Pixel (navegador) e no CAPI (servidor) — o Meta deduplica por ele. O Purchase é só server-side (postback Payt), sem duplicidade por construção. A taxa de correspondência (match quality) só aparece no Gerenciador de Eventos do Meta.</div>
+      </div>
+    </div>
+    <div style="height:14px"></div>
+    <div class="card" style="margin-bottom:14px"><h2 style="font-size:13px">🚨 Últimos erros (payload da resposta)</h2>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th class="fix">Quando</th><th>Evento</th><th>Status</th><th>Resposta do Meta</th></tr></thead>
+        <tbody>${errRows}</tbody></table></div>
+    </div>
     <div class="tbl-wrap"><table>
       <thead><tr><th class="fix">Quando</th><th>Evento</th><th>Status</th><th>Resposta</th></tr></thead>
       <tbody>${rows}</tbody></table></div></div>`;
@@ -807,7 +1217,7 @@ function tabCapi(){
 
 /* ====================== CSV / RESET ====================== */
 function exportCSV(){
-  const cols=['t','s','ev','step','name','gender','ans','ms','origin','device','browser','os','utm_source','utm_medium','utm_campaign','utm_content','utm_adset','ref'];
+  const cols=['t','s','ev','step','name','gender','ans','ms','origin','device','browser','os','utm_source','utm_medium','utm_campaign','utm_content','utm_adset','price_ab','ref'];
   const head=cols.join(',');
   const body=liveEv().map(e=>{
     const o=Object.assign({},e,{origin:evOrigin(e), t:e.t?new Date(e.t).toISOString():''});
@@ -815,7 +1225,7 @@ function exportCSV(){
   }).join('\n');
   const blob=new Blob([head+'\n'+body],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='eventos_'+(dayFilter||'todos')+'.csv'; a.click();
+  a.download='eventos_'+(period.mode||'todos')+'.csv'; a.click();
   toast('✓ CSV exportado');
 }
 async function resetData(){
