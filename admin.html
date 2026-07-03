@@ -261,6 +261,7 @@
       <button class="tab" data-tab="resumo"><span class="em">📈</span> Resumo</button>
       <button class="tab" data-tab="trafego"><span class="em">🎯</span> Tráfego</button>
       <button class="tab" data-tab="vendas"><span class="em">💰</span> Vendas</button>
+      <button class="tab" data-tab="horarios"><span class="em">🕐</span> Horários</button>
       <button class="tab" data-tab="capi"><span class="em">⚡</span> Meta CAPI</button>
     </div>
 
@@ -724,6 +725,7 @@ function renderTab(){
   else if(activeTab==='resumo') c.innerHTML=tabResumo();
   else if(activeTab==='trafego') c.innerHTML=tabTrafego();
   else if(activeTab==='vendas') c.innerHTML=tabVendas();
+  else if(activeTab==='horarios') c.innerHTML=tabHorarios();
   else if(activeTab==='capi') c.innerHTML=tabCapi();
 }
 
@@ -1390,6 +1392,69 @@ function tabVendas(){
       <thead><tr><th class="fix">Quando</th><th>Status</th><th>Produto</th><th>Método</th><th>Valor</th><th>A/B</th><th>Nome</th><th>Email</th><th>Pedido</th></tr></thead>
       <tbody>${rows}</tbody></table></div>
     <div class="note">Vendas chegam pelo postback do Payt (server-side) e não carregam sessão/UTM — a jornada individual não é linkável à venda. "(antigas s/ produto)" = registradas antes da coluna produto.</div></div>`;
+}
+
+/* ====================== HORÁRIOS (quando mais vende) ====================== */
+function tabHorarios(){
+  const appr = _vendas.filter(v=>APPROVED.test(v.status) && v.t);
+  if(!appr.length){
+    return `<div class="card"><h2>🕐 Horários que mais venderam</h2>
+      <div class="empty">Sem vendas aprovadas no período selecionado.<br>Ajuste o filtro de período no topo (ex.: "Tudo").</div></div>`;
+  }
+  const DIAS = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const DIAS_C = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const hCount=new Array(24).fill(0), hRev=new Array(24).fill(0);
+  const dCount=new Array(7).fill(0),  dRev=new Array(7).fill(0);
+  const heat={}; let maxCell=0;
+  appr.forEach(v=>{
+    const dt=new Date(v.t), h=dt.getHours(), d=dt.getDay(), val=v.valor||PRICE;
+    hCount[h]++; hRev[h]+=val; dCount[d]++; dRev[d]+=val;
+    const k=d+'_'+h; heat[k]=(heat[k]||0)+1; if(heat[k]>maxCell) maxCell=heat[k];
+  });
+  const argmax=arr=>{let mi=0; for(let i=1;i<arr.length;i++) if(arr[i]>arr[mi]) mi=i; return mi;};
+  const bestH=argmax(hCount), bestD=argmax(dCount);
+
+  // faixas do dia
+  const FAIXAS=[['🌙 Madrugada','00h–06h',0,5],['🌅 Manhã','06h–12h',6,11],['☀️ Tarde','12h–18h',12,17],['🌆 Noite','18h–00h',18,23]];
+  const faixa=FAIXAS.map(f=>{let c=0,r=0; for(let h=f[2];h<=f[3];h++){c+=hCount[h];r+=hRev[h];} return {nome:f[0],faixa:f[1],c,r};});
+  const bestFaixa=faixa.reduce((a,b)=>b.c>a.c?b:a,faixa[0]);
+
+  const maxH=Math.max(1,...hCount), maxD=Math.max(1,...dCount), maxF=Math.max(1,...faixa.map(f=>f.c));
+  const barRow=(label,count,rev,max,hot)=>`<div class="bg-row" style="grid-template-columns:66px 1fr 150px">
+    <div class="bg-name"${hot?' style="color:var(--primary);font-weight:800"':''}>${label}</div>
+    <div class="bg-track"><div class="bg-fill" style="width:${count/max*100}%${hot?';background:linear-gradient(90deg,var(--primary),var(--primary-d,#b02a63))':''}"></div></div>
+    <div class="bg-val">${count} · ${fmtMoney(rev)}</div></div>`;
+
+  const horas=Array.from({length:24},(_,h)=>barRow(String(h).padStart(2,'0')+'h', hCount[h], hRev[h], maxH, h===bestH)).join('');
+  const dias =DIAS.map((d,i)=>barRow(d, dCount[i], dRev[i], maxD, i===bestD)).join('');
+  const faixas=faixa.map(f=>barRow(f.nome.replace(/^\S+\s/,''), f.c, f.r, maxF, f===bestFaixa)).join('');
+
+  // heatmap dia × hora
+  const H=Array.from({length:24},(_,h)=>h);
+  const head=`<div style="display:grid;grid-template-columns:38px repeat(24,1fr);gap:2px;margin-bottom:3px">
+    <div></div>${H.map(h=>`<div style="font-size:8px;color:var(--muted);text-align:center">${h%3===0?h:''}</div>`).join('')}</div>`;
+  const rowsHeat=DIAS_C.map((d,di)=>`<div style="display:grid;grid-template-columns:38px repeat(24,1fr);gap:2px;margin-bottom:2px;align-items:center">
+    <div style="font-size:10px;color:var(--muted)">${d}</div>
+    ${H.map(h=>{const c=heat[di+'_'+h]||0; return `<div title="${DIAS[di]} ${String(h).padStart(2,'0')}h · ${c} venda(s)" style="height:15px;border-radius:3px;background:var(--primary);opacity:${c?(0.16+0.84*c/maxCell).toFixed(2):0.05}"></div>`;}).join('')}</div>`).join('');
+
+  return `<div class="card"><h2>🕐 Horários que mais venderam <span class="badge">${fmt(appr.length)} vendas aprovadas no período</span></h2>
+    <div class="mini-kpis">
+      <div class="mini-kpi"><div class="n">${String(bestH).padStart(2,'0')}h–${String((bestH+1)%24).padStart(2,'0')}h</div><div class="l">⏰ Melhor hora · ${hCount[bestH]} vendas</div></div>
+      <div class="mini-kpi"><div class="n">${DIAS[bestD]}</div><div class="l">📅 Melhor dia · ${dCount[bestD]} vendas</div></div>
+      <div class="mini-kpi"><div class="n">${bestFaixa.nome.split(' ')[1]||bestFaixa.nome}</div><div class="l">${bestFaixa.faixa} · ${bestFaixa.c} vendas</div></div>
+      <div class="mini-kpi"><div class="n">${fmtMoney(hRev[bestH])}</div><div class="l">💰 Receita na melhor hora</div></div>
+    </div>
+    <div class="note" style="margin-bottom:14px">Baseado nas <b>vendas aprovadas</b> do período selecionado no topo. Horário no fuso local de quem abre o painel.</div>
+    <div class="grid2">
+      <div><h3 style="font-size:13px;margin-bottom:10px">Por hora do dia</h3><div class="barGroup">${horas}</div></div>
+      <div>
+        <h3 style="font-size:13px;margin-bottom:10px">Por dia da semana</h3><div class="barGroup">${dias}</div>
+        <h3 style="font-size:13px;margin:18px 0 10px">Por faixa do dia</h3><div class="barGroup">${faixas}</div>
+      </div>
+    </div>
+    <h3 style="font-size:13px;margin:20px 0 10px">Mapa de calor · dia × hora <span class="badge">mais escuro = mais vendas</span></h3>
+    <div style="overflow-x:auto"><div style="min-width:600px">${head}${rowsHeat}</div></div>
+  </div>`;
 }
 
 /* ====================== META CAPI ====================== */
