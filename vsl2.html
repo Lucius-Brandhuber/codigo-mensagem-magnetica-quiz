@@ -475,11 +475,11 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     if (el) el.textContent = precos[ab] || precos.A;
   })();
 
-  /* ====== CARREGAMENTOS (checklist) — termina exatamente em REVEAL_AT_SECONDS (6,33 min) ====== */
+  /* ====== CARREGAMENTOS (checklist) — ritmo natural (~25s), independente do reveal ====== */
   (function(){
     var items = document.querySelectorAll('#clItems .ci');
     var count = document.getElementById('clCount');
-    var per = (REVEAL_AT_SECONDS * 1000) / items.length; // tempo de cada item
+    var per = 3200; // ~3,2s por item → ~25s no total (dá tempo de ler cada linha)
     var i = 0;
     function step(){
       if (i >= items.length){
@@ -489,10 +489,11 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
       var it = items[i];
       var fill = it.querySelector('.ci-fill');
       fill.style.transition = 'width ' + (per/1000) + 's linear';
-      requestAnimationFrame(function(){ fill.style.width = '100%'; });
+      void fill.offsetWidth;            // força o reflow p/ a transição pegar (evita barra "instantânea")
+      fill.style.width = '100%';
       setTimeout(function(){
         it.classList.add('done');
-        i++; count.textContent = i + '/8';
+        i++; count.textContent = i + '/' + items.length;
         step();
       }, per);
     }

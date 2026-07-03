@@ -24,7 +24,7 @@
       price_ab: priceAb()
     };
     backup(e);
-    try{ fetch(GAS, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=UTF-8'}, body: JSON.stringify(e) }); }catch(x){}
+    try{ fetch(GAS, { method:'POST', mode:'no-cors', keepalive:true, headers:{'Content-Type':'text/plain;charset=UTF-8'}, body: JSON.stringify(e) }); }catch(x){}
   }
 
   window.cmmTrack = {

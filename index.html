@@ -378,6 +378,37 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     color: #8a7e86;
     margin-bottom: 18px;
   }
+
+  /* ===== PROCESSANDO (diagnóstico) ===== */
+  .proc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 360px;
+    margin: 26px auto 0;
+    text-align: left;
+  }
+  .proc-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    font-size: 14.5px;
+    color: #a99fa6;
+    opacity: 0.45;
+    transition: opacity 0.35s, color 0.35s;
+  }
+  .proc-item::before {
+    content: '';
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid #e0d6dd;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #fff;
+    transition: background 0.35s, border-color 0.35s;
+  }
+  .proc-item.done { opacity: 1; color: #463d45; }
+  .proc-item.done::before { content: '✓'; background: var(--green-a); border-color: var(--green-a); }
   .price-note s { color: #c4b8c0; }
   .price-note b { color: var(--ink); font-size: 22px; font-weight: 800; }
 
@@ -414,26 +445,20 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     <div class="badge">✨ +3.300 mulheres já reconquistaram o ex</div>
 
     <h1 class="landing-title serif">
-      ⬇️ Descubra como fazer seu ex <span class="accent">te responder ainda hoje</span>
+      Descubra em 1 minuto se <span class="accent">ainda dá pra reconquistar o seu ex</span>
     </h1>
 
     <img src="imgquiz/img1.png" alt="Mensagens no WhatsApp" class="whatsapp-img">
 
     <p class="landing-desc">
-      Use as <strong>3 estruturas do Código da Reconquista Magnética</strong> e veja ele te responder hoje mesmo e querer voltar.
-      Não importa se você traiu, se ele te bloqueou ou se ele tá com outra.
+      Responda o teste rápido e receba um <strong>diagnóstico personalizado</strong> das suas chances reais de reverter —
+      não importa se ele te bloqueou, sumiu ou já tá com outra.
     </p>
 
-    <ul class="benefits">
-      <li><span class="ic">🎯</span> Protocolo Personalizado de Reconquista incluído</li>
-      <li><span class="ic">🚫</span> O erro que faz 96% das mulheres perder o ex pra sempre</li>
-      <li><span class="ic">⚡</span> Atalho pra fazer ele implorar pra voltar em 72 horas</li>
-    </ul>
-
     <div class="cta-ring">
-      <button class="btn-main" onclick="goToQuestion(1)">💕 QUERO RECONQUISTAR MEU EX</button>
+      <button class="btn-main" onclick="goToQuestion(1)">Fazer o teste rápido →</button>
     </div>
-    <p class="trust-note">🔒 Teste gratuito • Resultado em minutos</p>
+    <p class="trust-note">🔒 100% gratuito e anônimo • Leva menos de 1 minuto</p>
   </div>
 </div>
 
@@ -484,13 +509,13 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 <!-- ======== TELA 4: PERGUNTA 4 ======== -->
 <div class="screen" id="screen-4">
   <div class="question-wrap">
-    <span class="q-emoji">😰</span>
-    <h2 class="q-title serif">Se ele realmente se apaixonar por outra mulher, o que aconteceria com você?</h2>
+    <span class="q-emoji">💭</span>
+    <h2 class="q-title serif">Imagina que ele te procura HOJE, arrependido, dizendo que quer você de volta. Como você reagiria?</h2>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Eu perderia completamente o chão</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Ficaria mal, mas tentaria seguir em frente</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Tentaria reconquistar ele a qualquer custo</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Fingiria que não ligo, mesmo estando morta por dentro</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Meu coração dispararia — é tudo que eu mais quero</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Ficaria na defensiva, mas por dentro morrendo de vontade</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Iria com calma, mas com certeza daria uma chance</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Choraria de alívio — sinto muita falta dele</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
@@ -498,13 +523,54 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 <!-- ======== TELA 5: PERGUNTA 5 ======== -->
 <div class="screen" id="screen-5">
   <div class="question-wrap">
-    <span class="q-emoji">⌛</span>
-    <h2 class="q-title serif">Quanto tempo você acha que tem antes de ele te esquecer completamente?</h2>
+    <span class="q-emoji">🔑</span>
+    <h2 class="q-title serif">Se existisse um passo a passo testado pra fazer ele te procurar primeiro, você aplicaria?</h2>
     <div class="options">
-      <button class="option-btn" onclick="finish()"><span class="radio"></span><span class="option-text">Poucos dias, acho que já estou sendo substituída</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="finish()"><span class="radio"></span><span class="option-text">Algumas semanas, ainda consigo agir</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="finish()"><span class="radio"></span><span class="option-text">Uns meses, acho que ainda tem algo entre nós</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="finish()"><span class="radio"></span><span class="option-text">Não sei, mas tenho medo de descobrir</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, faria de tudo pra ter ele de volta</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, desde que seja simples de seguir</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, mas preciso ver funcionando primeiro</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Com certeza — só não sabia por onde começar</span><span class="arrow">›</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ======== TELA 6: DIAGNÓSTICO (Etapa 04 — transição pra pré-venda) ======== -->
+<div class="screen" id="screen-6">
+  <div class="result-wrap">
+    <!-- Fase 1: processando -->
+    <div id="processing">
+      <span class="q-emoji">💗</span>
+      <h2 class="result-title serif">Analisando suas respostas...</h2>
+      <p class="result-desc">Só um instante — estamos montando o seu diagnóstico personalizado.</p>
+      <div class="proc-list" id="procList">
+        <div class="proc-item">Avaliando o tempo e o estado do término</div>
+        <div class="proc-item">Medindo o vínculo emocional que ainda existe</div>
+        <div class="proc-item">Calculando suas chances reais de reconquista</div>
+        <div class="proc-item">Montando seu Plano de Reconquista personalizado</div>
+      </div>
+    </div>
+    <!-- Fase 2: diagnóstico revelado -->
+    <div id="diagnostico" style="display:none">
+      <div class="result-badge">✅ Diagnóstico pronto</div>
+      <h2 class="result-title serif">Boa notícia: <span class="accent">ainda dá pra reverter</span> 💗</h2>
+      <p class="result-desc">
+        Pelas suas respostas, o vínculo entre vocês <strong>não se rompeu</strong> — ele só está adormecido.
+        Com as mensagens certas, na ordem certa, dá pra reacender o interesse dele e fazer ele te procurar primeiro.
+      </p>
+      <div class="result-box">
+        <h3>Seu plano personalizado inclui</h3>
+        <div class="result-item"><span class="check">✓</span> As 3 mensagens que quebram o silêncio e despertam a saudade</div>
+        <div class="result-item"><span class="check">✓</span> O gatilho que faz ele repensar a decisão de ter te deixado</div>
+        <div class="result-item"><span class="check">✓</span> O passo a passo pra ele dar o primeiro passo em até 72h</div>
+      </div>
+      <div class="urgency">
+        <strong>⏳ Cada dia conta</strong>
+        Quanto mais tempo passa, mais ele se acostuma com a distância. O melhor momento pra agir é agora.
+      </div>
+      <div class="cta-ring">
+        <button class="btn-main" onclick="irParaVendas()">QUERO VER MEU PLANO →</button>
+      </div>
+      <p class="trust-note">🔒 Baseado nas suas respostas • Ver o plano é gratuito</p>
     </div>
   </div>
 </div>
@@ -542,9 +608,28 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 
   function nextQ(next) { updateProgress(next); showScreen(next); if(window.cmmTrack) cmmTrack.view(next); }
 
-  function finish() {
-    if (window.fbq) fbq('track', 'Lead');
-    window.location.href = 'vendas.html';
+  // Etapa 04 — tela de diagnóstico: processa, revela e transfere o desejo pra pré-venda
+  function showResult() {
+    updateProgress(6);              // esconde a barra (não há step 6 em progressData)
+    showScreen(6);
+    if (window.cmmTrack) cmmTrack.view('resultado');
+    var items = document.querySelectorAll('#procList .proc-item');
+    var i = 0;
+    var iv = setInterval(function () {
+      if (i < items.length) { items[i].classList.add('done'); i++; }
+      else { clearInterval(iv); }
+    }, 650);
+    setTimeout(function () {
+      document.getElementById('processing').style.display = 'none';
+      document.getElementById('diagnostico').style.display = 'block';
+      if (window.fbq) fbq('track', 'Lead');   // completou o quiz = lead
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, items.length * 650 + 500);
+  }
+
+  function irParaVendas() {
+    // keepalive no track.js já garante o envio; pequeno atraso por segurança
+    setTimeout(function () { window.location.href = 'vendas.html'; }, 120);
   }
 
   // tracking: view da landing + answer ao clicar numa opção
