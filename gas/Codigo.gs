@@ -252,6 +252,8 @@ function saveVenda(b){
       try { sendBibliotecaEmail(row); } catch(err){}
     } else if (produto === 'reconstrucao'){
       try { sendReconstrucaoEmail(row); } catch(err){}
+    } else if (produto === 'manual-comunicacao' || produto === 'manual'){
+      try { sendManualComunicacaoEmail(row); } catch(err){}
     } else {
       try { sendAccessEmail(row); } catch(err){}
     }
@@ -441,6 +443,35 @@ function sendReconstrucaoEmail(venda){
   MailApp.sendEmail(email, subject, 'Desbloquear: ' + link, { htmlBody: html, name: 'Código da Reconquista Magnética' });
 }
 
+function sendManualComunicacaoEmail(venda){
+  var email = venda.email;
+  if (!email) return;
+  var nome = venda.nome || 'aluna';
+  var primeiro = nome.split(' ')[0];
+  var chave = sha256('manual-comunicacao|' + email.toLowerCase());
+  var link = MEMBROS_URL + '?unlock=manual-comunicacao&email=' + encodeURIComponent(email) + '&key=' + chave;
+
+  var subject = '💬 Seu Manual da Comunicação está liberado!';
+  var html = '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f7f1f4;font-family:Arial,sans-serif">'
+    + '<div style="max-width:520px;margin:30px auto;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)">'
+    + '<div style="background:linear-gradient(135deg,#2b7de9,#0ea5c4);padding:36px 28px;text-align:center;color:#fff">'
+    + '<div style="font-size:42px;margin-bottom:8px">💬</div>'
+    + '<h1 style="margin:0;font-size:22px">Parabéns, ' + primeiro + '!</h1>'
+    + '<p style="margin:8px 0 0;font-size:14px;opacity:.9">Seu Manual da Comunicação foi liberado</p>'
+    + '</div>'
+    + '<div style="padding:28px">'
+    + '<p style="font-size:15px;color:#333;line-height:1.6">Clique no botão abaixo para desbloquear o <strong>Manual da Comunicação</strong> na sua área de membros:</p>'
+    + '<div style="text-align:center;margin:24px 0">'
+    + '<a href="' + link + '" style="display:inline-block;background:linear-gradient(135deg,#2b7de9,#1e63c4);color:#fff;text-decoration:none;padding:14px 36px;border-radius:12px;font-size:16px;font-weight:700">Desbloquear agora →</a>'
+    + '</div>'
+    + '<p style="font-size:13px;color:#888;line-height:1.5">Use o mesmo e-mail <strong>' + email + '</strong> da sua conta na área de membros.</p>'
+    + '<hr style="border:none;border-top:1px solid #eee;margin:20px 0">'
+    + '<p style="font-size:12px;color:#aaa;text-align:center">Código da Reconquista Magnética<br>Qualquer dúvida, responda este e-mail.</p>'
+    + '</div></div></body></html>';
+
+  MailApp.sendEmail(email, subject, 'Desbloquear: ' + link, { htmlBody: html, name: 'Código da Reconquista Magnética' });
+}
+
 /* ====================== HELPERS ====================== */
 function json(obj){
   return ContentService.createTextOutput(JSON.stringify(obj))
@@ -486,4 +517,9 @@ function testeBiblioteca(){
 function testeReconstrucao(){
   saveVenda({ status:'aprovada', payment_method:'pix', value:0, name:'Teste', email:'luciusbrandhuber2@gmail.com', order_id:'TR1', __payt:true, __produto:'reconstrucao' });
   Logger.log('Venda de teste da Reconstrução gravada — confira o e-mail.');
+}
+// Simula uma compra do MANUAL DA COMUNICAÇÃO (dispara o e-mail de desbloqueio). Troque o e-mail.
+function testeManualComunicacao(){
+  saveVenda({ status:'aprovada', payment_method:'pix', value:0, name:'Teste', email:'luciusbrandhuber2@gmail.com', order_id:'TM1', __payt:true, __produto:'manual-comunicacao' });
+  Logger.log('Venda de teste do Manual da Comunicação gravada — confira o e-mail.');
 }

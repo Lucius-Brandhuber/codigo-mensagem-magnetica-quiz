@@ -294,7 +294,7 @@ const QUIZ_TOTAL = 6;        // telas do quiz (step 0..5)
 const PRICE = 27.90;         // fallback de valor (BRL)
 const CURRENCY = 'BRL';
 const AB_MIN_BUYS = 10;      // mínimo de compras por variante p/ significância
-const PRODUTOS = { curso:'Curso principal', biblioteca:'Biblioteca das Respostas', reconstrucao:'Reconstrução da Confiança' };
+const PRODUTOS = { curso:'Curso principal', biblioteca:'Biblioteca das Respostas', reconstrucao:'Reconstrução da Confiança', 'manual-comunicacao':'Manual da Comunicação', manual:'Manual da Comunicação' };
 const PRICE_B = 34.90;       // variante B do curso
 const PRICE_BIBLIO = 14.90;  // Biblioteca das Respostas
 // Valor real da venda. Usa o valor do postback da Payt quando vem preenchido;
@@ -304,9 +304,9 @@ function vValor(v){
   if(v && v.valor>0) return v.valor;
   const prod=String(v&&v.produto||'').toLowerCase();
   const ab=String(v&&v.ab||'').toUpperCase();
-  if(prod==='biblioteca')   return PRICE_BIBLIO;
-  if(prod==='reconstrucao') return 0;               // preço definido na Payt; sem valor no postback
-  return ab==='B' ? PRICE_B : PRICE;                // curso (ou antiga s/ produto): A=27,90 | B=34,90
+  if(prod==='biblioteca')       return PRICE_BIBLIO;
+  if(prod==='curso' || prod==='') return ab==='B' ? PRICE_B : PRICE; // curso (ou antiga s/ produto): A=27,90 | B=34,90
+  return 0;                                          // reconstrução, manual e outros: preço só na Payt
 }
 
 /* ====================== STATE ====================== */
@@ -1375,7 +1375,7 @@ function tabVendas(){
   const appr=list.filter(x=>APPROVED.test(x.status));
   const rev=appr.reduce((a,x)=>a+vValor(x),0);
   const stChip=(k,lbl)=>`<button class="chip ${vStatus===k?'on':''}" onclick="vStatus='${k}';renderTab()">${lbl} (${fmt(stCount[k]||0)})</button>`;
-  const prods=[['all','Todos'],['curso','Curso'],['biblioteca','Biblioteca'],['reconstrucao','Reconstrução'],['antigo','(antigas s/ produto)']];
+  const prods=[['all','Todos'],['curso','Curso'],['biblioteca','Biblioteca'],['reconstrucao','Reconstrução'],['manual-comunicacao','Manual'],['antigo','(antigas s/ produto)']];
   const prodChip=([k,lbl])=>`<button class="chip ${vProd===k?'on':''}" onclick="vProd='${k}';renderTab()">${lbl}</button>`;
   const stBadge=v=>{
     const s=vendaStatus(v);
