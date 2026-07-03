@@ -1,4 +1,4 @@
-/* Tracking do funil — Código da Mensagem Magnética
+/* Tracking do funil — Código da Reconquista Magnética
    Gera session id, dispara view/answer/checkout_click para o GAS e mantém
    backup local. Usa fetch no-cors + text/plain (evita preflight CORS no GAS). */
 (function(){
