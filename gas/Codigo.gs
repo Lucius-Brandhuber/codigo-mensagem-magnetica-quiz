@@ -69,6 +69,16 @@ function doGet(e){
   // Modo combinado: 1 requisição traz as 3 abas de uma vez (usado pelo admin).
   // Evita 3 invocações do Apps Script (que enfileiram e somam ~3-4s cada).
   if (p.all){
+    // Delta sync: o admin manda ?since=<maior data que já tem> e recebe só as
+    // linhas novas (lê apenas o final da planilha). Payload minúsculo.
+    var since = Number(p.since) || 0;
+    if (since > 0){
+      var dd = db();
+      return json({ delta:true, since:since,
+        eventos:  rowsSince(dd.eventos, since),
+        vendas:   rowsSince(dd.vendas,  since),
+        capi_log: rowsSince(dd.capi,    since) });
+    }
     var cache = CacheService.getScriptCache();
     if (!p.fresh){
       var hit = cacheGet(cache);
@@ -112,20 +122,44 @@ function cacheGet(cache){
   } catch(x){ return null; }
 }
 function invalidateCache(){ try { CacheService.getScriptCache().remove(CACHE_KEY); } catch(x){} }
+function objFromRow(head, row){
+  var o = {}, empty = true;
+  for (var c=0;c<head.length;c++){
+    var v = row[c];
+    if (v instanceof Date) v = v.getTime();
+    o[head[c]] = v;
+    if (v !== '' && v != null) empty = false;
+  }
+  return empty ? null : o;
+}
 function rowsAsObjects(sh){
   var vals = sh.getDataRange().getValues();
   if (vals.length < 2) return [];
   var head = vals[0];
   var out = [];
-  for (var i=1;i<vals.length;i++){
-    var o = {}; var empty = true;
-    for (var c=0;c<head.length;c++){
-      var v = vals[i][c];
-      if (v instanceof Date) v = v.getTime();
-      o[head[c]] = v;
-      if (v !== '' && v != null) empty = false;
-    }
-    if (!empty) out.push(o);
+  for (var i=1;i<vals.length;i++){ var o = objFromRow(head, vals[i]); if (o) out.push(o); }
+  return out;
+}
+// Só as linhas com data >= since. Lê apenas o final da planilha (as novas ficam
+// no fim, appendRow), então é barato mesmo com milhares de linhas. Se a janela
+// não alcançar o 'since' (gap grande), lê tudo por segurança.
+function rowsSince(sh, since){
+  var lastRow = sh.getLastRow();
+  if (lastRow < 2) return [];
+  var cols = sh.getLastColumn();
+  var head = sh.getRange(1,1,1,cols).getValues()[0];
+  var di = head.indexOf('data'); if (di < 0) di = 0;
+  var WINDOW = 3000;
+  var startRow = Math.max(2, lastRow - WINDOW + 1);
+  var vals = sh.getRange(startRow, 1, lastRow - startRow + 1, cols).getValues();
+  if (startRow > 2){
+    var fd = vals[0][di]; if (fd instanceof Date) fd = fd.getTime();
+    if (Number(fd) >= since){ vals = sh.getRange(2, 1, lastRow - 1, cols).getValues(); }
+  }
+  var out = [];
+  for (var i=0;i<vals.length;i++){
+    var d = vals[i][di]; if (d instanceof Date) d = d.getTime();
+    if (Number(d) >= since){ var o = objFromRow(head, vals[i]); if (o) out.push(o); }
   }
   return out;
 }

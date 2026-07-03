@@ -490,6 +490,24 @@ function mergeNoDup(base, extra){
   extra.forEach(e=>{ const k=e.s+'|'+e.ev+'|'+e.step+'|'+e.t; if(!seen.has(k)){seen.add(k);out.push(e);} });
   return out;
 }
+function mergeVendas(base, extra){
+  const key=v=>v.order_id+'|'+v.status+'|'+v.t;
+  const seen=new Set(base.map(key)); const out=base.slice();
+  extra.forEach(v=>{ const k=key(v); if(!seen.has(k)){seen.add(k);out.push(v);} });
+  return out;
+}
+function mergeCapi(base, extra){
+  const key=c=>c.event_id+'|'+c.ev+'|'+c.t+'|'+c.status_code;
+  const seen=new Set(base.map(key)); const out=base.slice();
+  extra.forEach(c=>{ const k=key(c); if(!seen.has(k)){seen.add(k);out.push(c);} });
+  return out;
+}
+// maior timestamp que já temos localmente → ponto de partida do delta sync
+function sinceTs(){
+  let m=0;
+  [_evAll,_vendasAll,_capiLogAll].forEach(a=>a.forEach(x=>{ if(x.t>m) m=x.t; }));
+  return m;
+}
 function extract(j){ if(Array.isArray(j))return j; if(!j)return[]; return j.data||j.rows||j.eventos||j.vendas||j.items||[]; }
 
 let _syncing=false;
@@ -502,11 +520,13 @@ async function sync(manual){
   const ok = GAS && !/COLE_AQUI/.test(GAS);
   if(ok){
     try{
-      const url = GAS+'?all=1'+(manual?'&fresh=1':'');
+      // Delta: se já temos dados locais e não é refresh manual, pedimos só o novo.
+      const since = manual ? 0 : sinceTs();
+      const url = GAS+'?all=1'+(since>0 ? '&since='+since : (manual?'&fresh=1':''));
       const j = await fetch(url).then(r=>r.json());
-      let evRaw, veRaw, caRaw;
-      if(j && !Array.isArray(j) && (j.eventos||j.vendas||j.capi_log)){
-        evRaw=j.eventos||[]; veRaw=j.vendas||[]; caRaw=j.capi_log||[];
+      let evRaw, veRaw, caRaw, isDelta=false;
+      if(j && !Array.isArray(j) && (j.eventos||j.vendas||j.capi_log||j.delta)){
+        evRaw=j.eventos||[]; veRaw=j.vendas||[]; caRaw=j.capi_log||[]; isDelta=!!j.delta;
       }else{
         const [a,b,c] = await Promise.all([
           Array.isArray(j)?Promise.resolve(j):fetch(GAS).then(r=>r.json()).catch(()=>[]),
@@ -515,11 +535,18 @@ async function sync(manual){
         ]);
         evRaw=extract(a); veRaw=extract(b); caRaw=extract(c);
       }
-      _evAll     = mergeNoDup(evRaw.map(norm), localBackup());
-      _vendasAll = veRaw.map(normVenda);
-      _capiLogAll= caRaw.map(normCapi);
+      const evN=evRaw.map(norm), veN=veRaw.map(normVenda), caN=caRaw.map(normCapi);
+      if(isDelta){
+        _evAll     = mergeNoDup(_evAll, evN);
+        _vendasAll = mergeVendas(_vendasAll, veN);
+        _capiLogAll= mergeCapi(_capiLogAll, caN);
+      }else{
+        _evAll     = mergeNoDup(evN, localBackup());
+        _vendasAll = veN;
+        _capiLogAll= caN;
+      }
       localStorage.setItem(CKEY, JSON.stringify({ev:_evAll,vendas:_vendasAll,capi:_capiLogAll,ts:Date.now()}));
-      $('#syncTxt').textContent='atualizado '+new Date().toLocaleTimeString('pt-BR')+' · '+((Date.now()-t0)/1000).toFixed(1)+'s';
+      $('#syncTxt').textContent='atualizado '+new Date().toLocaleTimeString('pt-BR')+(isDelta?(' · +'+evN.length):'')+' · '+((Date.now()-t0)/1000).toFixed(1)+'s';
     }catch(e){
       _evAll = mergeNoDup(_evAll, localBackup());
       $('#syncTxt').textContent='offline · usando cache';
