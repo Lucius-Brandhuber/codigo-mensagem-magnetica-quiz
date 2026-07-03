@@ -553,7 +553,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     <div id="diagnostico" style="display:none">
       <div class="result-badge">✅ Diagnóstico pronto</div>
       <h2 class="result-title serif">Boa notícia: <span class="accent">ainda dá pra reverter</span> 💗</h2>
-      <p class="result-desc">
+      <p class="result-desc" id="diagDesc">
         Pelas suas respostas, o vínculo entre vocês <strong>não se rompeu</strong> — ele só está adormecido.
         Com as mensagens certas, na ordem certa, dá pra reacender o interesse dele e fazer ele te procurar primeiro.
       </p>
@@ -565,7 +565,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
       </div>
       <div class="urgency">
         <strong>⏳ Cada dia conta</strong>
-        Quanto mais tempo passa, mais ele se acostuma com a distância. O melhor momento pra agir é agora.
+        <span id="diagUrgencyLine">Quanto mais tempo passa, mais ele se acostuma com a distância. O melhor momento pra agir é agora.</span>
       </div>
       <div class="cta-ring">
         <button class="btn-main" onclick="irParaVendas()">QUERO VER MEU PLANO →</button>
@@ -579,6 +579,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 <script>
   // cronômetros do tracking: tempo na landing, na pergunta atual e no diagnóstico
   var _pageT0 = Date.now(), _qT0 = Date.now(), _diagT0 = 0;
+  var respostas = {};   // guarda a opção escolhida em cada pergunta (para personalizar o diagnóstico)
 
   const progressData = {
     1: { label: 'Pergunta 1 de 5', pct: 20 },
@@ -628,6 +629,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
       else { clearInterval(iv); }
     }, 650);
     setTimeout(function () {
+      try { montarDiagnostico(); } catch(e){}
       document.getElementById('processing').style.display = 'none';
       document.getElementById('diagnostico').style.display = 'block';
       _diagT0 = Date.now();
@@ -635,6 +637,42 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
       if (window.fbq) fbq('track', 'Lead');   // completou o quiz = lead
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, items.length * 650 + 500);
+  }
+
+  // Etapa 04 — monta o diagnóstico PERSONALIZADO a partir das respostas do quiz
+  function montarDiagnostico() {
+    var r1 = respostas['1'] || '', r2 = respostas['2'] || '', r3 = respostas['3'] || '';
+
+    var vinculo = {
+      'Sim, conversamos às vezes': 'Vocês ainda conversam — e esse é um dos sinais mais fortes que existem: o canal está aberto e o vínculo continua vivo.',
+      'Ele fala comigo, mas é frio e distante': 'Ele ainda fala com você, mesmo frio e distante. E frieza quase nunca é falta de sentimento — é um muro de defesa, e muro se derruba com as mensagens certas.',
+      'Me responde por obrigação': 'Ele ainda te responde, mesmo que pareça por obrigação. Isso quer dizer que a porta não está fechada — só emperrada, e dá pra reabrir do jeito certo.',
+      'Não, fui bloqueada em tudo': 'Ele te bloqueou — e eu sei o quanto isso dói. Mas bloqueio, na maioria das vezes, é excesso de sentimento, não ausência dele: dá pra reverter até a partir do zero.'
+    };
+    var dor = {
+      'Sinto muita saudade e penso nele todo dia': 'a saudade que aperta todo santo dia',
+      'Ver ele seguir a vida como se eu não tivesse existido': 'ver ele seguir a vida como se você nunca tivesse existido',
+      'Não me manda mensagem e não me responde': 'o silêncio dele, que às vezes machuca mais que qualquer briga',
+      'Sinto que não fui suficiente pra ele': 'essa sensação de não ter sido suficiente — que, pode acreditar, não é verdade',
+      'Ver ele com outra e saber que fui substituída': 'a dor de ver ele com outra e se sentir substituída'
+    };
+    var urg = {
+      'Menos de 1 semana': 'O término é recente: essa é a <strong>janela de ouro</strong> da reconquista, quando o vínculo ainda está quente e reverter é mais rápido.',
+      'Esse mês': 'O término é recente: essa é a <strong>janela de ouro</strong> da reconquista, quando o vínculo ainda está quente e reverter é mais rápido.',
+      'Entre 1 e 6 meses': 'Já faz um tempo, mas o vínculo que vocês construíram não some — ele só precisa ser reativado com os gatilhos certos.',
+      'Entre 6 meses e 1 ano': 'Mesmo com o tempo que passou, memória emocional não expira — dá pra reacender o que vocês viveram.',
+      'Mais de 1 ano': 'Mesmo com o tempo que passou, memória emocional não expira — dá pra reacender o que vocês viveram.'
+    };
+
+    var partes = [];
+    if (vinculo[r2]) partes.push(vinculo[r2]);
+    if (dor[r3]) partes.push('E eu sei que, por dentro, o que mais te machuca é <strong>' + dor[r3] + '</strong>.');
+    partes.push('A boa notícia: pelas suas respostas, o vínculo entre vocês <strong>não se rompeu</strong> — ele só está adormecido. Com as mensagens certas, na ordem certa, dá pra reacender o interesse dele e fazer ele te procurar primeiro. 💗');
+    var el = document.getElementById('diagDesc');
+    if (el) el.innerHTML = partes.join(' ');
+
+    var uel = document.getElementById('diagUrgencyLine');
+    if (uel && urg[r1]) uel.innerHTML = urg[r1];
   }
 
   function irParaVendas() {
@@ -653,6 +691,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     var sc = b.closest('.screen'); if(!sc) return;
     var step = sc.id.replace('screen-','');
     var t = (b.querySelector('.option-text')||{}).textContent || '';
+    respostas[step] = t.trim();
     if(window.cmmTrack) cmmTrack.answer(step, t.trim(), Date.now() - _qT0);
   }, true);
 </script>
