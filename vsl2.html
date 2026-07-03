@@ -265,7 +265,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   </div>
 
   <!-- CARREGAMENTOS (some quando o protocolo é revelado) -->
-  <div class="checklist" id="checklist" style="display:none">
+  <div class="checklist" id="checklist">
     <div class="checklist-head">
       <span class="t">Criando seu Protocolo... ✏️</span>
       <span class="c" id="clCount">0/8</span>
@@ -475,30 +475,32 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     if (el) el.textContent = precos[ab] || precos.A;
   })();
 
-  /* ====== REVELAR RESTANTE após REVEAL_AT_SECONDS ====== */
+  /* ====== REVELAR RESTANTE ====== */
   var revealed = false;
   function revealRest(){
     if (revealed) return; revealed = true;
-    // Mostra o checklist e anima item a item (~25s total)
     var cl = document.getElementById('checklist');
-    if (cl) cl.style.display = 'block';
+    if (cl) cl.style.display = 'none';
+    document.getElementById('rest').style.display = 'block';
+    startCountdown();
+    setTimeout(function(){
+      var badge = document.querySelector('.reveal-badge');
+      if (badge) badge.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+
+  /* ====== CHECKLIST: inicia na hora, termina em REVEAL_AT_SECONDS ====== */
+  (function(){
+    var cl = document.getElementById('checklist');
     var items = document.querySelectorAll('#clItems .ci');
     var count = document.getElementById('clCount');
-    var per = 3200;
+    // Tempo por item: total - 1.8s (mensagem "Gerado") dividido por 8
+    var per = Math.floor((REVEAL_AT_SECONDS * 1000 - 1800) / items.length);
     var i = 0;
     function step(){
       if (i >= items.length){
         document.getElementById('gerado').style.display = 'block';
-        // Após o "Protocolo Gerado", esconde o checklist e revela a oferta
-        setTimeout(function(){
-          cl.style.display = 'none';
-          document.getElementById('rest').style.display = 'block';
-          startCountdown();
-          setTimeout(function(){
-            var badge = document.querySelector('.reveal-badge');
-            if (badge) badge.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 100);
-        }, 1800);
+        setTimeout(revealRest, 1800);
         return;
       }
       var it = items[i];
@@ -512,13 +514,11 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
         step();
       }, per);
     }
+    // atalho de PREVIEW: ?rev=1 pula direto pra oferta
+    if (/[?&]rev=1/.test(location.search)){ revealRest(); return; }
     step();
-  }
-  // atalho de PREVIEW: ?rev=1 revela a oferta na hora (invisível pro tráfego real)
-  if (/[?&]rev=1/.test(location.search)) revealRest();
-  // dispara pelo tempo de página (a VSL inicia automaticamente)
-  setTimeout(revealRest, REVEAL_AT_SECONDS * 1000);
-  // best-effort: também sincroniza com o tempo real do player VTurb, se disponível
+  })();
+  // fallback: sincroniza com o player VTurb caso a aba tenha ficado em segundo plano
   var _poll = setInterval(function(){
     try {
       var inst = window.smartplayer && window.smartplayer.instances && window.smartplayer.instances[0];
