@@ -343,6 +343,31 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   .plan-foot{margin-top:16px;font-size:12px;color:var(--muted-2);letter-spacing:.4px}
   .plan-foot .warn{color:#e07a6a;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;font-size:11.5px;display:block;margin-bottom:8px}
 
+  /* ===== DOIS PLANOS =====
+     No celular o Completo vem primeiro (é a escolha que a gente quer).
+     O Essencial é a âncora de contraste: sem moldura dourada, sem halo. */
+  .plans{display:flex;flex-direction:column;gap:26px;margin-top:30px}
+  .plan.lite{
+    background:var(--card);
+    box-shadow:var(--sh-card);
+    padding:26px 22px 24px;
+  }
+  .plan.lite::before{background:linear-gradient(150deg,#3a3a44,#2c2c34)}
+  .plan.lite::after{display:none}
+  .plan.lite .plan-tag{
+    background:#33333d;color:var(--muted);box-shadow:none;
+  }
+  .plan.lite .now{font-size:clamp(36px,10vw,44px);text-shadow:none;color:var(--muted)}
+  .plan.lite .once{color:var(--muted-2)}
+  .plan.lite .btn{
+    background:transparent;color:var(--gold);border:1.5px solid rgba(230,180,85,.45);
+    box-shadow:none;
+  }
+  .plan-list .no{color:#5a5a66;flex-shrink:0;font-weight:800}
+  .plan-list .off{color:#5a5a66;text-decoration:line-through;text-decoration-color:#4a4a55}
+  .plan-list .off b{color:#5a5a66}
+  .plans-note{margin-top:22px;font-size:13px;color:var(--muted-2);line-height:1.5}
+
   /* ===== POR DENTRO / DEPOIMENTOS (trilhos) ===== */
   /* alinhados pelo topo: os depoimentos têm proporções diferentes
      (5 são prints em retrato, 3 em paisagem) e centralizá-los desalinharia tudo */
@@ -467,6 +492,15 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 
     /* a oferta e os blocos de leitura não podem esticar demais */
     .plan{max-width:640px; margin:0 auto; padding:40px 34px 34px}
+    /* dois planos lado a lado: Essencial à esquerda, Completo à direita e maior */
+    .plans{
+      flex-direction:row; align-items:stretch; justify-content:center;
+      gap:30px; max-width:940px; margin:40px auto 0;
+    }
+    .plans .plan{flex:1 1 0; max-width:none; margin:0; display:flex; flex-direction:column}
+    .plans .plan .plan-list{flex:1}
+    .plans .plan.lite{order:1; padding:34px 26px 28px}
+    .plans .plan.full{order:2; transform:scale(1.04)}
     .guar{max-width:820px; margin:0 auto; padding:48px 40px}
     .faq-wrap{max-width:820px; margin:0 auto}
     .sub{margin-bottom:40px}
@@ -622,29 +656,66 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
       <div class="u"><div class="n" id="cdS">00</div><div class="l">Segundos</div></div>
     </div>
 
-    <div class="plan rv">
-      <span class="plan-tag">⚡ Acesso completo</span>
-      <h3>Código da Reconquista Magnética</h3>
+    <div class="plans">
+      <!-- COMPLETO — primeiro no celular de propósito -->
+      <div class="plan full rv">
+        <span class="plan-tag">⭐ Mais escolhido</span>
+        <h3>Reconquista Magnética<br>COMPLETO</h3>
 
-      <div class="from">DE <s>R$ 1.433,00</s> POR</div>
-      <div class="now" id="priceNow">R$ 27,90</div>
-      <div class="once">Pagamento único e vitalício</div>
+        <div class="from">DE <s>R$ 1.433,00</s> POR</div>
+        <div class="now">R$ 54,90</div>
+        <div class="once">Pagamento único e vitalício</div>
 
-      <div class="plan-list">
-        <div><span class="ck">✓</span><span>Método completo em vídeo — 7 módulos <b>(R$ 497)</b></span></div>
-        <div><span class="ck">✓</span><span>Kit de Ferramentas: Emergência, 90 mensagens, Planner e Diário <b>(R$ 297)</b></span></div>
-        <div><span class="ck">✓</span><span>8 Sintonias em áudio <b>(R$ 197)</b></span></div>
-        <div><span class="ck">✓</span><span>6 bônus em PDF liberados na hora <b>(R$ 442)</b></span></div>
-        <div><span class="ck">✓</span><span>Garantia incondicional de 30 dias</span></div>
+        <div class="plan-list">
+          <div><span class="ck">✓</span><span>Método completo em vídeo — 7 módulos <b>(R$ 497)</b></span></div>
+          <div><span class="ck">✓</span><span>O Protocolo dos 12 Dias, dia a dia</span></div>
+          <div><span class="ck">✓</span><span>Código da Mensagem Magnética <b>(R$ 97)</b></span></div>
+          <div><span class="ck">✓</span><span>Gerador de Mensagens: 90 mensagens prontas <b>(R$ 297)</b></span></div>
+          <div><span class="ck">✓</span><span>Kit de Emergência pra hora da ansiedade</span></div>
+          <div><span class="ck">✓</span><span>Planejador de 14 dias + Diário de Bordo</span></div>
+          <div><span class="ck">✓</span><span>8 Sintonias em áudio <b>(R$ 197)</b></span></div>
+          <div><span class="ck">✓</span><span>Os 5 bônus em PDF liberados na hora <b>(R$ 345)</b></span></div>
+          <div><span class="ck">✓</span><span>Garantia incondicional de 30 dias</span></div>
+        </div>
+
+        <button class="btn pulse" data-label="Oferta" onclick="comprar('completo')">QUERO O ACESSO COMPLETO</button>
+
+        <div class="plan-foot">
+          <span class="warn">Oferta por tempo limitado</span>
+          +3.300 mulheres já entraram no método
+        </div>
       </div>
 
-      <button class="btn pulse" data-label="Oferta" onclick="comprar()">QUERO DESTRAVAR MEU ACESSO</button>
+      <!-- ESSENCIAL — a âncora de contraste -->
+      <div class="plan lite rv">
+        <span class="plan-tag">Só o essencial</span>
+        <h3>Reconquista Magnética<br>ESSENCIAL</h3>
 
-      <div class="plan-foot">
-        <span class="warn">Oferta por tempo limitado</span>
-        +3.300 mulheres já entraram no método
+        <div class="from">PAGAMENTO ÚNICO DE</div>
+        <div class="now">R$ 19,90</div>
+        <div class="once">Acesso vitalício</div>
+
+        <div class="plan-list">
+          <div><span class="ck">✓</span><span>Método completo em vídeo — 7 módulos</span></div>
+          <div><span class="ck">✓</span><span>O Protocolo dos 12 Dias, dia a dia</span></div>
+          <div><span class="ck">✓</span><span>Código da Mensagem Magnética</span></div>
+          <div><span class="ck">✓</span><span>Garantia incondicional de 30 dias</span></div>
+          <div><span class="no">✕</span><span class="off">Gerador de Mensagens: 90 mensagens prontas</span></div>
+          <div><span class="no">✕</span><span class="off">Kit de Emergência pra hora da ansiedade</span></div>
+          <div><span class="no">✕</span><span class="off">Planejador de 14 dias + Diário de Bordo</span></div>
+          <div><span class="no">✕</span><span class="off">8 Sintonias em áudio</span></div>
+          <div><span class="no">✕</span><span class="off">Os 5 bônus em PDF</span></div>
+        </div>
+
+        <button class="btn" data-label="Oferta" onclick="comprar('essencial')">QUERO O ESSENCIAL</button>
+
+        <div class="plan-foot">
+          Sem os atalhos. Você escreve cada mensagem sozinha.
+        </div>
       </div>
     </div>
+
+    <p class="plans-note rv">Os dois liberam o acesso na hora do pagamento. A diferença é o quanto do caminho você vai ter que fazer sem ajuda.</p>
   </section>
 
   <!-- ===== POR DENTRO ===== -->
@@ -664,7 +735,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     </div>
     <p class="swipe">← arraste para ver →</p>
     <div class="rv" style="max-width:420px;margin:26px auto 0">
-      <button class="btn" data-label="Após por dentro" onclick="comprar()">QUERO ACESSAR AGORA</button>
+      <button class="btn" data-label="Após por dentro" onclick="irOferta()">QUERO ACESSAR AGORA</button>
     </div>
   </section>
 
@@ -762,7 +833,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     <h2 class="h2 rv">Ele não vai esperar <span class="g">pra sempre</span></h2>
     <p class="sub rv" style="margin-bottom:26px">Cada dia parado é um dia a mais em que ele se acostuma com a sua ausência. Você já sabe o que acontece se não fizer nada — já está acontecendo.</p>
     <div class="rv" style="max-width:460px;margin:0 auto">
-      <button class="btn pulse" data-label="Fechamento" onclick="comprar()">COMEÇAR MEU PROTOCOLO AGORA</button>
+      <button class="btn pulse" data-label="Fechamento" onclick="irOferta()">COMEÇAR MEU PROTOCOLO AGORA</button>
       <p class="btn-note">Garantia de 30 dias • Acesso imediato • Pagamento único</p>
     </div>
   </section>
@@ -778,10 +849,10 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 <div class="bottombar" id="bottombar">
   <div class="in">
     <div class="px">
-      <div class="a">Acesso completo por</div>
-      <div class="b" id="priceBar">R$ 27,90</div>
+      <div class="a">Acesso a partir de</div>
+      <div class="b" id="priceBar">R$ 19,90</div>
     </div>
-    <button class="btn" data-label="Barra fixa" onclick="comprar()">DESTRAVAR ACESSO</button>
+    <button class="btn" data-label="Barra fixa" onclick="irOferta()">DESTRAVAR ACESSO</button>
   </div>
 </div>
 
@@ -789,30 +860,20 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 <script>
   if (window.cmmTrack) cmmTrack.view('pv');
 
-  /* ===== Teste A/B de PREÇO (variante sorteada no track.js) ===== */
-  var CHECKOUT_A = 'https://checkout.payt.com.br/c/R3NZPZ';  // preço atual
-  var CHECKOUT_B = 'https://payt.site/VqClrnk';              // R$ 34,90
-  var PRECOS = { A: 'R$ 27,90', B: 'R$ 34,90' };
+  /* ===== Dois planos =====
+     O preço deixou de ser sorteado (o antigo teste A/B saiu): agora quem escolhe
+     é a lead. Os dois links abaixo são checkouts distintos na Payt. */
+  // TODO: trocar pelo link real da Payt cobrando R$ 19,90
+  var CHECKOUT_ESSENCIAL = '';
+  // TODO: trocar pelo link real da Payt cobrando R$ 54,90
+  var CHECKOUT_COMPLETO  = '';
 
-  function ab(){ return (window.cmmTrack && cmmTrack.getAb) ? cmmTrack.getAb() : 'A'; }
-
-  (function(){
-    var p = PRECOS[ab()] || PRECOS.A;
-    ['priceNow','priceBar'].forEach(function(id){
-      var el = document.getElementById(id);
-      if (el) el.textContent = p;
-    });
-  })();
-
-  function comprar(){
+  function comprar(plano){
+    var url = (plano === 'essencial') ? CHECKOUT_ESSENCIAL : CHECKOUT_COMPLETO;
+    if (!url) { alert('Checkout em configuração. Tente novamente em instantes.'); return; }
     if (window.fbq) fbq('track', 'InitiateCheckout');
-    var label = 'CTA';
-    try {
-      var b = (window.event && window.event.target) ? window.event.target.closest('.btn') : null;
-      if (b && b.getAttribute('data-label')) label = b.getAttribute('data-label');
-    } catch(x){}
-    if (window.cmmTrack) cmmTrack.checkout(label);
-    window.location.href = (ab() === 'B') ? CHECKOUT_B : CHECKOUT_A;
+    if (window.cmmTrack) cmmTrack.checkout(plano === 'essencial' ? 'essencial' : 'completo');
+    window.location.href = url;
   }
 
   // CTA do topo: leva até o preço (nunca manda pro checkout às cegas)
