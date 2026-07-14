@@ -89,6 +89,9 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     background: #fff;
     padding: 13px 50px 15px;
     border-bottom: 1px solid #f3e8ee;
+    position: sticky;
+    top: 0;
+    z-index: 5;
   }
   .progress-bar-wrap.visible { display: block; }
   .progress-meta {
@@ -125,7 +128,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   .landing {
     max-width: 470px;
     margin: 0 auto;
-    padding: 30px 22px 48px;
+    padding: 26px 22px 48px;
     text-align: center;
   }
   .badge {
@@ -139,56 +142,67 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     font-size: 13.5px;
     color: var(--pink);
     font-weight: 600;
-    margin-bottom: 26px;
+    margin-bottom: 22px;
   }
   .landing-title {
-    font-size: 34px;
+    font-size: 31px;
     font-weight: 800;
-    line-height: 1.18;
+    line-height: 1.2;
     color: var(--ink);
-    margin-bottom: 26px;
+    margin-bottom: 22px;
     letter-spacing: -0.3px;
   }
   .landing-title .accent { color: var(--pink-bright); }
+
+  /* print do WhatsApp — a prova visual (herói da landing) */
   .whatsapp-img {
     width: 100%;
-    max-width: 330px;
-    border-radius: 18px;
-    margin: 0 auto 26px;
+    max-width: 360px;
+    border-radius: 16px;
+    margin: 0 auto 22px;
     display: block;
-    box-shadow: 0 8px 28px rgba(120,60,90,0.14);
+    box-shadow: 0 10px 32px rgba(120,60,90,0.16);
   }
-  .landing-desc {
-    font-size: 15.5px;
-    line-height: 1.62;
-    color: var(--body-gray);
-    margin-bottom: 26px;
-  }
-  .landing-desc strong { color: var(--ink); font-weight: 700; }
 
-  .benefits {
+  .hook {
+    font-size: 17px;
+    line-height: 1.5;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .hook .accent { color: var(--pink-bright); }
+  .hook-sub {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--body-gray);
+    margin-bottom: 22px;
+  }
+
+  /* bullets verdes de benefício (o que ela recebe ao fazer o teste) */
+  .gains {
     list-style: none;
-    margin-bottom: 30px;
     display: flex;
     flex-direction: column;
-    gap: 13px;
+    gap: 10px;
+    margin-bottom: 28px;
   }
-  .benefits li {
+  .gains li {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #fff;
-    border: 1px solid #f3e8ee;
-    border-radius: 15px;
-    padding: 15px 18px;
-    font-size: 14.5px;
-    color: #463d45;
+    align-items: flex-start;
+    gap: 10px;
+    background: #eaf9ef;
+    border: 1px solid #c8ecd4;
+    border-radius: 13px;
+    padding: 13px 15px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #2c4a35;
     text-align: left;
-    box-shadow: 0 3px 12px rgba(120,60,90,0.05);
   }
-  .benefits li .ic { font-size: 18px; flex-shrink: 0; }
+  .gains li .ic { flex-shrink: 0; }
 
-  /* CTA com anel externo (igual ao design) */
+  /* CTA com anel externo */
   .cta-ring {
     border: 1.6px solid #b9e6c4;
     border-radius: 22px;
@@ -214,15 +228,12 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   .btn-main:hover { filter: brightness(1.04); }
   .btn-main:active { transform: scale(0.985); box-shadow: 0 3px 10px rgba(31,168,74,0.3); }
 
-  /* Animação de ping no botão inicial */
   @keyframes ctaPing {
     0%   { transform: scale(1);     box-shadow: 0 6px 18px rgba(31,168,74,0.32), 0 0 0 0   rgba(44,191,82,0.5); }
     70%  { transform: scale(1.03);  box-shadow: 0 9px 24px rgba(31,168,74,0.40), 0 0 0 16px rgba(44,191,82,0);  }
     100% { transform: scale(1);     box-shadow: 0 6px 18px rgba(31,168,74,0.32), 0 0 0 0   rgba(44,191,82,0);   }
   }
-  #screen-0 .btn-main {
-    animation: ctaPing 1.7s cubic-bezier(.4,0,.2,1) infinite;
-  }
+  #screen-0 .btn-main { animation: ctaPing 1.7s cubic-bezier(.4,0,.2,1) infinite; }
   #screen-0 .btn-main:hover { animation-play-state: paused; }
   @media (prefers-reduced-motion: reduce) {
     #screen-0 .btn-main { animation: none; }
@@ -234,9 +245,17 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     font-weight: 500;
   }
 
-  /* Primeira pergunta embutida na landing */
-  .landing-q { margin-top: 4px; }
-  .landing-q .q-emoji { font-size: 34px; margin-bottom: 10px; display: block; line-height: 1; }
+  /* Primeira pergunta embutida na landing (start sem troca de tela) */
+  .landing-q { margin-top: 6px; }
+  .landing-q .q-kicker {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--pink);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
   .landing-q .q-title { font-size: 22px; margin-bottom: 20px; line-height: 1.3; }
 
   /* ===== QUESTION ===== */
@@ -253,12 +272,20 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     line-height: 1;
   }
   .q-title {
-    font-size: 29px;
+    font-size: 28px;
     font-weight: 800;
     color: var(--ink);
     line-height: 1.28;
-    margin-bottom: 34px;
+    margin-bottom: 12px;
     letter-spacing: -0.2px;
+  }
+  /* micro-justificativa embaixo da pergunta (conecta a pergunta à promessa) */
+  .q-why {
+    font-size: 13.5px;
+    color: #a99fa6;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    font-weight: 500;
   }
   .options {
     display: flex;
@@ -306,7 +333,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     font-weight: 400;
   }
 
-  /* ===== RESULT ===== */
+  /* ===== RESULT / DIAGNÓSTICO ===== */
   .result-wrap {
     max-width: 480px;
     margin: 0 auto;
@@ -366,6 +393,49 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   }
   .result-item:last-child { margin-bottom: 0; }
   .result-item .check { color: #1fa84a; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* medidor de chances (resultado "calculado" a partir das respostas) */
+  .score-card {
+    background: #fff;
+    border: 1px solid #f3e8ee;
+    border-radius: 18px;
+    padding: 20px 22px 22px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 16px rgba(120,60,90,0.05);
+  }
+  .score-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--pink);
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    margin-bottom: 12px;
+  }
+  .score-value {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 44px;
+    font-weight: 900;
+    color: var(--green-a);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .score-track {
+    width: 100%;
+    height: 12px;
+    background: #f1e6ec;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .score-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--green-b), var(--green-a));
+    border-radius: 99px;
+    transition: width 1.1s cubic-bezier(.4,0,.2,1);
+  }
+  .score-note { font-size: 13px; color: #8a7e86; line-height: 1.5; }
+
   .urgency {
     background: linear-gradient(135deg, #fff4f0, #fff0f5);
     border: 1.5px solid #ffd3da;
@@ -377,14 +447,11 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     line-height: 1.55;
     text-align: left;
   }
-  .urgency strong { display: block; font-size: 15px; color: #b3332e; margin-bottom: 5px; }
-  .price-note {
-    font-size: 14px;
-    color: #8a7e86;
-    margin-bottom: 18px;
-  }
+  /* só o título ("Cada dia conta") vira bloco — os <strong> dentro da frase seguem inline */
+  .urgency > strong { display: block; font-size: 15px; color: #b3332e; margin-bottom: 5px; }
+  .urgency span strong { font-weight: 700; color: #b3332e; }
 
-  /* ===== PROCESSANDO (diagnóstico) ===== */
+  /* ===== PROCESSANDO (montando o protocolo) ===== */
   .proc-list {
     display: flex;
     flex-direction: column;
@@ -414,13 +481,11 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   }
   .proc-item.done { opacity: 1; color: #463d45; }
   .proc-item.done::before { content: '✓'; background: var(--green-a); border-color: var(--green-a); }
-  .price-note s { color: #c4b8c0; }
-  .price-note b { color: var(--ink); font-size: 22px; font-weight: 800; }
 
   @media (max-width: 520px) {
     .progress-bar-wrap { padding: 12px 20px 14px; }
-    .landing-title { font-size: 29px; }
-    .q-title { font-size: 24px; }
+    .landing-title { font-size: 27px; }
+    .q-title { font-size: 23px; }
     .question-wrap { padding: 34px 18px 48px; }
     .result-title { font-size: 26px; }
   }
@@ -436,140 +501,209 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 <!-- PROGRESS BAR -->
 <div class="progress-bar-wrap" id="progressWrap">
   <div class="progress-meta">
-    <span id="progressLabel">Pergunta 1 de 5</span>
-    <span id="progressPct">20% concluído</span>
+    <span id="progressLabel">Pergunta 1 de 8</span>
+    <span id="progressPct">12% concluído</span>
   </div>
   <div class="progress-track">
-    <div class="progress-fill" id="progressFill" style="width: 20%"></div>
+    <div class="progress-fill" id="progressFill" style="width: 12%"></div>
   </div>
 </div>
 
-<!-- ======== TELA 0: LANDING ======== -->
+<!-- ======== TELA 0: LANDING (Etapa 01 — Engajamento) + P1 embutida ======== -->
 <div class="screen active" id="screen-0">
   <div class="landing">
     <div class="badge">✨ +3.300 mulheres já reconquistaram o ex</div>
 
     <h1 class="landing-title serif">
-      Descubra em 1 minuto se <span class="accent">ainda dá pra reconquistar o seu ex</span>
+      Descubra como fazer seu ex <span class="accent">sentir a sua falta</span> em 60 segundos
     </h1>
 
-    <p class="landing-desc" style="margin-bottom:20px">
-      Responda 5 perguntas rápidas e receba um <strong>diagnóstico personalizado</strong> das suas chances reais —
-      não importa se ele te bloqueou, sumiu ou já tá com outra.
+    <img src="imgquiz/img1.png" alt="Print de conversa no WhatsApp: chamadas perdidas e mensagem de saudade" class="whatsapp-img">
+
+    <p class="hook">
+      Use essa <span class="accent">mensagem psicológica</span> e ele vai te procurar. Não importa se vocês brigaram feio, se ele te bloqueou ou se ele já está com outra.
+    </p>
+    <p class="hook-sub">
+      Responda o teste rápido abaixo e <strong>desbloqueie essa mensagem</strong> 👇
     </p>
 
+    <ul class="gains">
+      <li><span class="ic">✅</span><span>Além da mensagem, você recebe um <strong>Protocolo Personalizado de Reconquista</strong> — feito com base nas suas respostas.</span></li>
+      <li><span class="ic">✅</span><span>Descobre o erro que faz <strong>93% das mulheres perderem o ex pra sempre</strong> — e como evitá-lo ainda hoje.</span></li>
+      <li><span class="ic">✅</span><span>E descobre o caminho para ele <strong>te procurar primeiro nas próximas 48 horas</strong>.</span></li>
+    </ul>
+
     <div class="landing-q">
-      <span class="q-emoji">⏰</span>
-      <h2 class="q-title serif">Pra começar: faz quanto tempo que vocês terminaram?</h2>
+      <span class="q-kicker">Pergunta 1 de 8</span>
+      <h2 class="q-title serif">Quando foi o término entre vocês?</h2>
       <div class="options">
-        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Menos de 1 semana</span><span class="arrow">›</span></button>
-        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Esse mês</span><span class="arrow">›</span></button>
-        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Entre 1 e 6 meses</span><span class="arrow">›</span></button>
-        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Entre 6 meses e 1 ano</span><span class="arrow">›</span></button>
+        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Faz menos de 1 semana</span><span class="arrow">›</span></button>
+        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Entre 1 e 4 semanas</span><span class="arrow">›</span></button>
+        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Entre 1 e 3 meses</span><span class="arrow">›</span></button>
+        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Entre 3 meses e 1 ano</span><span class="arrow">›</span></button>
         <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Mais de 1 ano</span><span class="arrow">›</span></button>
       </div>
     </div>
-    <img src="imgquiz/img1.png" alt="Print de conversa no WhatsApp" class="whatsapp-img" style="max-width:230px;margin:8px auto 18px">
+
     <p class="trust-note">🔒 100% gratuito e anônimo • Leva menos de 1 minuto</p>
   </div>
 </div>
 
-<!-- TELA 1 (P1) agora embutida na landing (screen-0) para reduzir o atrito de começar -->
-
-<!-- ======== TELA 2: PERGUNTA 2 ======== -->
+<!-- ======== TELA 2 — P2 (Etapa 02: Problema) ======== -->
 <div class="screen" id="screen-2">
   <div class="question-wrap">
     <span class="q-emoji">💬</span>
-    <h2 class="q-title serif">Vocês ainda têm contato hoje em dia?</h2>
+    <h2 class="q-title serif">Vocês ainda têm algum tipo de contato hoje em dia?</h2>
+    <p class="q-why">Isso define por onde a primeira mensagem tem que entrar.</p>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Sim, conversamos às vezes</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Sim, conversamos de vez em quando</span><span class="arrow">›</span></button>
       <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Ele fala comigo, mas é frio e distante</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Me responde por obrigação</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Não, fui bloqueada em tudo</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Só responde por educação</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(3)"><span class="radio"></span><span class="option-text">Não, ele me bloqueou em tudo</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
 
-<!-- ======== TELA 3: PERGUNTA 3 ======== -->
+<!-- ======== TELA 3 — P3 (Etapa 02: Problema — a dor) ======== -->
 <div class="screen" id="screen-3">
   <div class="question-wrap">
     <span class="q-emoji">💔</span>
-    <h2 class="q-title serif">O que você mais sofre desde o término?</h2>
+    <h2 class="q-title serif">O que mais dói em você desde o término?</h2>
+    <p class="q-why">Seja sincera — ninguém vê essa resposta além de você.</p>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Sinto muita saudade e penso nele todo dia</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Ver ele seguir a vida como se eu não tivesse existido</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Não me manda mensagem e não me responde</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Sinto que não fui suficiente pra ele</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Ver ele com outra e saber que fui substituída</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">A saudade e a solidão, que apertam todo dia</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Culpa — fico remoendo o que eu poderia ter feito diferente</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">O silêncio dele: não me procura e mal me responde</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Sentir que não fui suficiente pra ele</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(4)"><span class="radio"></span><span class="option-text">Imaginar que ele já está ficando com outra</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
 
-<!-- ======== TELA 4: PERGUNTA 4 ======== -->
+<!-- ======== TELA 4 — P4 (Etapa 02: invalida as tentativas por conta própria) ======== -->
 <div class="screen" id="screen-4">
+  <div class="question-wrap">
+    <span class="q-emoji">🔁</span>
+    <h2 class="q-title serif">Você já tentou se reaproximar dele e não funcionou?</h2>
+    <p class="q-why">Quase toda mulher tenta do jeito errado antes de descobrir o certo.</p>
+    <div class="options">
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Sim, mandei mensagem e ele mal respondeu</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Sim, tentei conversar pra resolver e só piorou</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Sim, dei espaço e sumi — e ele não veio atrás</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Ainda não tentei nada, morro de medo de errar</span><span class="arrow">›</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ======== TELA 5 — P5 (Etapa 02: medo da perda definitiva) ======== -->
+<div class="screen" id="screen-5">
+  <div class="question-wrap">
+    <span class="q-emoji">💣</span>
+    <h2 class="q-title serif">Se ele realmente se apaixonar por outra, o que aconteceria com você?</h2>
+    <p class="q-why">Responda com o que você sente de verdade, não com o que "deveria" sentir.</p>
+    <div class="options">
+      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Eu perderia completamente o chão</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Ficaria mal, mas tentaria seguir em frente</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Tentaria reconquistar ele de qualquer jeito</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(6)"><span class="radio"></span><span class="option-text">Fingiria que não ligo, mas morreria por dentro</span><span class="arrow">›</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ======== TELA 6 — P6 (Etapa 02: urgência auto-imposta) ======== -->
+<div class="screen" id="screen-6">
+  <div class="question-wrap">
+    <span class="q-emoji">⏳</span>
+    <h2 class="q-title serif">Quanto tempo você acha que ainda tem antes dele te esquecer de vez?</h2>
+    <p class="q-why">Sua resposta define a velocidade do seu protocolo.</p>
+    <div class="options">
+      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Poucos dias — sinto que já estou sendo substituída</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Algumas semanas — ainda dá pra agir</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Uns meses — acho que ele ainda sente algo</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(7)"><span class="radio"></span><span class="option-text">Não sei, e tenho medo de descobrir</span><span class="arrow">›</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ======== TELA 7 — P7 (Etapa 03: Desejo — imaginar a vida resolvida) ======== -->
+<div class="screen" id="screen-7">
   <div class="question-wrap">
     <span class="q-emoji">💭</span>
     <h2 class="q-title serif">Imagina que ele te procura HOJE, arrependido, dizendo que quer você de volta. Como você reagiria?</h2>
+    <p class="q-why">Fecha os olhos por 2 segundos e imagina a cena antes de responder.</p>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Meu coração dispararia — é tudo que eu mais quero</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Ficaria na defensiva, mas por dentro morrendo de vontade</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Iria com calma, mas com certeza daria uma chance</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(5)"><span class="radio"></span><span class="option-text">Choraria de alívio — sinto muita falta dele</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(8)"><span class="radio"></span><span class="option-text">Meu coração dispararia — é tudo que eu mais quero</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(8)"><span class="radio"></span><span class="option-text">Ficaria na defensiva, mas por dentro morrendo de vontade</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(8)"><span class="radio"></span><span class="option-text">Iria com calma, mas com certeza daria uma chance</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(8)"><span class="radio"></span><span class="option-text">Choraria de alívio — sinto muita falta dele</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
 
-<!-- ======== TELA 5: PERGUNTA 5 ======== -->
-<div class="screen" id="screen-5">
+<!-- ======== TELA 8 — P8 (Etapa 04: micro-compromisso, todas as opções são "sim") ======== -->
+<div class="screen" id="screen-8">
   <div class="question-wrap">
     <span class="q-emoji">🔑</span>
-    <h2 class="q-title serif">Se existisse um passo a passo testado pra fazer ele te procurar primeiro, você aplicaria?</h2>
+    <h2 class="q-title serif">Se existisse o passo a passo exato pra fazer ele te procurar primeiro nas próximas 48 horas, você se comprometeria a ver até o final?</h2>
+    <p class="q-why">Só liberamos o protocolo pra quem se compromete a aplicar.</p>
     <div class="options">
-      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, faria de tudo pra ter ele de volta</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, desde que seja simples de seguir</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, mas preciso ver funcionando primeiro</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Com certeza — só não sabia por onde começar</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, quero ver agora</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, quero ver e aplicar hoje mesmo</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, mas quero entender cada detalhe antes</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
 
-<!-- ======== TELA 6: DIAGNÓSTICO (Etapa 04 — transição pra pré-venda) ======== -->
-<div class="screen" id="screen-6">
+<!-- ======== TELA 9: DIAGNÓSTICO (Etapa 04 — transfere o desejo pra pré-venda) ======== -->
+<div class="screen" id="screen-9">
   <div class="result-wrap">
     <!-- Fase 1: processando -->
     <div id="processing">
       <span class="q-emoji">💗</span>
-      <h2 class="result-title serif">Analisando suas respostas...</h2>
-      <p class="result-desc">Só um instante — estamos montando o seu diagnóstico personalizado.</p>
+      <h2 class="result-title serif">Criando o seu Protocolo Personalizado de Reconquista...</h2>
+      <p class="result-desc">Só um instante — estamos cruzando as suas respostas com os casos das mulheres que já trouxeram o ex de volta.</p>
       <div class="proc-list" id="procList">
         <div class="proc-item">Avaliando o tempo e o estado do término</div>
         <div class="proc-item">Medindo o vínculo emocional que ainda existe</div>
+        <div class="proc-item">Identificando o erro que está afastando ele</div>
         <div class="proc-item">Calculando suas chances reais de reconquista</div>
-        <div class="proc-item">Montando seu Plano de Reconquista personalizado</div>
+        <div class="proc-item">Montando o seu protocolo personalizado</div>
       </div>
     </div>
     <!-- Fase 2: diagnóstico revelado -->
     <div id="diagnostico" style="display:none">
-      <div class="result-badge">✅ Diagnóstico pronto</div>
+      <div class="result-badge">✅ Protocolo pronto</div>
       <h2 class="result-title serif">Boa notícia: <span class="accent">ainda dá pra reverter</span> 💗</h2>
+
+      <div class="score-card">
+        <div class="score-label">Suas chances de reconquista</div>
+        <div class="score-value" id="scoreValue">—</div>
+        <div class="score-track"><div class="score-fill" id="scoreFill"></div></div>
+        <div class="score-note" id="scoreNote">Calculado a partir das suas 8 respostas.</div>
+      </div>
+
       <p class="result-desc" id="diagDesc">
         Pelas suas respostas, o vínculo entre vocês <strong>não se rompeu</strong> — ele só está adormecido.
         Com as mensagens certas, na ordem certa, dá pra reacender o interesse dele e fazer ele te procurar primeiro.
       </p>
+
       <div class="result-box">
-        <h3>Seu plano personalizado inclui</h3>
-        <div class="result-item"><span class="check">✓</span> As 3 mensagens que quebram o silêncio e despertam a saudade</div>
-        <div class="result-item"><span class="check">✓</span> O gatilho que faz ele repensar a decisão de ter te deixado</div>
-        <div class="result-item"><span class="check">✓</span> O passo a passo pra ele dar o primeiro passo em até 72h</div>
+        <h3>O seu protocolo personalizado inclui</h3>
+        <div class="result-item"><span class="check">✓</span> <span>A <strong>mensagem psicológica</strong> que quebra o silêncio e desperta a saudade (a mesma do print lá do começo)</span></div>
+        <div class="result-item"><span class="check">✓</span> <span>O erro nº 1 que faz <strong>93% das mulheres perderem o ex pra sempre</strong> — e como sair dele hoje</span></div>
+        <div class="result-item"><span class="check">✓</span> <span>O gatilho que faz ele <strong>repensar a decisão</strong> de ter te deixado</span></div>
+        <div class="result-item"><span class="check">✓</span> <span>O passo a passo pra ele <strong>dar o primeiro passo em até 48h</strong></span></div>
       </div>
+
       <div class="urgency">
         <strong>⏳ Cada dia conta</strong>
         <span id="diagUrgencyLine">Quanto mais tempo passa, mais ele se acostuma com a distância. O melhor momento pra agir é agora.</span>
       </div>
+
       <div class="cta-ring">
-        <button class="btn-main" onclick="irParaVendas()">QUERO VER MEU PLANO →</button>
+        <button class="btn-main" onclick="irParaVendas()">VER MEU PROTOCOLO AGORA →</button>
       </div>
-      <p class="trust-note">🔒 Baseado nas suas respostas • Ver o plano é gratuito</p>
+      <p class="trust-note">🔒 Baseado nas suas respostas • Ver o protocolo é gratuito</p>
     </div>
   </div>
 </div>
@@ -578,15 +712,13 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 <script>
   // cronômetros do tracking: tempo na landing, na pergunta atual e no diagnóstico
   var _pageT0 = Date.now(), _qT0 = Date.now(), _diagT0 = 0;
-  var respostas = {};   // guarda a opção escolhida em cada pergunta (para personalizar o diagnóstico)
+  var respostas = {};   // opção escolhida em cada pergunta (personaliza o diagnóstico)
 
-  const progressData = {
-    1: { label: 'Pergunta 1 de 5', pct: 20 },
-    2: { label: 'Pergunta 2 de 5', pct: 40 },
-    3: { label: 'Pergunta 3 de 5', pct: 60 },
-    4: { label: 'Pergunta 4 de 5', pct: 80 },
-    5: { label: 'Pergunta 5 de 5', pct: 100 },
-  };
+  var TOTAL_QS = 8;
+  var progressData = {};
+  for (var i = 1; i <= TOTAL_QS; i++) {
+    progressData[i] = { label: 'Pergunta ' + i + ' de ' + TOTAL_QS, pct: Math.round(i / TOTAL_QS * 100) };
+  }
 
   function showScreen(n) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -608,15 +740,9 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     }
   }
 
-  function goToQuestion(q) {
-    // clique de início na landing (mede quanto tempo levou pra decidir começar)
-    if (q === 1 && window.cmmTrack) cmmTrack.click(0, 'Começar o teste', Date.now() - _pageT0);
-    updateProgress(q); showScreen(q); if(window.cmmTrack) cmmTrack.view(q);
-  }
-
   function nextQ(next) { updateProgress(next); showScreen(next); if(window.cmmTrack) cmmTrack.view(next); }
 
-  // P1 embutida na landing: registra início (view 1 = start) + resposta da P1 (answer 1 = Lead) e avança pra P2
+  // P1 embutida na landing: registra o início (view 1 = start) + a resposta da P1 (Lead) e avança pra P2
   function iniciarQuiz(btn){
     var t = ((btn.querySelector('.option-text')||{}).textContent||'').trim();
     respostas['1'] = t;
@@ -629,67 +755,124 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     if (window.cmmTrack) cmmTrack.view(2);
   }
 
-  // Etapa 04 — tela de diagnóstico: processa, revela e transfere o desejo pra pré-venda
+  // Etapa 04 — processa, revela o protocolo e transfere o desejo pra pré-venda
   function showResult() {
-    updateProgress(6);              // esconde a barra (não há step 6 em progressData)
-    showScreen(6);
+    updateProgress(9);              // esconde a barra (não há step 9 em progressData)
+    showScreen(9);
     if (window.cmmTrack) cmmTrack.view('resultado');
     var items = document.querySelectorAll('#procList .proc-item');
     var i = 0;
     var iv = setInterval(function () {
       if (i < items.length) { items[i].classList.add('done'); i++; }
       else { clearInterval(iv); }
-    }, 650);
+    }, 620);
     setTimeout(function () {
       try { montarDiagnostico(); } catch(e){}
       document.getElementById('processing').style.display = 'none';
       document.getElementById('diagnostico').style.display = 'block';
       _diagT0 = Date.now();
       if (window.cmmTrack) cmmTrack.view('diagnostico');   // diagnóstico revelado
-      if (window.fbq) fbq('track', 'Lead');   // completou o quiz = lead
+      if (window.fbq) fbq('track', 'Lead');                // completou o quiz = lead
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, items.length * 650 + 500);
+    }, items.length * 620 + 500);
   }
 
-  // Etapa 04 — monta o diagnóstico PERSONALIZADO a partir das respostas do quiz
+  // Etapa 04 — monta o diagnóstico PERSONALIZADO a partir das respostas
   function montarDiagnostico() {
-    var r1 = respostas['1'] || '', r2 = respostas['2'] || '', r3 = respostas['3'] || '';
+    var r1 = respostas['1'] || '', r2 = respostas['2'] || '', r3 = respostas['3'] || '',
+        r4 = respostas['4'] || '', r6 = respostas['6'] || '';
 
+    // --- score de chances (alto de propósito: o quiz não vende, ele dá esperança) ---
+    var score = 62;
+    var addTempo = {
+      'Faz menos de 1 semana': 22, 'Entre 1 e 4 semanas': 18,
+      'Entre 1 e 3 meses': 12, 'Entre 3 meses e 1 ano': 8, 'Mais de 1 ano': 5
+    };
+    var addContato = {
+      'Sim, conversamos de vez em quando': 14,
+      'Ele fala comigo, mas é frio e distante': 11,
+      'Só responde por educação': 8,
+      'Não, ele me bloqueou em tudo': 6
+    };
+    score += (addTempo[r1] || 8) + (addContato[r2] || 8);
+    if (score > 94) score = 94;
+    if (score < 71) score = 71;
+
+    var sv = document.getElementById('scoreValue');
+    var sf = document.getElementById('scoreFill');
+    if (sv && sf) {
+      // conta de 0 até o score em 1,1s — mesma duração da transição da barra (ficam em sincronia)
+      // t0 é o relógio real, não o 1º frame: se a aba estiver em 2º plano (rAF pausado),
+      // ao voltar o progresso já está completo e o número não "volta atrás".
+      var DUR = 1100, t0 = Date.now();
+      sv.textContent = '0%';
+      requestAnimationFrame(function tick() {
+        var p = Math.min(1, (Date.now() - t0) / DUR);
+        sv.textContent = Math.round(score * (1 - Math.pow(1 - p, 3))) + '%';   // easeOutCubic
+        if (p < 1) requestAnimationFrame(tick);
+      });
+      setTimeout(function () { sv.textContent = score + '%'; }, DUR + 200);   // garantia
+      setTimeout(function () { sf.style.width = score + '%'; }, 60);
+    }
+    var sn = document.getElementById('scoreNote');
+    if (sn) sn.innerHTML = 'Acima da média das mulheres que responderam esse teste — e <strong>bem acima</strong> do ponto em que a reconquista deixa de ser possível.';
+
+    // --- texto do diagnóstico ---
     var vinculo = {
-      'Sim, conversamos às vezes': 'Vocês ainda conversam — e esse é um dos sinais mais fortes que existem: o canal está aberto e o vínculo continua vivo.',
+      'Sim, conversamos de vez em quando': 'Vocês ainda conversam — e esse é um dos sinais mais fortes que existem: o canal está aberto e o vínculo continua vivo.',
       'Ele fala comigo, mas é frio e distante': 'Ele ainda fala com você, mesmo frio e distante. E frieza quase nunca é falta de sentimento — é um muro de defesa, e muro se derruba com as mensagens certas.',
-      'Me responde por obrigação': 'Ele ainda te responde, mesmo que pareça por obrigação. Isso quer dizer que a porta não está fechada — só emperrada, e dá pra reabrir do jeito certo.',
-      'Não, fui bloqueada em tudo': 'Ele te bloqueou — e eu sei o quanto isso dói. Mas bloqueio, na maioria das vezes, é excesso de sentimento, não ausência dele: dá pra reverter até a partir do zero.'
+      'Só responde por educação': 'Ele ainda te responde, mesmo que pareça só por educação. Isso quer dizer que a porta não está fechada — só emperrada, e dá pra reabrir do jeito certo.',
+      'Não, ele me bloqueou em tudo': 'Ele te bloqueou — e eu sei o quanto isso dói. Mas bloqueio, na maioria das vezes, é excesso de sentimento, não ausência dele: dá pra reverter até a partir do zero.'
     };
     var dor = {
-      'Sinto muita saudade e penso nele todo dia': 'a saudade que aperta todo santo dia',
-      'Ver ele seguir a vida como se eu não tivesse existido': 'ver ele seguir a vida como se você nunca tivesse existido',
-      'Não me manda mensagem e não me responde': 'o silêncio dele, que às vezes machuca mais que qualquer briga',
-      'Sinto que não fui suficiente pra ele': 'essa sensação de não ter sido suficiente — que, pode acreditar, não é verdade',
-      'Ver ele com outra e saber que fui substituída': 'a dor de ver ele com outra e se sentir substituída'
+      'A saudade e a solidão, que apertam todo dia': 'a saudade que aperta todo santo dia',
+      'Culpa — fico remoendo o que eu poderia ter feito diferente': 'a culpa de ficar remoendo o que você poderia ter feito diferente',
+      'O silêncio dele: não me procura e mal me responde': 'o silêncio dele, que às vezes machuca mais que qualquer briga',
+      'Sentir que não fui suficiente pra ele': 'essa sensação de não ter sido suficiente — que, pode acreditar, não é verdade',
+      'Imaginar que ele já está ficando com outra': 'a dor de imaginar ele com outra e se sentir substituída'
+    };
+    var erro = {
+      'Sim, mandei mensagem e ele mal respondeu': 'Você já mandou mensagem e ele mal respondeu. O problema não foi <em>falar</em> com ele — foi a <strong>ordem</strong> das palavras: mensagem certa na hora errada empurra ele pra longe.',
+      'Sim, tentei conversar pra resolver e só piorou': 'Você tentou a conversa "vamos resolver isso" — e piorou. Não foi culpa sua: homem fecha na pressão, e essa conversa é lida por ele como cobrança.',
+      'Sim, dei espaço e sumi — e ele não veio atrás': 'Você sumiu e ele não veio atrás. Sumir sozinho não funciona: o silêncio só faz efeito quando vem <strong>acompanhado do gatilho certo</strong>.',
+      'Ainda não tentei nada, morro de medo de errar': 'Você ainda não tentou nada — e isso, por incrível que pareça, é uma <strong>vantagem enorme</strong>: você não queimou nenhuma carta, e vai fazer tudo certo já na primeira tentativa.'
     };
     var urg = {
-      'Menos de 1 semana': 'O término é recente: essa é a <strong>janela de ouro</strong> da reconquista, quando o vínculo ainda está quente e reverter é mais rápido.',
-      'Esse mês': 'O término é recente: essa é a <strong>janela de ouro</strong> da reconquista, quando o vínculo ainda está quente e reverter é mais rápido.',
-      'Entre 1 e 6 meses': 'Já faz um tempo, mas o vínculo que vocês construíram não some — ele só precisa ser reativado com os gatilhos certos.',
-      'Entre 6 meses e 1 ano': 'Mesmo com o tempo que passou, memória emocional não expira — dá pra reacender o que vocês viveram.',
+      'Faz menos de 1 semana': 'O término é recente: essa é a <strong>janela de ouro</strong> da reconquista, quando o vínculo ainda está quente e reverter é mais rápido.',
+      'Entre 1 e 4 semanas': 'O término é recente: essa é a <strong>janela de ouro</strong> da reconquista, quando o vínculo ainda está quente e reverter é mais rápido.',
+      'Entre 1 e 3 meses': 'Já faz um tempo, mas o vínculo que vocês construíram não some — ele só precisa ser reativado com os gatilhos certos.',
+      'Entre 3 meses e 1 ano': 'Mesmo com o tempo que passou, memória emocional não expira — dá pra reacender o que vocês viveram.',
       'Mais de 1 ano': 'Mesmo com o tempo que passou, memória emocional não expira — dá pra reacender o que vocês viveram.'
     };
 
     var partes = [];
     if (vinculo[r2]) partes.push(vinculo[r2]);
     if (dor[r3]) partes.push('E eu sei que, por dentro, o que mais te machuca é <strong>' + dor[r3] + '</strong>.');
+    if (erro[r4]) partes.push(erro[r4]);
     partes.push('A boa notícia: pelas suas respostas, o vínculo entre vocês <strong>não se rompeu</strong> — ele só está adormecido. Com as mensagens certas, na ordem certa, dá pra reacender o interesse dele e fazer ele te procurar primeiro. 💗');
     var el = document.getElementById('diagDesc');
     if (el) el.innerHTML = partes.join(' ');
 
+    // a urgência usa o prazo que ELA mesma declarou na P6 (e cai no tempo do término se não houver)
+    var linhaUrg = '';
+    if (r6.indexOf('Poucos dias') === 0) {
+      linhaUrg = 'Você mesma disse que sente que <strong>já está sendo substituída</strong>. Se essa sensação é real, cada dia parado é um dia a favor da outra — o protocolo precisa começar hoje.';
+    } else if (r6.indexOf('Algumas semanas') === 0) {
+      linhaUrg = 'Você mesma disse que ainda tem <strong>algumas semanas</strong>. É tempo suficiente — mas só se você começar agora, enquanto a janela está aberta.';
+    } else if (r6.indexOf('Uns meses') === 0) {
+      linhaUrg = 'Você acha que ele ainda sente algo — e provavelmente está certa. Mas sentimento sem contato esfria: o que ele sente hoje é o máximo que ele vai sentir se nada mudar.';
+    } else if (r6.indexOf('Não sei') === 0) {
+      linhaUrg = 'Você não sabe quanto tempo ainda tem — e é exatamente por isso que não dá pra esperar. Ninguém avisa quando a porta fecha.';
+    } else if (urg[r1]) {
+      linhaUrg = urg[r1];
+    }
     var uel = document.getElementById('diagUrgencyLine');
-    if (uel && urg[r1]) uel.innerHTML = urg[r1];
+    if (uel && linhaUrg) uel.innerHTML = linhaUrg;
   }
 
   function irParaVendas() {
     // CTA do diagnóstico (mede o tempo lendo o diagnóstico antes de avançar)
-    if (window.cmmTrack) cmmTrack.click('diagnostico', 'QUERO VER MEU PLANO', _diagT0 ? Date.now() - _diagT0 : 0);
+    if (window.cmmTrack) cmmTrack.click('diagnostico', 'VER MEU PROTOCOLO', _diagT0 ? Date.now() - _diagT0 : 0);
     // keepalive no track.js já garante o envio; pequeno atraso por segurança
     setTimeout(function () { window.location.href = 'vendas.html'; }, 120);
   }

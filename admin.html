@@ -750,7 +750,10 @@ const FUNIL_STEPS = [
   {k:'Quiz · Pergunta 3',            short:'Pergunta 3',     tag:'answer · step 3',            pred:e=>e.ev==='answer'&&String(e.step)==='3'},
   {k:'Quiz · Pergunta 4',            short:'Pergunta 4',     tag:'answer · step 4',            pred:e=>e.ev==='answer'&&String(e.step)==='4'},
   {k:'Quiz · Pergunta 5',            short:'Pergunta 5',     tag:'answer · step 5',            pred:e=>e.ev==='answer'&&String(e.step)==='5'},
-  {k:'Diagnóstico (fim do quiz)',    short:'Diagnóstico',    tag:'view · resultado',           pred:e=>e.ev==='view'&&(String(e.step)==='resultado'||String(e.step)==='diagnostico'), clicks:()=>uSet(e=>e.ev==='click'&&String(e.step)==='diagnostico')},
+  {k:'Quiz · Pergunta 6',            short:'Pergunta 6',     tag:'answer · step 6',            pred:e=>e.ev==='answer'&&String(e.step)==='6'},
+  {k:'Quiz · Pergunta 7',            short:'Pergunta 7',     tag:'answer · step 7',            pred:e=>e.ev==='answer'&&String(e.step)==='7'},
+  {k:'Quiz · Pergunta 8',            short:'Pergunta 8',     tag:'answer · step 8',            pred:e=>e.ev==='answer'&&String(e.step)==='8'},
+  {k:'Protocolo (fim do quiz)',      short:'Protocolo',      tag:'view · resultado',           pred:e=>e.ev==='view'&&(String(e.step)==='resultado'||String(e.step)==='diagnostico'), clicks:()=>uSet(e=>e.ev==='click'&&String(e.step)==='diagnostico')},
   {k:'Pré-venda — abriu',            short:'Pré-venda',      tag:'view · vendas.html',         pred:e=>e.ev==='view'&&String(e.step)==='vendas'},
   {k:'VSL Vídeos — abriu',           short:'VSL vídeos',     tag:'view · vsl.html',            pred:e=>e.ev==='view'&&String(e.step)==='vsl'},
   {k:'Quiz do meio — abriu',         short:'Quiz 2',         tag:'view · quiz2.html',          pred:e=>e.ev==='view'&&String(e.step)==='quiz2'},
@@ -916,13 +919,18 @@ function openJourney(sid){
 
 /* ====================== QUIZ (análise pergunta a pergunta) ====================== */
 const QUIZ_QS = [
-  {step:'1',     emoji:'⏰', q:'Faz quanto tempo que vocês terminaram?'},
-  {step:'2',     emoji:'💬', q:'Vocês ainda têm contato hoje em dia?'},
-  {step:'3',     emoji:'💔', q:'O que você mais sofre desde o término?'},
-  {step:'4',     emoji:'💭', q:'Se ele te procurasse hoje, como você reagiria?'},
-  {step:'5',     emoji:'🔑', q:'Aplicaria um passo a passo testado?'},
+  {step:'1',     emoji:'⏰', q:'Quando foi o término entre vocês?'},
+  {step:'2',     emoji:'💬', q:'Vocês ainda têm algum tipo de contato hoje em dia?'},
+  {step:'3',     emoji:'💔', q:'O que mais dói em você desde o término?'},
+  {step:'4',     emoji:'🔁', q:'Você já tentou se reaproximar e não funcionou?'},
+  {step:'5',     emoji:'💣', q:'Se ele se apaixonar por outra, o que aconteceria com você?'},
+  {step:'6',     emoji:'⏳', q:'Quanto tempo você acha que tem antes dele te esquecer?'},
+  {step:'7',     emoji:'💭', q:'Se ele te procurasse hoje, como você reagiria?'},
+  {step:'8',     emoji:'🔑', q:'Se compromete a ver o passo a passo até o final?'},
   {step:'quiz2', emoji:'🎯', q:'Quiz do meio — compromisso de assistir a VSL'}
 ];
+const LAST_Q = '8';          // última pergunta do quiz (conclusão)
+const N_QS   = 8;            // nº de perguntas do quiz principal
 // tempo por pergunta (ms), clique de início na landing e CTA do diagnóstico
 // passaram a ser coletados em 03/07/2026 — antes disso aparecem zerados/"—".
 const isDiagView  = e=>e.ev==='view' &&(String(e.step)==='resultado'||String(e.step)==='diagnostico');
@@ -935,7 +943,7 @@ function quizStatsIn(arr){
   return {
     vis:  uSetIn(arr,e=>e.ev==='view'&&String(e.step)==='0'),
     start:uSetIn(arr,e=>e.ev==='view'&&String(e.step)==='1'),
-    done: uSetIn(arr,e=>e.ev==='answer'&&String(e.step)==='5'),
+    done: uSetIn(arr,e=>e.ev==='answer'&&String(e.step)===LAST_Q),
     diag: uSetIn(arr,isDiagView),
     cta:  uSetIn(arr,isDiagClick),
     pv:   uSetIn(arr,e=>e.ev==='view'&&String(e.step)==='vendas')
@@ -953,13 +961,13 @@ function quizMs(step, ev){
   const v=liveEv().filter(e=>e.ev===(ev||'answer')&&String(e.step)===String(step)&&e.ms>250&&e.ms<600000).map(e=>e.ms);
   return {med:medianOf(v), n:v.length};
 }
-/* duração total do quiz por sessão (view P1 → answer P5) */
+/* duração total do quiz por sessão (view P1 → answer da última pergunta) */
 function quizDuration(){
   const t1={}, t5={};
   liveEv().forEach(e=>{
     if(!e.s||!e.t)return;
     if(e.ev==='view'&&String(e.step)==='1'&&(!t1[e.s]||e.t<t1[e.s])) t1[e.s]=e.t;
-    if(e.ev==='answer'&&String(e.step)==='5'&&(!t5[e.s]||e.t<t5[e.s])) t5[e.s]=e.t;
+    if(e.ev==='answer'&&String(e.step)===LAST_Q&&(!t5[e.s]||e.t<t5[e.s])) t5[e.s]=e.t;
   });
   const d=[]; Object.keys(t5).forEach(s=>{ if(t1[s]){ const x=t5[s]-t1[s]; if(x>5000&&x<1800000)d.push(x); } });
   return {med:medianOf(d), n:d.length};
@@ -983,16 +991,16 @@ function tabQuiz(){
   const kpis =
     kpi('👁️','#4A7AF5',fmt(S.vis),'Visitantes','landing do quiz',deltaBadge(S.vis,P.vis))+
     kpi('🚀','#cf3a7d',startRate+'%','Taxa de início',fmt(S.start)+' viram a P1',deltaBadge(startRate,startRateP))+
-    kpi('🏁','#a855f7',doneRate+'%','Conclusão',fmt(S.done)+' responderam a P5 · % de quem começou',deltaBadge(doneRate,doneRateP))+
-    kpi('🩺','#f5a623',fmt(S.diag),'Viram o diagnóstico',pct(S.diag,S.done)+'% de quem concluiu',deltaBadge(S.diag,P.diag))+
-    kpi('👉','#2cbf52',fmt(S.cta),'Clicaram "ver plano"',S.diag?pct(S.cta,S.diag)+'% do diagnóstico':'evento novo',deltaBadge(S.cta,P.cta))+
-    kpi('⏱️','#16a34a',dur.n?fmtSec(dur.med):'—','Tempo do quiz','mediana P1→P5 · n='+fmt(dur.n),'');
+    kpi('🏁','#a855f7',doneRate+'%','Conclusão',fmt(S.done)+' responderam a P'+LAST_Q+' · % de quem começou',deltaBadge(doneRate,doneRateP))+
+    kpi('🩺','#f5a623',fmt(S.diag),'Viram o protocolo',pct(S.diag,S.done)+'% de quem concluiu',deltaBadge(S.diag,P.diag))+
+    kpi('👉','#2cbf52',fmt(S.cta),'Clicaram "ver protocolo"',S.diag?pct(S.cta,S.diag)+'% do diagnóstico':'evento novo',deltaBadge(S.cta,P.cta))+
+    kpi('⏱️','#16a34a',dur.n?fmtSec(dur.med):'—','Tempo do quiz','mediana P1→P'+LAST_Q+' · n='+fmt(dur.n),'');
 
   /* ---- escada de retenção ---- */
   const base=Math.max(1,S.vis);
   const lr=[{emoji:'🏠', label:'Landing — abriu a página', saw:S.vis, adv:S.start, keep:null}];
   let prevAns=S.start;
-  QUIZ_QS.slice(0,5).forEach(q=>{
+  QUIZ_QS.slice(0,N_QS).forEach(q=>{
     const saw=uViews(q.step), ans=uAnswers(q.step);
     lr.push({emoji:q.emoji, label:'Pergunta '+q.step+' — '+q.q, saw, adv:ans, keep:pct(ans,prevAns)});
     prevAns=ans;
@@ -1050,7 +1058,7 @@ function tabQuiz(){
 
   /* ---- tempo mediano por etapa ---- */
   const timeRows=[['🏠 Landing → clicou em começar',quizMs('0','click')]]
-    .concat(QUIZ_QS.slice(0,5).map(q=>[q.emoji+' Pergunta '+q.step+' — tempo pra responder',quizMs(q.step)]))
+    .concat(QUIZ_QS.slice(0,N_QS).map(q=>[q.emoji+' Pergunta '+q.step+' — tempo pra responder',quizMs(q.step)]))
     .concat([['🎯 Quiz 2 (meio do funil)',quizMs('quiz2')],['🩺 Diagnóstico → clicou no CTA',quizMs('diagnostico','click')]])
     .map(([l,o])=>`<tr><td>${l}</td>
       <td style="text-align:right;font-weight:700">${o.n?fmtSec(o.med):'—'}</td>
