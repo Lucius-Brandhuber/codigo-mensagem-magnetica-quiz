@@ -757,7 +757,9 @@ const FUNIL_STEPS = [
   {k:'Pré-venda — abriu',            short:'Pré-venda',      tag:'view · vendas.html',         pred:e=>e.ev==='view'&&String(e.step)==='vendas'},
   {k:'VSL Vídeos — abriu',           short:'VSL vídeos',     tag:'view · vsl.html',            pred:e=>e.ev==='view'&&String(e.step)==='vsl'},
   {k:'Quiz do meio — abriu',         short:'Quiz 2',         tag:'view · quiz2.html',          pred:e=>e.ev==='view'&&String(e.step)==='quiz2'},
-  {k:'PV Real (VSL2) — abriu',       short:'PV oferta',      tag:'view · vsl2.html',           pred:e=>e.ev==='view'&&String(e.step)==='vsl2', clicks:()=>uSet(e=>e.ev==='checkout_click')},
+  {k:'VSL2 — abriu',                 short:'VSL2',           tag:'view · vsl2.html',           pred:e=>e.ev==='view'&&String(e.step)==='vsl2'},
+  {k:'Protocolo pronto (fim da VSL)',short:'Protocolo',      tag:'view · protocolo_pronto',    pred:e=>e.ev==='view'&&String(e.step)==='protocolo_pronto', clicks:()=>uSet(e=>e.ev==='click'&&String(e.step)==='vsl2')},
+  {k:'Página de vendas — abriu',     short:'PV oferta',      tag:'view · pv.html',             pred:e=>e.ev==='view'&&String(e.step)==='pv', clicks:()=>uSet(e=>e.ev==='checkout_click')},
   {k:'Checkout — clicou (→ Payt)',   short:'Checkout',       tag:'checkout_click',             pred:e=>e.ev==='checkout_click'}
 ];
 function tabFunil(){
