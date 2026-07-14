@@ -15,7 +15,7 @@
  ***********************************************************************/
 
 /* ====================== CONFIG ====================== */
-var PIXEL_ID   = '1015700578061069';
+var PIXEL_ID   = '28159617713645746';
 // Gere em: Gerenciador de Eventos > Configurações > Conversions API > Gerar token de acesso
 var CAPI_TOKEN = 'COLE_AQUI_O_TOKEN_DA_CONVERSIONS_API';
 var CAPI_URL   = 'https://graph.facebook.com/v19.0/' + PIXEL_ID + '/events';
