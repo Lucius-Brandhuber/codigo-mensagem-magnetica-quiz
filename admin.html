@@ -752,7 +752,6 @@ const FUNIL_STEPS = [
   {k:'Quiz · Pergunta 5',            short:'Pergunta 5',     tag:'answer · step 5',            pred:e=>e.ev==='answer'&&String(e.step)==='5'},
   {k:'Quiz · Pergunta 6',            short:'Pergunta 6',     tag:'answer · step 6',            pred:e=>e.ev==='answer'&&String(e.step)==='6'},
   {k:'Quiz · Pergunta 7',            short:'Pergunta 7',     tag:'answer · step 7',            pred:e=>e.ev==='answer'&&String(e.step)==='7'},
-  {k:'Quiz · Pergunta 8',            short:'Pergunta 8',     tag:'answer · step 8',            pred:e=>e.ev==='answer'&&String(e.step)==='8'},
   {k:'Protocolo (fim do quiz)',      short:'Protocolo',      tag:'view · resultado',           pred:e=>e.ev==='view'&&(String(e.step)==='resultado'||String(e.step)==='diagnostico'), clicks:()=>uSet(e=>e.ev==='click'&&String(e.step)==='diagnostico')},
   {k:'Pré-venda — abriu',            short:'Pré-venda',      tag:'view · vendas.html',         pred:e=>e.ev==='view'&&String(e.step)==='vendas'},
   {k:'VSL Vídeos — abriu',           short:'VSL vídeos',     tag:'view · vsl.html',            pred:e=>e.ev==='view'&&String(e.step)==='vsl'},
@@ -928,11 +927,10 @@ const QUIZ_QS = [
   {step:'5',     emoji:'💣', q:'Se ele se apaixonar por outra, o que aconteceria com você?'},
   {step:'6',     emoji:'⏳', q:'Quanto tempo você acha que tem antes dele te esquecer?'},
   {step:'7',     emoji:'💭', q:'Se ele te procurasse hoje, como você reagiria?'},
-  {step:'8',     emoji:'🔑', q:'Se compromete a ver o passo a passo até o final?'},
   {step:'quiz2', emoji:'🎯', q:'Quiz do meio — compromisso de assistir a VSL'}
 ];
-const LAST_Q = '8';          // última pergunta do quiz (conclusão)
-const N_QS   = 8;            // nº de perguntas do quiz principal
+const LAST_Q = '7';          // última pergunta do quiz (conclusão)
+const N_QS   = 7;            // nº de perguntas do quiz principal
 // tempo por pergunta (ms), clique de início na landing e CTA do diagnóstico
 // passaram a ser coletados em 03/07/2026 — antes disso aparecem zerados/"—".
 const isDiagView  = e=>e.ev==='view' &&(String(e.step)==='resultado'||String(e.step)==='diagnostico');

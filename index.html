@@ -488,7 +488,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
       Use essa <span class="accent">mensagem psicológica</span> e ele vai te procurar. Não importa se ele te bloqueou, sumiu ou já está com outra.
     </p>
     <p class="hook-sub">
-      Responda 8 perguntas rápidas e <strong>desbloqueie essa mensagem</strong> 👇
+      Responda 7 perguntas rápidas e <strong>desbloqueie essa mensagem</strong> 👇
     </p>
 
     <div class="cta-ring">
@@ -592,36 +592,24 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 </div>
 
 <!-- ======== TELA 7 — P7 (Etapa 03: Desejo — imaginar a vida resolvida) ======== -->
+<!-- Última pergunta: o micro-compromisso ("se compromete a ver até o final?") vive no quiz2.html,
+     no meio do funil, para não repetir a mesma pergunta duas vezes. -->
 <div class="screen" id="screen-7">
   <div class="question-wrap">
     <span class="q-emoji">💭</span>
     <h2 class="q-title serif">Imagina que ele te procura HOJE, arrependido, dizendo que quer você de volta. Como você reagiria?</h2>
     <p class="q-why">Fecha os olhos por 2 segundos e imagina a cena antes de responder.</p>
     <div class="options">
-      <button class="option-btn" onclick="nextQ(8)"><span class="radio"></span><span class="option-text">Meu coração dispararia — é tudo que eu mais quero</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(8)"><span class="radio"></span><span class="option-text">Ficaria na defensiva, mas por dentro morrendo de vontade</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(8)"><span class="radio"></span><span class="option-text">Iria com calma, mas com certeza daria uma chance</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="nextQ(8)"><span class="radio"></span><span class="option-text">Choraria de alívio — sinto muita falta dele</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Meu coração dispararia — é tudo que eu mais quero</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Ficaria na defensiva, mas por dentro morrendo de vontade</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Iria com calma, mas com certeza daria uma chance</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Choraria de alívio — sinto muita falta dele</span><span class="arrow">›</span></button>
     </div>
   </div>
 </div>
 
-<!-- ======== TELA 8 — P8 (Etapa 04: micro-compromisso, todas as opções são "sim") ======== -->
+<!-- ======== TELA 8: DIAGNÓSTICO (Etapa 04 — transfere o desejo pra pré-venda) ======== -->
 <div class="screen" id="screen-8">
-  <div class="question-wrap">
-    <span class="q-emoji">🔑</span>
-    <h2 class="q-title serif">Se existisse o passo a passo exato pra fazer ele te procurar primeiro nas próximas 48 horas, você se comprometeria a ver até o final?</h2>
-    <p class="q-why">Só liberamos o protocolo pra quem se compromete a aplicar.</p>
-    <div class="options">
-      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, quero ver agora</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, quero ver e aplicar hoje mesmo</span><span class="arrow">›</span></button>
-      <button class="option-btn" onclick="showResult()"><span class="radio"></span><span class="option-text">Sim, mas quero entender cada detalhe antes</span><span class="arrow">›</span></button>
-    </div>
-  </div>
-</div>
-
-<!-- ======== TELA 9: DIAGNÓSTICO (Etapa 04 — transfere o desejo pra pré-venda) ======== -->
-<div class="screen" id="screen-9">
   <div class="result-wrap">
     <!-- Fase 1: processando -->
     <div id="processing">
@@ -645,7 +633,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
         <div class="score-label">Suas chances de reconquista</div>
         <div class="score-value" id="scoreValue">—</div>
         <div class="score-track"><div class="score-fill" id="scoreFill"></div></div>
-        <div class="score-note" id="scoreNote">Calculado a partir das suas 8 respostas.</div>
+        <div class="score-note" id="scoreNote">Calculado a partir das suas 7 respostas.</div>
       </div>
 
       <p class="result-desc" id="diagDesc">
@@ -680,7 +668,7 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
   var _pageT0 = Date.now(), _qT0 = Date.now(), _diagT0 = 0;
   var respostas = {};   // opção escolhida em cada pergunta (personaliza o diagnóstico)
 
-  var TOTAL_QS = 8;
+  var TOTAL_QS = 7;
   var progressData = {};
   for (var i = 1; i <= TOTAL_QS; i++) {
     progressData[i] = { label: 'Pergunta ' + i + ' de ' + TOTAL_QS, pct: Math.round(i / TOTAL_QS * 100) };
@@ -717,8 +705,8 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 
   // Etapa 04 — processa, revela o protocolo e transfere o desejo pra pré-venda
   function showResult() {
-    updateProgress(9);              // esconde a barra (não há step 9 em progressData)
-    showScreen(9);
+    updateProgress(8);              // esconde a barra (não há step 8 em progressData)
+    showScreen(8);
     if (window.cmmTrack) cmmTrack.view('resultado');
     var items = document.querySelectorAll('#procList .proc-item');
     var i = 0;
