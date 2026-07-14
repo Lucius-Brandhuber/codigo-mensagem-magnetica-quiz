@@ -179,29 +179,6 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     margin-bottom: 22px;
   }
 
-  /* bullets verdes de benefício (o que ela recebe ao fazer o teste) */
-  .gains {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 28px;
-  }
-  .gains li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    background: #eaf9ef;
-    border: 1px solid #c8ecd4;
-    border-radius: 13px;
-    padding: 13px 15px;
-    font-size: 14px;
-    line-height: 1.45;
-    color: #2c4a35;
-    text-align: left;
-  }
-  .gains li .ic { flex-shrink: 0; }
-
   /* CTA com anel externo */
   .cta-ring {
     border: 1.6px solid #b9e6c4;
@@ -244,19 +221,6 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     color: #a99fa6;
     font-weight: 500;
   }
-
-  /* Primeira pergunta embutida na landing (start sem troca de tela) */
-  .landing-q { margin-top: 6px; }
-  .landing-q .q-kicker {
-    display: block;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--pink);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 8px;
-  }
-  .landing-q .q-title { font-size: 22px; margin-bottom: 20px; line-height: 1.3; }
 
   /* ===== QUESTION ===== */
   .question-wrap {
@@ -521,31 +485,33 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
     <img src="imgquiz/img1.png" alt="Print de conversa no WhatsApp: chamadas perdidas e mensagem de saudade" class="whatsapp-img">
 
     <p class="hook">
-      Use essa <span class="accent">mensagem psicológica</span> e ele vai te procurar. Não importa se vocês brigaram feio, se ele te bloqueou ou se ele já está com outra.
+      Use essa <span class="accent">mensagem psicológica</span> e ele vai te procurar. Não importa se ele te bloqueou, sumiu ou já está com outra.
     </p>
     <p class="hook-sub">
-      Responda o teste rápido abaixo e <strong>desbloqueie essa mensagem</strong> 👇
+      Responda 8 perguntas rápidas e <strong>desbloqueie essa mensagem</strong> 👇
     </p>
 
-    <ul class="gains">
-      <li><span class="ic">✅</span><span>Além da mensagem, você recebe um <strong>Protocolo Personalizado de Reconquista</strong> — feito com base nas suas respostas.</span></li>
-      <li><span class="ic">✅</span><span>Descobre o erro que faz <strong>93% das mulheres perderem o ex pra sempre</strong> — e como evitá-lo ainda hoje.</span></li>
-      <li><span class="ic">✅</span><span>E descobre o caminho para ele <strong>te procurar primeiro nas próximas 48 horas</strong>.</span></li>
-    </ul>
-
-    <div class="landing-q">
-      <span class="q-kicker">Pergunta 1 de 8</span>
-      <h2 class="q-title serif">Quando foi o término entre vocês?</h2>
-      <div class="options">
-        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Faz menos de 1 semana</span><span class="arrow">›</span></button>
-        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Entre 1 e 4 semanas</span><span class="arrow">›</span></button>
-        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Entre 1 e 3 meses</span><span class="arrow">›</span></button>
-        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Entre 3 meses e 1 ano</span><span class="arrow">›</span></button>
-        <button class="option-btn" onclick="iniciarQuiz(this)"><span class="radio"></span><span class="option-text">Mais de 1 ano</span><span class="arrow">›</span></button>
-      </div>
+    <div class="cta-ring">
+      <button class="btn-main" onclick="goToQuestion(1)">QUERO RECONQUISTAR MEU EX!</button>
     </div>
 
     <p class="trust-note">🔒 100% gratuito e anônimo • Leva menos de 1 minuto</p>
+  </div>
+</div>
+
+<!-- ======== TELA 1 — P1 (Etapa 01: pergunta fácil, respondível no automático) ======== -->
+<div class="screen" id="screen-1">
+  <div class="question-wrap">
+    <span class="q-emoji">⏰</span>
+    <h2 class="q-title serif">Quando foi o término entre vocês?</h2>
+    <p class="q-why">Isso define o quão rápido o seu protocolo precisa agir.</p>
+    <div class="options">
+      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Faz menos de 1 semana</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Entre 1 e 4 semanas</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Entre 1 e 3 meses</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Entre 3 meses e 1 ano</span><span class="arrow">›</span></button>
+      <button class="option-btn" onclick="nextQ(2)"><span class="radio"></span><span class="option-text">Mais de 1 ano</span><span class="arrow">›</span></button>
+    </div>
   </div>
 </div>
 
@@ -742,17 +708,11 @@ src="https://www.facebook.com/tr?id=1015700578061069&ev=PageView&noscript=1"/></
 
   function nextQ(next) { updateProgress(next); showScreen(next); if(window.cmmTrack) cmmTrack.view(next); }
 
-  // P1 embutida na landing: registra o início (view 1 = start) + a resposta da P1 (Lead) e avança pra P2
-  function iniciarQuiz(btn){
-    var t = ((btn.querySelector('.option-text')||{}).textContent||'').trim();
-    respostas['1'] = t;
-    if (window.cmmTrack){
-      cmmTrack.click(0, 'Começar o teste', Date.now() - _pageT0);
-      cmmTrack.view(1);                              // "start" do quiz
-      cmmTrack.answer(1, t, Date.now() - _pageT0);   // Lead + resposta da P1
-    }
-    updateProgress(2); showScreen(2);
-    if (window.cmmTrack) cmmTrack.view(2);
+  // CTA da landing → abre a P1 ("start" do quiz). ms = tempo que ela levou pra decidir começar.
+  function goToQuestion(q) {
+    if (q === 1 && window.cmmTrack) cmmTrack.click(0, 'Começar o teste', Date.now() - _pageT0);
+    updateProgress(q); showScreen(q);
+    if (window.cmmTrack) cmmTrack.view(q);
   }
 
   // Etapa 04 — processa, revela o protocolo e transfere o desejo pra pré-venda
