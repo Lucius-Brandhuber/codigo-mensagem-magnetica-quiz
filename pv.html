@@ -863,10 +863,8 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   /* ===== Dois planos =====
      O preço deixou de ser sorteado (o antigo teste A/B saiu): agora quem escolhe
      é a lead. Os dois links abaixo são checkouts distintos na Payt. */
-  // TODO: trocar pelo link real da Payt cobrando R$ 19,90
-  var CHECKOUT_ESSENCIAL = '';
-  // TODO: trocar pelo link real da Payt cobrando R$ 54,90
-  var CHECKOUT_COMPLETO  = '';
+  var CHECKOUT_ESSENCIAL = 'https://checkout.payt.com.br/c/4EX8DE';  // R$ 19,90
+  var CHECKOUT_COMPLETO  = 'https://checkout.payt.com.br/c/RW3A2P';  // R$ 54,90
 
   function comprar(plano){
     var url = (plano === 'essencial') ? CHECKOUT_ESSENCIAL : CHECKOUT_COMPLETO;
