@@ -41,31 +41,35 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* superfícies */
-    --bg:#08080a;
-    --card:#121215;
-    --card-2:#17171c;
-    --line:#2a2a33;
-    --line-soft:#1e1e25;
+    /* superfícies — creme + branco, igual ao quiz e à área de membros */
+    --bg:#fbf6f2;
+    --card:#ffffff;
+    --card-2:#fdf1f7;
+    --line:#f1dce8;
+    --line-soft:#f7e8f0;
 
     /* texto */
-    --txt:#f4f3f6;
-    --muted:#9c9ca8;
-    --muted-2:#6d6d79;
+    --ink:#2a1a2a;        /* títulos serif escuros */
+    --txt:#3a2b38;        /* corpo forte */
+    --muted:#7d6f79;      /* corpo secundário */
+    --muted-2:#a99fa6;    /* apagado */
 
-    /* acentos */
-    --gold:#e6b455;
-    --gold-2:#f6d79b;
-    --gold-deep:#a97c22;
-    --pink:#ec3a8b;
-    --green:#33cc5c;
+    /* acentos — rosa da marca */
+    --pink:#cf3a7d;
+    --pink-bright:#ec3a8b;
+    --pink-deep:#b81f66;
+    --grad-a:#d6357a;
+    --grad-b:#e8638c;
+    --purple:#7b3ff2;
+    --green:#2cbf52;
     --green-d:#1fa84a;
-    --red:#e04a3a;
+    --red:#e2436a;
 
-    /* sombras */
-    --sh-card:0 10px 34px rgba(0,0,0,.42);
-    --sh-cta:0 10px 30px rgba(31,168,74,.32);
-    --sh-gold:0 12px 44px rgba(230,180,85,.16);
+    /* sombras — suaves e com leve tom rosa */
+    --sh-card:0 12px 34px rgba(160,60,110,.10);
+    --sh-soft:0 6px 20px rgba(42,26,42,.06);
+    --sh-cta:0 12px 28px rgba(31,168,74,.26);
+    --sh-pink:0 14px 44px rgba(236,58,139,.16);
 
     /* raios */
     --r-sm:12px; --r-md:16px; --r-lg:22px; --r-xl:28px;
@@ -82,16 +86,15 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     background:var(--bg); color:var(--txt);
     font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     line-height:1.6; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-    padding-bottom:88px;              /* espaço da barra fixa de compra */
     overflow-x:hidden;
   }
-  /* luz ambiente — dois halos fixos, sem custo de scroll */
+  /* luz ambiente — dois halos rosados fixos, bem suaves sobre o creme */
   body::before{
     content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
     background:
-      radial-gradient(900px 620px at 50% -8%, rgba(230,180,85,.10), transparent 62%),
-      radial-gradient(760px 620px at 108% 42%, rgba(236,58,139,.07), transparent 60%),
-      radial-gradient(700px 560px at -10% 82%, rgba(230,180,85,.05), transparent 60%);
+      radial-gradient(900px 620px at 50% -8%, rgba(236,58,139,.07), transparent 62%),
+      radial-gradient(760px 620px at 108% 40%, rgba(123,63,242,.05), transparent 60%),
+      radial-gradient(700px 560px at -10% 82%, rgba(236,58,139,.04), transparent 60%);
   }
   .serif{font-family:'Playfair Display',Georgia,serif}
   img{max-width:100%;height:auto;display:block}
@@ -99,24 +102,25 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   /* ===== BARRA DE TOPO ===== */
   .topbar{
     position:sticky; top:0; z-index:40;
-    background:linear-gradient(90deg,#9e1f1f,#e04a3a 52%,#9e1f1f);
+    background:linear-gradient(90deg,#b81f66,#ec3a8b 52%,#b81f66);
+    color:#fff;
     display:flex; align-items:center; justify-content:center; gap:10px;
     padding:11px 14px; font-size:clamp(12.5px,3.4vw,14px); font-weight:700; letter-spacing:.3px;
-    box-shadow:0 6px 26px rgba(0,0,0,.55);
+    box-shadow:0 6px 22px rgba(184,31,102,.32);
   }
   .topbar .clock{
-    background:rgba(0,0,0,.34); border-radius:8px; padding:3px 11px;
+    background:rgba(0,0,0,.20); border-radius:8px; padding:3px 11px;
     font-variant-numeric:tabular-nums; font-weight:800; letter-spacing:1px;
   }
   .topbar .clock.urge{animation:clockPulse 1s ease-in-out infinite}
-  @keyframes clockPulse{50%{transform:scale(1.07); background:rgba(0,0,0,.5)}}
+  @keyframes clockPulse{50%{transform:scale(1.07); background:rgba(0,0,0,.32)}}
 
   /* progresso de leitura */
   .progress{position:sticky; top:0; z-index:39; height:3px; background:transparent}
   .progress i{
     display:block; height:100%; width:0;
-    background:linear-gradient(90deg,var(--gold-deep),var(--gold),var(--gold-2));
-    box-shadow:0 0 12px rgba(230,180,85,.6);
+    background:linear-gradient(90deg,var(--grad-a),var(--pink-bright),var(--grad-b));
+    box-shadow:0 0 12px rgba(236,58,139,.55);
   }
 
   /* ===== LAYOUT ===== */
@@ -125,27 +129,24 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
 
   .eyebrow{
     display:block; text-align:center; font-size:11px; font-weight:800;
-    letter-spacing:2.4px; text-transform:uppercase; color:var(--gold);
+    letter-spacing:2.4px; text-transform:uppercase; color:var(--pink);
     margin-bottom:12px;
   }
   .eyebrow::after{
     content:''; display:block; width:34px; height:1px; margin:10px auto 0;
-    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    background:linear-gradient(90deg,transparent,var(--pink),transparent);
   }
   .h2{
-    font-family:'Playfair Display',serif; font-weight:800; text-align:center;
+    font-family:'Playfair Display',serif; font-weight:800; text-align:center; color:var(--ink);
     font-size:clamp(26px,6.6vw,34px); line-height:1.22; letter-spacing:-.4px; margin-bottom:10px;
   }
   .h2 .g{
-    color:var(--gold);
-    background:linear-gradient(100deg,var(--gold-deep),var(--gold-2) 45%,var(--gold));
+    background:linear-gradient(100deg,var(--pink-deep),var(--pink-bright) 52%,var(--grad-b));
     -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
   }
   .sub{text-align:center; color:var(--muted); font-size:clamp(13.5px,3.6vw,15px); margin:0 auto 28px; max-width:46ch}
 
-  /* ===== MOTION =====
-     O reveal só existe se o JS estiver vivo (classe .js no <html>).
-     Sem JS — ou se o script falhar — o conteúdo nasce visível em vez de sumir. */
+  /* ===== MOTION ===== */
   .js .rv{opacity:0; transform:translateY(26px)}
   .js .rv.in{
     opacity:1; transform:none;
@@ -162,19 +163,19 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   .hero{padding:clamp(28px,7vw,46px) 0 6px; text-align:center}
   .kicker{
     display:inline-flex; align-items:center; gap:7px;
-    border:1px solid rgba(230,180,85,.35); background:rgba(230,180,85,.07);
-    color:var(--gold-2); border-radius:99px; padding:7px 16px;
+    border:1.5px solid #f6cadd; background:#fdeef5;
+    color:var(--pink); border-radius:99px; padding:7px 16px;
     font-size:12px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; margin-bottom:18px;
   }
-  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(51,204,92,.6);animation:dotPing 1.9s infinite}
-  @keyframes dotPing{70%{box-shadow:0 0 0 8px rgba(51,204,92,0)}100%{box-shadow:0 0 0 0 rgba(51,204,92,0)}}
+  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(44,191,82,.55);animation:dotPing 1.9s infinite}
+  @keyframes dotPing{70%{box-shadow:0 0 0 8px rgba(44,191,82,0)}100%{box-shadow:0 0 0 0 rgba(44,191,82,0)}}
 
   .hero h1{
-    font-family:'Playfair Display',serif; font-weight:900;
+    font-family:'Playfair Display',serif; font-weight:900; color:var(--ink);
     font-size:clamp(30px,8.4vw,44px); line-height:1.14; letter-spacing:-.7px; margin-bottom:16px;
   }
   .hero h1 .g{
-    background:linear-gradient(100deg,var(--gold-deep),var(--gold-2) 42%,var(--gold));
+    background:linear-gradient(100deg,var(--pink-deep),var(--pink-bright) 48%,var(--grad-b));
     -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
   }
   .hero p{color:var(--muted); font-size:clamp(14.5px,3.9vw,16.5px); margin:0 auto 26px; max-width:44ch}
@@ -182,11 +183,11 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   .hero-img{
     position:relative; border-radius:var(--r-xl); overflow:hidden;
     border:1px solid var(--line); background:var(--card);
-    box-shadow:var(--sh-card), var(--sh-gold); margin-bottom:26px;
+    box-shadow:var(--sh-card), var(--sh-pink); margin-bottom:26px;
   }
   .hero-img::after{  /* brilho diagonal que passa devagar */
     content:''; position:absolute; inset:0;
-    background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.13) 50%,transparent 62%);
+    background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.35) 50%,transparent 62%);
     transform:translateX(-120%); animation:sheen 5.5s ease-in-out 1.2s infinite;
   }
   @keyframes sheen{0%{transform:translateX(-120%)}55%,100%{transform:translateX(120%)}}
@@ -202,17 +203,17 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   }
   .btn::after{  /* shine no hover */
     content:''; position:absolute; top:0; bottom:0; width:42%;
-    background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.32),transparent);
     transform:translateX(-180%) skewX(-18deg); transition:transform .75s var(--ease-out);
   }
-  .btn:hover{filter:brightness(1.07); transform:translateY(-2px); box-shadow:0 14px 36px rgba(31,168,74,.42)}
+  .btn:hover{filter:brightness(1.05); transform:translateY(-2px); box-shadow:0 16px 34px rgba(31,168,74,.34)}
   .btn:hover::after{transform:translateX(320%) skewX(-18deg)}
   .btn:active{transform:translateY(0) scale(.985)}
-  .btn:focus-visible{outline:2px solid var(--gold-2); outline-offset:3px}
+  .btn:focus-visible{outline:2px solid var(--pink-bright); outline-offset:3px}
   @keyframes ping{
-    0%{box-shadow:var(--sh-cta), 0 0 0 0 rgba(51,204,92,.42)}
-    70%{box-shadow:var(--sh-cta), 0 0 0 15px rgba(51,204,92,0)}
-    100%{box-shadow:var(--sh-cta), 0 0 0 0 rgba(51,204,92,0)}
+    0%{box-shadow:var(--sh-cta), 0 0 0 0 rgba(44,191,82,.40)}
+    70%{box-shadow:var(--sh-cta), 0 0 0 15px rgba(44,191,82,0)}
+    100%{box-shadow:var(--sh-cta), 0 0 0 0 rgba(44,191,82,0)}
   }
   .btn.pulse{animation:ping 2s var(--ease) infinite}
   .btn-note{font-size:12.5px;color:var(--muted-2);margin-top:12px;text-align:center;letter-spacing:.2px}
@@ -222,63 +223,65 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   .inc li{
     display:flex; gap:13px; align-items:flex-start;
     border:1px solid var(--line); background:var(--card); border-radius:var(--r-md);
-    padding:16px 17px; font-size:14.5px; line-height:1.5;
-    transition:border-color var(--t-mid), transform var(--t-mid) var(--ease), background var(--t-mid);
+    padding:16px 17px; font-size:14.5px; line-height:1.5; color:var(--txt);
+    box-shadow:var(--sh-soft);
+    transition:border-color var(--t-mid), transform var(--t-mid) var(--ease), box-shadow var(--t-mid);
   }
-  .inc li:hover{border-color:rgba(230,180,85,.4); transform:translateX(3px); background:var(--card-2)}
+  .inc li:hover{border-color:#eeb9d5; transform:translateX(3px); box-shadow:var(--sh-card)}
   .inc li .ic{
-    color:var(--gold); flex-shrink:0; font-size:14px; margin-top:2px;
-    filter:drop-shadow(0 0 6px rgba(230,180,85,.45));
+    color:var(--pink); flex-shrink:0; font-size:14px; margin-top:2px;
+    filter:drop-shadow(0 0 6px rgba(236,58,139,.35));
   }
-  .inc li b{color:#fff; font-weight:700}
+  .inc li b{color:var(--ink); font-weight:700}
 
   /* ===== POR QUE ESCOLHER ===== */
   .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:13px}
   .gcard{
     position:relative; overflow:hidden;
-    border:1px solid var(--line); background:var(--card-2); border-radius:var(--r-lg);
-    padding:22px 15px; text-align:center;
+    border:1px solid var(--line); background:var(--card); border-radius:var(--r-lg);
+    padding:22px 15px; text-align:center; box-shadow:var(--sh-soft);
     transition:transform var(--t-mid) var(--ease), border-color var(--t-mid), box-shadow var(--t-mid);
   }
-  .gcard:hover{transform:translateY(-5px); border-color:rgba(230,180,85,.42); box-shadow:var(--sh-card)}
+  .gcard:hover{transform:translateY(-5px); border-color:#eeb9d5; box-shadow:var(--sh-card)}
   .gcard .gi{
     width:46px;height:46px;margin:0 auto 13px; border-radius:14px;
-    background:linear-gradient(160deg,rgba(230,180,85,.18),rgba(230,180,85,.05));
-    border:1px solid rgba(230,180,85,.34);
+    background:linear-gradient(160deg,#fde4f0,#fbeef6);
+    border:1px solid #f6cadd;
     display:flex;align-items:center;justify-content:center;font-size:21px;
     transition:transform var(--t-mid) var(--ease);
   }
   .gcard:hover .gi{transform:scale(1.1) rotate(-4deg)}
-  .gcard h3{font-size:15.5px;font-weight:700;margin-bottom:7px}
+  .gcard h3{font-size:15.5px;font-weight:700;margin-bottom:7px;color:var(--ink)}
   .gcard p{font-size:13px;color:var(--muted);line-height:1.5}
 
   /* ===== BÔNUS ===== */
   .bonus{display:grid; gap:14px}
   .bcard{
     border:1px solid var(--line); background:var(--card); border-radius:var(--r-lg); padding:20px;
+    box-shadow:var(--sh-soft);
     transition:transform var(--t-mid) var(--ease), border-color var(--t-mid), box-shadow var(--t-mid);
   }
-  .bcard:hover{transform:translateY(-4px); border-color:rgba(230,180,85,.42); box-shadow:var(--sh-card)}
+  .bcard:hover{transform:translateY(-4px); border-color:#eeb9d5; box-shadow:var(--sh-card)}
   .bcard.super{
-    border-color:rgba(230,180,85,.55);
-    background:linear-gradient(165deg,rgba(230,180,85,.10),var(--card) 62%);
-    box-shadow:var(--sh-gold);
+    border-color:#f3aecf;
+    background:linear-gradient(165deg,#fdeef6,var(--card) 62%);
+    box-shadow:var(--sh-pink);
   }
-  .btag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
-  .bcard h3{font-size:17px;font-weight:700;margin-bottom:6px}
+  .btag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--pink);margin-bottom:9px}
+  .bcard h3{font-size:17px;font-weight:700;margin-bottom:6px;color:var(--ink)}
   .bcard p{font-size:13.5px;color:var(--muted);margin-bottom:14px;line-height:1.5}
   .bprice{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line-soft);padding-top:12px}
   .bprice s{color:var(--muted-2);font-size:14px}
-  .bprice b{color:var(--green);font-size:15px;font-weight:800;letter-spacing:.6px}
+  .bprice b{color:var(--green-d);font-size:15px;font-weight:800;letter-spacing:.6px}
   .saved{
     display:flex;justify-content:space-between;align-items:center;gap:12px;
-    border:1px solid rgba(230,180,85,.4); border-radius:var(--r-lg); padding:18px 20px; margin-top:18px;
-    background:linear-gradient(100deg,rgba(230,180,85,.10),transparent);
+    border:1.5px solid #f3aecf; border-radius:var(--r-lg); padding:18px 20px; margin-top:18px;
+    background:linear-gradient(100deg,#fdeef6,transparent);
   }
   .saved span{font-size:11.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
   .saved b{
     font-family:'Playfair Display',serif;font-size:clamp(24px,6vw,30px);font-weight:900;
-    background:linear-gradient(100deg,var(--gold-deep),var(--gold-2) 45%,var(--gold));
+    background:linear-gradient(100deg,var(--pink-deep),var(--pink-bright) 50%,var(--grad-b));
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
     white-space:nowrap;
   }
@@ -289,95 +292,89 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   .cd .n{
     display:flex;align-items:center;justify-content:center;
     width:clamp(54px,15vw,64px); height:clamp(54px,15vw,64px); border-radius:16px;
-    background:linear-gradient(180deg,#e2564a,#b8322c); color:#fff;
+    background:linear-gradient(180deg,#ec3a8b,#b81f66); color:#fff;
     font-size:clamp(21px,5.6vw,25px); font-weight:800; font-variant-numeric:tabular-nums;
-    box-shadow:0 10px 26px rgba(184,50,44,.38), inset 0 1px 0 rgba(255,255,255,.18);
+    box-shadow:0 10px 24px rgba(184,31,102,.32), inset 0 1px 0 rgba(255,255,255,.22);
   }
   .cd .l{font-size:9.5px;letter-spacing:1.4px;color:var(--muted-2);margin-top:7px;text-transform:uppercase}
-  .cd .s{align-self:center;font-size:22px;color:#4b4b56;font-weight:700;margin-bottom:18px}
+  .cd .s{align-self:center;font-size:22px;color:#e0a8c4;font-weight:700;margin-bottom:18px}
 
   .plan{
     position:relative; border-radius:var(--r-xl); padding:30px 22px 26px; text-align:center;
-    background:linear-gradient(180deg,rgba(230,180,85,.09),var(--card) 58%);
-    box-shadow:var(--sh-card), var(--sh-gold);
+    background:linear-gradient(180deg,#fdeef6,var(--card) 58%);
+    box-shadow:var(--sh-card), var(--sh-pink);
   }
-  /* moldura dourada estática + respiro de luz.
-     (Uma borda cônica animada via @property repinta o gradiente inteiro a cada
-      frame e trava o scroll no celular — aqui só a opacidade anima, que é composto.) */
+  /* moldura rosa estática + respiro de luz (só opacity anima, sem repaint) */
   .plan::before{
     content:''; position:absolute; inset:0; border-radius:inherit; padding:1.5px;
-    background:linear-gradient(150deg, var(--gold-deep), var(--gold-2) 38%, var(--gold) 62%, var(--gold-deep));
+    background:linear-gradient(150deg, var(--pink-deep), var(--grad-b) 38%, var(--pink-bright) 62%, var(--pink-deep));
     -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite:xor; mask-composite:exclude;
     pointer-events:none;
   }
-  .plan::after{   /* halo que respira — só opacity, sem repaint */
+  .plan::after{
     content:''; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none;
-    box-shadow:0 0 40px rgba(230,180,85,.28);
+    box-shadow:0 0 40px rgba(236,58,139,.24);
     opacity:.55; animation:breathe 3.6s ease-in-out infinite;
   }
   @keyframes breathe{50%{opacity:1}}
 
   .plan-tag{
     position:absolute; top:-13px; left:50%; transform:translateX(-50%);
-    background:linear-gradient(100deg,var(--gold-deep),var(--gold-2),var(--gold));
-    color:#22190a; font-size:11px; font-weight:800; letter-spacing:1.3px; text-transform:uppercase;
-    padding:6px 16px; border-radius:99px; white-space:nowrap; box-shadow:0 6px 18px rgba(230,180,85,.35);
+    background:linear-gradient(100deg,var(--pink-deep),var(--pink-bright),var(--grad-b));
+    color:#fff; font-size:11px; font-weight:800; letter-spacing:1.3px; text-transform:uppercase;
+    padding:6px 16px; border-radius:99px; white-space:nowrap; box-shadow:0 6px 18px rgba(236,58,139,.35);
   }
-  .plan h3{font-family:'Playfair Display',serif;font-size:clamp(21px,5.4vw,25px);font-weight:800;margin:10px 0 16px;line-height:1.25}
+  .plan h3{font-family:'Playfair Display',serif;font-size:clamp(21px,5.4vw,25px);font-weight:800;margin:10px 0 16px;line-height:1.25;color:var(--ink)}
   .plan .from{font-size:13.5px;color:var(--muted);letter-spacing:.5px}
   .plan .from s{color:var(--muted-2)}
   .plan .now{
-    font-family:'Playfair Display',serif; font-weight:900; line-height:1.02; color:#fff;
+    font-family:'Playfair Display',serif; font-weight:900; line-height:1.02; color:var(--ink);
     font-size:clamp(46px,13vw,62px); margin:6px 0 6px; letter-spacing:-1px;
-    text-shadow:0 6px 30px rgba(230,180,85,.22);
   }
-  .plan .once{font-size:11.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+  .plan .once{font-size:11.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink);margin-bottom:22px}
   .plan-list{text-align:left;display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
-  .plan-list div{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;line-height:1.45}
+  .plan-list div{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;line-height:1.45;color:var(--txt)}
   .plan-list .ck{
-    color:var(--green);flex-shrink:0;font-weight:800;
-    filter:drop-shadow(0 0 5px rgba(51,204,92,.5));
+    color:var(--green-d);flex-shrink:0;font-weight:800;
+    filter:drop-shadow(0 0 5px rgba(44,191,82,.4));
   }
-  .plan-list b{color:var(--gold-2);font-weight:700;white-space:nowrap}
+  .plan-list b{color:var(--pink);font-weight:700;white-space:nowrap}
   .plan-foot{margin-top:16px;font-size:12px;color:var(--muted-2);letter-spacing:.4px}
-  .plan-foot .warn{color:#e07a6a;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;font-size:11.5px;display:block;margin-bottom:8px}
+  .plan-foot .warn{color:var(--red);font-weight:800;letter-spacing:1.2px;text-transform:uppercase;font-size:11.5px;display:block;margin-bottom:8px}
 
-  /* ===== DOIS PLANOS =====
-     No celular o Completo vem primeiro (é a escolha que a gente quer).
-     O Essencial é a âncora de contraste: sem moldura dourada, sem halo. */
+  /* ===== DOIS PLANOS ===== */
   .plans{display:flex;flex-direction:column;gap:26px;margin-top:30px}
   .plan.lite{
     background:var(--card);
-    box-shadow:var(--sh-card);
+    box-shadow:var(--sh-soft);
     padding:26px 22px 24px;
   }
-  .plan.lite::before{background:linear-gradient(150deg,#3a3a44,#2c2c34)}
+  .plan.lite::before{background:linear-gradient(150deg,#e6d3de,#efe1ea)}
   .plan.lite::after{display:none}
   .plan.lite .plan-tag{
-    background:#33333d;color:var(--muted);box-shadow:none;
+    background:#efe1ea;color:var(--muted);box-shadow:none;
   }
-  .plan.lite .now{font-size:clamp(36px,10vw,44px);text-shadow:none;color:var(--muted)}
+  .plan.lite .now{font-size:clamp(36px,10vw,44px);color:var(--muted)}
   .plan.lite .once{color:var(--muted-2)}
   .plan.lite .btn{
-    background:transparent;color:var(--gold);border:1.5px solid rgba(230,180,85,.45);
+    background:transparent;color:var(--pink);border:1.5px solid #eeb9d5;
     box-shadow:none;
   }
-  .plan-list .no{color:#5a5a66;flex-shrink:0;font-weight:800}
-  .plan-list .off{color:#5a5a66;text-decoration:line-through;text-decoration-color:#4a4a55}
-  .plan-list .off b{color:#5a5a66}
-  .plans-note{margin-top:22px;font-size:13px;color:var(--muted-2);line-height:1.5}
+  .plan.lite .btn:hover{background:#fdeef6;filter:none;box-shadow:none}
+  .plan-list .no{color:#c9b6c3;flex-shrink:0;font-weight:800}
+  .plan-list .off{color:#b3a4ae;text-decoration:line-through;text-decoration-color:#d8c6d1}
+  .plan-list .off b{color:#b3a4ae}
+  .plans-note{margin-top:22px;font-size:13px;color:var(--muted-2);line-height:1.5;text-align:center}
 
   /* ===== POR DENTRO / DEPOIMENTOS (trilhos) ===== */
-  /* alinhados pelo topo: os depoimentos têm proporções diferentes
-     (5 são prints em retrato, 3 em paisagem) e centralizá-los desalinharia tudo */
   .rail,.deps{
     display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; align-items:flex-start;
     padding-bottom:10px; -webkit-overflow-scrolling:touch; scrollbar-width:thin;
   }
   .rail::-webkit-scrollbar,.deps::-webkit-scrollbar{height:5px}
-  .rail::-webkit-scrollbar-thumb,.deps::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
-  .rail figure{flex:0 0 84%;scroll-snap-align:center}
+  .rail::-webkit-scrollbar-thumb,.deps::-webkit-scrollbar-thumb{background:#eccfe0;border-radius:99px}
+  .rail figure{flex:0 0 68%;scroll-snap-align:center}
   .rail img,.deps img{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);box-shadow:var(--sh-card)}
   .rail figcaption{text-align:center;font-size:12.5px;color:var(--muted);margin-top:11px}
   .deps img{flex:0 0 82%;scroll-snap-align:center}
@@ -385,72 +382,57 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
 
   /* ===== GARANTIA ===== */
   .guar{
-    border:1px solid rgba(124,196,90,.34); border-radius:var(--r-xl); padding:34px 22px; text-align:center;
-    background:radial-gradient(120% 100% at 50% 0%, rgba(90,170,70,.14), var(--card) 62%);
+    border:1.5px solid #b9e3b0; border-radius:var(--r-xl); padding:34px 22px; text-align:center;
+    background:radial-gradient(120% 100% at 50% 0%, #e9f7e5, var(--card) 62%);
     box-shadow:var(--sh-card);
   }
   .seal{
     position:relative; width:112px;height:112px;margin:0 auto 18px;border-radius:50%;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:rgba(90,160,70,.10); border:1px solid rgba(140,205,110,.28);
+    background:#eaf7e6; border:1px solid #bfe6b6;
   }
   .seal::before{
     content:''; position:absolute; inset:-6px; border-radius:50%;
-    border:2px dashed rgba(140,205,110,.5); animation:spin 22s linear infinite;
+    border:2px dashed #9bd68c; animation:spin 22s linear infinite;
   }
   @keyframes spin{to{transform:rotate(360deg)}}
-  .seal b{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:#9ada78;line-height:1}
-  .seal span{font-size:10px;letter-spacing:2.4px;color:#9ada78;text-transform:uppercase}
+  .seal b{font-family:'Playfair Display',serif;font-size:34px;font-weight:900;color:#2f9e46;line-height:1}
+  .seal span{font-size:10px;letter-spacing:2.4px;color:#2f9e46;text-transform:uppercase}
   .guar-tag{
-    display:inline-block;border:1px solid rgba(140,205,110,.42);color:#9ada78;background:rgba(90,160,70,.08);
+    display:inline-block;border:1px solid #b9e3b0;color:#2f9e46;background:#eaf7e6;
     border-radius:99px;padding:6px 15px;font-size:11px;font-weight:800;letter-spacing:1.4px;
     text-transform:uppercase;margin-bottom:15px;
   }
-  .guar h2{font-family:'Playfair Display',serif;font-size:clamp(23px,5.8vw,29px);font-weight:800;margin-bottom:13px;line-height:1.26}
-  .guar h2 .g{color:var(--gold)}
+  .guar h2{font-family:'Playfair Display',serif;font-size:clamp(23px,5.8vw,29px);font-weight:800;margin-bottom:13px;line-height:1.26;color:var(--ink)}
+  .guar h2 .g{
+    background:linear-gradient(100deg,var(--pink-deep),var(--pink-bright) 52%,var(--grad-b));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  }
   .guar p{font-size:14.5px;color:var(--muted);line-height:1.65;max-width:46ch;margin:0 auto}
 
   /* ===== FAQ ===== */
-  .faq-group{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin:26px 0 11px}
-  .faq{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--card)}
+  .faq-group{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--pink);margin:26px 0 11px}
+  .faq{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--card);box-shadow:var(--sh-soft)}
   .faq details{border-bottom:1px solid var(--line-soft)}
   .faq details:last-child{border-bottom:none}
   .faq summary{
-    list-style:none; cursor:pointer; padding:18px 17px; font-size:15px; font-weight:600;
+    list-style:none; cursor:pointer; padding:18px 17px; font-size:15px; font-weight:600; color:var(--ink);
     display:flex; justify-content:space-between; align-items:center; gap:12px;
     transition:background var(--t-fast), color var(--t-fast);
   }
   .faq summary::-webkit-details-marker{display:none}
-  .faq summary:hover{background:var(--card-2); color:var(--gold-2)}
+  .faq summary:hover{background:var(--card-2); color:var(--pink)}
   .faq summary::after{
     content:'+'; flex-shrink:0; width:27px;height:27px;border-radius:50%;
     border:1px solid var(--line); display:flex;align-items:center;justify-content:center;
     font-size:17px;color:var(--muted); transition:transform var(--t-mid) var(--ease), color var(--t-fast), border-color var(--t-fast);
   }
-  .faq details[open] summary{color:var(--gold-2)}
-  .faq details[open] summary::after{content:'−'; transform:rotate(180deg); color:var(--gold); border-color:rgba(230,180,85,.5)}
+  .faq details[open] summary{color:var(--pink)}
+  .faq details[open] summary::after{content:'−'; transform:rotate(180deg); color:var(--pink); border-color:#eeb9d5}
   .faq .a{padding:0 17px 18px; font-size:14px; color:var(--muted); line-height:1.65; animation:faqIn .32s var(--ease-out)}
   @keyframes faqIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 
-  /* ===== BARRA FIXA DE COMPRA ===== */
-  .bottombar{
-    position:fixed; left:0; right:0; bottom:0; z-index:50;
-    /* fundo sólido de propósito: backdrop-filter numa barra fixa reprocessa o blur
-       da tela inteira a cada frame de scroll e engasga o celular. */
-    background:#0c0c0f;
-    border-top:1px solid var(--line); padding:11px 14px calc(11px + env(safe-area-inset-bottom));
-    box-shadow:0 -12px 30px rgba(0,0,0,.5);
-    transform:translateY(110%); transition:transform .45s var(--ease-out);
-    will-change:transform;
-  }
-  .bottombar.on{transform:none}
-  .bottombar .in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px}
-  .bottombar .px{flex:1;min-width:0}
-  .bottombar .px .a{font-size:11px;color:var(--muted-2);letter-spacing:.4px}
-  .bottombar .px .b{font-size:20px;font-weight:800;font-family:'Playfair Display',serif;color:#fff;line-height:1.15}
-  .bottombar .btn{width:auto;flex-shrink:0;padding:14px 20px;font-size:14.5px;border-radius:var(--r-sm)}
-
-  .foot{text-align:center;color:var(--muted-2);font-size:11.5px;padding:30px 0 14px;line-height:1.8}
+  .foot{text-align:center;color:var(--muted-2);font-size:11.5px;padding:30px 0 40px;line-height:1.8}
 
   /* =====================================================================
      TABLET (>=768px)
@@ -461,19 +443,17 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     .grid{grid-template-columns:repeat(3,1fr)}
     .bonus{grid-template-columns:1fr 1fr}
     .bcard.super{grid-column:1 / -1}
-    .rail figure{flex:0 0 48%}
+    .rail figure{flex:0 0 40%}
     .deps img{flex:0 0 44%}
-    .bottombar .in{max-width:720px}
   }
 
   /* =====================================================================
-     DESKTOP (>=1024px) — a página deixa de ser uma coluna estreita
+     DESKTOP (>=1024px)
      ===================================================================== */
   @media (min-width:1024px){
     .wrap{max-width:1120px; padding:0 32px}
     section{padding:80px 0}
 
-    /* hero em duas colunas: texto+CTA à esquerda, mockup à direita */
     .hero{
       display:grid;
       grid-template-columns:1.05fr .95fr;
@@ -490,9 +470,7 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     .hero p{margin-left:0; margin-bottom:0; max-width:38ch}
     .hero .btn-note{text-align:left}
 
-    /* a oferta e os blocos de leitura não podem esticar demais */
     .plan{max-width:640px; margin:0 auto; padding:40px 34px 34px}
-    /* dois planos lado a lado: Essencial à esquerda, Completo à direita e maior */
     .plans{
       flex-direction:row; align-items:stretch; justify-content:center;
       gap:30px; max-width:940px; margin:40px auto 0;
@@ -510,7 +488,7 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     .saved{max-width:640px; margin:26px auto 0; justify-content:center; gap:22px}
 
     /* trilhos viram grade: no desktop não existe swipe */
-    .rail{display:grid; grid-template-columns:1fr 1fr; gap:26px; overflow:visible; max-width:900px; margin:0 auto}
+    .rail{display:grid; grid-template-columns:repeat(4,1fr); gap:22px; overflow:visible; max-width:1000px; margin:0 auto}
     .rail figure{flex:none}
     .deps{
       display:grid; grid-template-columns:repeat(4,1fr); gap:18px; overflow:visible; align-items:start;
@@ -519,8 +497,6 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     .swipe{display:none}
 
     .cd .n{width:74px;height:74px;font-size:28px;border-radius:18px}
-    .bottombar .in{max-width:1120px}
-    .bottombar .btn{padding:15px 30px}
   }
 
   /* telas muito estreitas */
@@ -528,8 +504,6 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     .wrap{padding:0 14px}
     .grid{gap:10px}
     .gcard{padding:18px 11px}
-    .bottombar .px .b{font-size:18px}
-    .bottombar .btn{padding:13px 15px;font-size:13.5px}
   }
 </style>
 </head>
@@ -558,7 +532,7 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
 
     <div class="hero-cta rv" style="--d:220ms">
       <button class="btn pulse" onclick="irOferta()">QUERO MEU PROTOCOLO AGORA</button>
-      <p class="btn-note">Acesso imediato • Garantia de 30 dias • Pagamento único</p>
+      <p class="btn-note">Acesso imediato • Garantia de 90 dias • Pagamento único</p>
     </div>
   </section>
 
@@ -589,7 +563,7 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
       <div class="gcard rv" style="--d:70ms"><div class="gi">⚡</div><h3>Aplica hoje</h3><p>A primeira mensagem pode sair ainda hoje, do seu celular.</p></div>
       <div class="gcard rv" style="--d:140ms"><div class="gi">🚫</div><h3>Trava os erros</h3><p>O Kit de Emergência te segura antes do textão que afasta.</p></div>
       <div class="gcard rv" style="--d:210ms"><div class="gi">💬</div><h3>Mensagens prontas</h3><p>90 sugestões por situação — você não trava na hora de escrever.</p></div>
-      <div class="gcard rv" style="--d:280ms"><div class="gi">🔒</div><h3>Risco zero</h3><p>30 dias pra testar. Não gostou, devolvemos 100%.</p></div>
+      <div class="gcard rv" style="--d:280ms"><div class="gi">🔒</div><h3>Risco zero</h3><p>90 dias pra testar. Não gostou, devolvemos 100%.</p></div>
       <div class="gcard rv" style="--d:350ms"><div class="gi">♾️</div><h3>É seu pra sempre</h3><p>Pagamento único. Sem mensalidade, sem renovação.</p></div>
     </div>
   </section>
@@ -675,7 +649,7 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
           <div><span class="ck">✓</span><span>Planejador de 14 dias + Diário de Bordo</span></div>
           <div><span class="ck">✓</span><span>8 Sintonias em áudio <b>(R$ 197)</b></span></div>
           <div><span class="ck">✓</span><span>Os 5 bônus em PDF liberados na hora <b>(R$ 345)</b></span></div>
-          <div><span class="ck">✓</span><span>Garantia incondicional de 30 dias</span></div>
+          <div><span class="ck">✓</span><span>Garantia incondicional de 90 dias</span></div>
         </div>
 
         <button class="btn pulse" data-label="Oferta" onclick="comprar('completo')">QUERO O ACESSO COMPLETO</button>
@@ -699,7 +673,7 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
           <div><span class="ck">✓</span><span>Método completo em vídeo — 7 módulos</span></div>
           <div><span class="ck">✓</span><span>O Protocolo dos 12 Dias, dia a dia</span></div>
           <div><span class="ck">✓</span><span>Código da Mensagem Magnética</span></div>
-          <div><span class="ck">✓</span><span>Garantia incondicional de 30 dias</span></div>
+          <div><span class="ck">✓</span><span>Garantia incondicional de 90 dias</span></div>
           <div><span class="no">✕</span><span class="off">Gerador de Mensagens: 90 mensagens prontas</span></div>
           <div><span class="no">✕</span><span class="off">Kit de Emergência pra hora da ansiedade</span></div>
           <div><span class="no">✕</span><span class="off">Planejador de 14 dias + Diário de Bordo</span></div>
@@ -725,12 +699,20 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     <p class="sub rv">É isso que abre no seu celular assim que o pagamento é aprovado.</p>
     <div class="rail rv">
       <figure>
-        <img src="area-membros.png" alt="Tela do Método na área de membros" width="780" height="1560" loading="lazy">
-        <figcaption>Os 7 módulos em vídeo, na área de membros</figcaption>
+        <img src="am-inicio.png" alt="Tela inicial da área de membros" width="476" height="930" loading="lazy">
+        <figcaption>Sua área, organizada — método, ferramentas e bônus</figcaption>
       </figure>
       <figure>
-        <img src="mockup.png" alt="O método aberto no celular e no tablet" width="1024" height="1024" loading="lazy">
-        <figcaption>Acesso pelo celular, tablet ou computador</figcaption>
+        <img src="am-metodo.png" alt="Os módulos do método na área de membros" width="476" height="880" loading="lazy">
+        <figcaption>Os 7 módulos em vídeo, aula por aula</figcaption>
+      </figure>
+      <figure>
+        <img src="am-emergencia.png" alt="Kit de Emergência da área de membros" width="476" height="540" loading="lazy">
+        <figcaption>Kit de Emergência pra hora da ansiedade</figcaption>
+      </figure>
+      <figure>
+        <img src="am-planner.png" alt="Planejador de 14 dias da área de membros" width="476" height="900" loading="lazy">
+        <figcaption>Planejador de 14 dias, dia a dia</figcaption>
       </figure>
     </div>
     <p class="swipe">← arraste para ver →</p>
@@ -760,10 +742,10 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   <!-- ===== GARANTIA ===== -->
   <section>
     <div class="guar rv">
-      <div class="seal"><b>30</b><span>Dias</span></div>
+      <div class="seal"><b>90</b><span>Dias</span></div>
       <span class="guar-tag">🛡️ Risco zero</span>
-      <h2>Garantia <span class="g">incondicional</span> de 30 dias</h2>
-      <p>Entre, veja tudo por dentro e aplique. Se em 30 dias você não sentir que vale cada centavo, devolvemos 100% do valor — sem perguntas, sem burocracia. O risco é todo nosso.</p>
+      <h2>Garantia <span class="g">incondicional</span> de 90 dias</h2>
+      <p>Entre, veja tudo por dentro e aplique. Se em 90 dias você não sentir que vale cada centavo, devolvemos 100% do valor — sem perguntas, sem burocracia. O risco é todo nosso.</p>
     </div>
   </section>
 
@@ -814,7 +796,7 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
       <div class="faq rv">
         <details>
           <summary>Como funciona a garantia?</summary>
-          <div class="a">Você tem 30 dias a partir da compra. Se não gostar, basta pedir o reembolso e devolvemos 100% do valor, sem perguntas.</div>
+          <div class="a">Você tem 90 dias a partir da compra. Se não gostar, basta pedir o reembolso e devolvemos 100% do valor, sem perguntas.</div>
         </details>
         <details>
           <summary>É cobrança mensal?</summary>
@@ -834,7 +816,7 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     <p class="sub rv" style="margin-bottom:26px">Cada dia parado é um dia a mais em que ele se acostuma com a sua ausência. Você já sabe o que acontece se não fizer nada — já está acontecendo.</p>
     <div class="rv" style="max-width:460px;margin:0 auto">
       <button class="btn pulse" data-label="Fechamento" onclick="irOferta()">COMEÇAR MEU PROTOCOLO AGORA</button>
-      <p class="btn-note">Garantia de 30 dias • Acesso imediato • Pagamento único</p>
+      <p class="btn-note">Garantia de 90 dias • Acesso imediato • Pagamento único</p>
     </div>
   </section>
 
@@ -843,17 +825,6 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     Este produto não garante a decisão de terceiros. Os resultados variam de pessoa para pessoa.
   </p>
 
-</div>
-
-<!-- ===== BARRA FIXA DE COMPRA ===== -->
-<div class="bottombar" id="bottombar">
-  <div class="in">
-    <div class="px">
-      <div class="a">Acesso a partir de</div>
-      <div class="b" id="priceBar">R$ 19,90</div>
-    </div>
-    <button class="btn" data-label="Barra fixa" onclick="irOferta()">DESTRAVAR ACESSO</button>
-  </div>
 </div>
 
 <script src="track.js"></script>
@@ -904,9 +875,6 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
       });
     }
 
-    // rede de segurança: um timer também varre a lista. Se o rAF for suspenso
-    // (aba em segundo plano, navegador econômico), o conteúdo ainda assim aparece
-    // em vez de ficar preso em opacity:0.
     var guarda = setInterval(function(){
       passo();
       if (!pendentes.length) clearInterval(guarda);
@@ -915,23 +883,19 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     return passo;
   })();
 
-  /* ===== Barra de progresso + barra de compra (só aparece depois do hero) =====
-     As medidas de layout (scrollHeight, offsetTop) são lidas UMA vez e recalculadas
-     só no resize. Lê-las a cada frame de scroll força reflow e engasga o celular. */
+  /* ===== Barra de progresso de leitura =====
+     A medida de layout (scrollHeight) é lida UMA vez e recalculada só no resize.
+     Lê-la a cada frame de scroll força reflow e engasga o celular. */
   (function(){
     var bar = document.getElementById('progressBar');
-    var bottom = document.getElementById('bottombar');
-    var hero = document.querySelector('.hero');
-    var maxScroll = 1, limite = 400, ticking = false;
+    var maxScroll = 1, ticking = false;
 
     function medir(){
       maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      limite = hero ? hero.offsetTop + hero.offsetHeight - 120 : 400;
     }
 
     function pintar(){
       bar.style.width = Math.min(100, (window.scrollY / maxScroll) * 100).toFixed(1) + '%';
-      bottom.classList.toggle('on', window.scrollY > limite);
       revelar();
       ticking = false;
     }
