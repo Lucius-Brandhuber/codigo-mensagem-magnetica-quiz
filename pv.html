@@ -934,10 +934,21 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
       if (H) H.textContent = pad(h);
       if (M) M.textContent = pad(m);
       if (S) S.textContent = pad(ss);
-      if (left <= 0) clearInterval(iv);
+    }
+
+    /* Agendador alinhado ao segundo cheio (em vez de setInterval).
+       setInterval sofre "drift": se um disparo atrasa por causa de outra
+       tarefa na thread, o relógio pula um número ou parece travar. Aqui cada
+       próximo tick é agendado exatamente para o instante em que o valor
+       exibido muda — o contador nunca pula nem engasga entre segundos. */
+    function agendar(){
+      var left = end - Date.now();
+      if (left <= 0) { tick(); return; }        // zerou: mostra 00:00 e para
+      var ateProximo = left % 1000 || 1000;     // ms até o número decrementar
+      setTimeout(function(){ tick(); agendar(); }, ateProximo);
     }
     tick();
-    var iv = setInterval(tick, 1000);
+    agendar();
   })();
 </script>
 
