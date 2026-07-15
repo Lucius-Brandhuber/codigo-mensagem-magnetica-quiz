@@ -34,9 +34,10 @@
   #dash{display:none}
   .topbar{position:sticky;top:0;z-index:50;height:60px;background:#fff;border-bottom:1px solid var(--line);
     display:flex;align-items:center;gap:14px;padding:0 18px}
-  .tb-logo{font-size:17px;font-weight:800;white-space:nowrap}
+  .tb-logo{font-size:17px;font-weight:800;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis;flex-shrink:1}
   .tb-logo .p{color:var(--primary)}
-  .spacer{flex:1}
+  .spacer{flex:1;min-width:8px}
+  .capi-pill,.btn-refresh,.btn-exit{flex-shrink:0}
   .capi-pill{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:99px;border:1px solid var(--line)}
   .capi-dot{width:9px;height:9px;border-radius:50%;background:#9ca3af;animation:pulse 1.4s infinite}
   .capi-pill.ok{background:#eafaef;color:var(--accent-d);border-color:#bfe6c8}
@@ -136,6 +137,12 @@
   .mini-kpi{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px}
   .mini-kpi .n{font-size:20px;font-weight:800}
   .mini-kpi .l{font-size:11px;color:var(--muted);margin-top:3px}
+  /* impede que conteúdo largo (tabelas, SVGs, tokens sem quebra) estoure as colunas
+     de grid/flex — os itens podem encolher abaixo do min-content e o overflow fica
+     contido nos wrappers roláveis internos */
+  .grid2>*,.mini-kpis>*,.kpis>*{min-width:0}
+  .mini-kpi{overflow:hidden}
+  .mini-kpi .n,.mini-kpi .l{overflow-wrap:anywhere}
 
   .pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:12px;font-size:12.5px;color:var(--muted)}
   .pager button{padding:6px 11px;border:1px solid var(--line);border-radius:8px;background:#fff}
@@ -191,13 +198,43 @@
     .grid2{grid-template-columns:1fr}
     .mini-kpis{grid-template-columns:repeat(2,1fr)}
     .sync-txt{display:none}
-    .tb-logo{font-size:14px}
+    .tb-logo{font-size:15px}
     .capi-pill .t{display:none}
   }
-  @media(max-width:520px){
-    .kpis{grid-template-columns:1fr 1fr}
+  /* ===== MOBILE ===== */
+  @media(max-width:600px){
+    .topbar{height:56px;gap:10px;padding:0 12px}
+    .tb-rest{display:none}                    /* logo vira só "💗 Código" */
+    .capi-pill{padding:6px 9px}
+    .btn-refresh .tx{display:none}            /* botão de atualizar fica só o ícone ↻ */
+    .btn-refresh,.btn-exit{padding:8px 11px}
     .wrap{padding:12px}
-    .bg-row{grid-template-columns:96px 1fr 40px}
+    .periodbar{padding:10px;gap:6px;border-radius:12px}
+    .periodbar label{flex-basis:100%}
+    .pf-btn{padding:7px 11px;font-size:12px}
+    .pf-info{margin-left:0;flex-basis:100%;order:9}
+    .card{padding:14px;border-radius:14px}
+    .card h2{font-size:14px}
+    /* abas viram faixa de rolagem horizontal (edge-to-edge) */
+    .tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+      margin:0 -12px 14px;padding:2px 12px}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{flex:0 0 auto;padding:8px 14px}
+    .kpi{padding:14px;border-radius:14px}
+    .kpi .ic{width:34px;height:34px;font-size:17px;margin-bottom:9px}
+    .kpi .num{font-size:22px}
+    .mini-kpi .n{font-size:18px}
+    th,td{padding:8px 10px}
+    #modal{padding:16px 10px;align-items:flex-start}
+    .modal-card{padding:16px;border-radius:14px}
+    .river-tip{position:fixed;left:10px;right:10px;top:auto;bottom:10px;max-width:none;min-width:0}
+    #toast{left:12px;right:12px;bottom:12px;text-align:center}
+  }
+  @media(max-width:400px){
+    .kpis{gap:10px}
+    .bg-row{grid-template-columns:84px 1fr 38px;gap:8px}
+    .kpi .num{font-size:20px}
+    .tb-logo{font-size:14px}
   }
 </style>
 </head>
@@ -218,11 +255,11 @@
 <!-- ===== DASHBOARD ===== -->
 <div id="dash">
   <div class="topbar">
-    <div class="tb-logo"><span class="p">💗 Código</span> da Reconquista Magnética</div>
+    <div class="tb-logo"><span class="p">💗 Código</span><span class="tb-rest"> da Reconquista Magnética</span></div>
     <div class="spacer"></div>
     <div class="capi-pill" id="capiPill"><span class="capi-dot"></span><span class="t" id="capiTxt">CAPI…</span></div>
     <div class="sync-txt" id="syncTxt">sincronizando…</div>
-    <button class="btn-refresh" onclick="sync(true)">↻ Atualizar</button>
+    <button class="btn-refresh" onclick="sync(true)" title="Atualizar" aria-label="Atualizar"><span class="ic">↻</span><span class="tx"> Atualizar</span></button>
     <button class="btn-exit" onclick="logout()" title="Sair">⎋</button>
   </div>
 
