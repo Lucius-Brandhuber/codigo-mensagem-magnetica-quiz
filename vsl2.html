@@ -194,9 +194,33 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
 
   if (window.cmmTrack) cmmTrack.view('vsl2');
 
+  /* ====== Analytics da VSL: quanto tempo ficaram e onde saíram ====== */
+  var _vslT0 = Date.now();
+  var _advanced = false;   // clicou "VER MEU PROTOCOLO" e foi pra PV
+  var _left = false;       // já registramos a saída (evita duplicar)
+  function vslSecs(){
+    try {
+      var inst = window.smartplayer && window.smartplayer.instances && window.smartplayer.instances[0];
+      if (inst){
+        var t = (typeof inst.getCurrentTime === 'function') ? inst.getCurrentTime()
+              : (inst.video && inst.video.currentTime) || inst.currentTime || 0;
+        return Math.round(t) || 0;
+      }
+    } catch(e){}
+    return 0;
+  }
+  // registra abandono (só se NÃO avançou pela nossa CTA)
+  function markLeave(){
+    if (_left || _advanced) return; _left = true;
+    if (window.cmmTrack) cmmTrack.leave('vsl2', Date.now() - _vslT0, vslSecs());
+  }
+  document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'hidden') markLeave(); });
+  window.addEventListener('pagehide', markLeave);
+
   // A página de vendas agora é uma página própria (pv.html), não fica embaixo da VSL.
   function irParaPV(){
-    if (window.cmmTrack) cmmTrack.click('vsl2', 'VER MEU PROTOCOLO');
+    _advanced = true;
+    if (window.cmmTrack) cmmTrack.click('vsl2', 'VER MEU PROTOCOLO', Date.now() - _vslT0);
     setTimeout(function(){ window.location.href = 'pv.html'; }, 120);
   }
 

@@ -46,6 +46,8 @@
     view:     function(step){ if(seen('v'+step)) return; send('view', {step:step}); },
     answer:   function(step,text,ms){ send('answer', {step:step, ans:text, ms:ms}); },
     click:    function(step,label,ms){ send('click', {step:step, name:label||'Botão', ms:ms}); },
+    /* saída de uma página (ex.: abandono da VSL): ms = tempo na página; secs = ponto do vídeo (opcional) */
+    leave:    function(step,ms,secs){ send('leave', {step:step, ms:ms, ans:(secs!=null?String(secs):'')}); },
     checkout: function(label){ send('checkout_click', {name:label||'CTA'}); },
     getAb:    function(){ return priceAb(); }   // variante de preço do visitante (A|B)
   };

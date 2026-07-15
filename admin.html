@@ -64,7 +64,7 @@
   #customRange.show{display:flex}
 
   /* ===== KPIs ===== */
-  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
   .kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;transition:transform .15s,box-shadow .15s}
   .kpi:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.07)}
   .kpi .ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:12px}
@@ -257,6 +257,7 @@
     <div class="tabs" id="tabs">
       <button class="tab on" data-tab="funil"><span class="em">📊</span> Funil</button>
       <button class="tab" data-tab="quiz"><span class="em">🧩</span> Quiz</button>
+      <button class="tab" data-tab="vsl"><span class="em">🎬</span> VSL</button>
       <button class="tab" data-tab="eventos"><span class="em">📋</span> Eventos</button>
       <button class="tab" data-tab="resumo"><span class="em">📈</span> Resumo</button>
       <button class="tab" data-tab="trafego"><span class="em">🎯</span> Tráfego</button>
@@ -436,13 +437,14 @@ function metricsFor(evArr, vendasArr){
   const visitors = uSetIn(evArr, e=>e.ev==='view'&&String(e.step)==='0');
   const leads    = uSetIn(evArr, e=>e.ev==='answer'&&String(e.step)==='1');
   const quizDone = uSetIn(evArr, e=>e.ev==='answer'&&String(e.step)==='5');
-  const salesV   = uSetIn(evArr, e=>e.ev==='view'&&String(e.step)==='vsl2');
+  const vslV     = uSetIn(evArr, e=>e.ev==='view'&&String(e.step)==='vsl2');   // VSL (vídeo) — etapa antes da PV
+  const salesV   = uSetIn(evArr, e=>e.ev==='view'&&String(e.step)==='pv');     // PV real = pv.html (página de vendas)
   const checkout = uSetIn(evArr, e=>e.ev==='checkout_click');
   const approved = vendasArr.filter(v=>APPROVED.test(v.status));
   const purchases= approved.length;
   const revenue  = approved.reduce((a,v)=>a+vValor(v),0);
   const ticket   = purchases>0 ? revenue/purchases : 0;
-  return {visitors,leads,quizDone,salesV,checkout,purchases,revenue,ticket};
+  return {visitors,leads,quizDone,vslV,salesV,checkout,purchases,revenue,ticket};
 }
 function metrics(){ return metricsFor(_ev,_vendas); }
 function metricsPrev(){ return metricsFor(_evPrev,_vendasPrev); }
@@ -669,7 +671,8 @@ function renderKPIs(){
   $('#kpis').innerHTML =
     kpi('👁️','#4A7AF5',fmt(m.visitors),'Visitantes','step 0',deltaBadge(m.visitors,p.visitors))+
     kpi('🎯','#cf3a7d',fmt(m.leads),'Leads',pct(m.leads,m.visitors)+'% dos visit.',deltaBadge(m.leads,p.leads))+
-    kpi('🛒','#a855f7',fmt(m.salesV),'PV / Oferta',pct(m.salesV,m.visitors)+'% dos visit. · VSL2',deltaBadge(m.salesV,p.salesV))+
+    kpi('🎬','#a855f7',fmt(m.vslV),'VSL (vídeo)',pct(m.vslV,m.visitors)+'% dos visit. · vsl2.html',deltaBadge(m.vslV,p.vslV))+
+    kpi('🛒','#cf3a7d',fmt(m.salesV),'PV / Oferta',pct(m.salesV,m.vslV)+'% da VSL · pv.html',deltaBadge(m.salesV,p.salesV))+
     kpi('💳','#f5a623',fmt(m.checkout),'Checkout',pct(m.checkout,m.salesV)+'% da PV',deltaBadge(m.checkout,p.checkout))+
     kpi('✅','#2cbf52',fmt(m.purchases),'Compras',pct(m.purchases,m.checkout)+'% do checkout',deltaBadge(m.purchases,p.purchases))+
     kpi('💰','#16a34a',fmtMoney(m.revenue),'Receita','Ticket '+fmtMoney(m.ticket),deltaBadge(m.revenue,p.revenue));
@@ -683,7 +686,8 @@ function renderFunnelCard(){
     {n:'Pré-venda',v:uViews('vendas')},
     {n:'VSL Vídeos',v:uViews('vsl')},
     {n:'Quiz 2',v:uViews('quiz2')},
-    {n:'PV Oferta',v:uViews('vsl2')},
+    {n:'VSL',v:uViews('vsl2')},
+    {n:'PV Oferta',v:uViews('pv')},
     {n:'Checkout',v:m.checkout},
     {n:'Compra',v:m.purchases}
   ];
@@ -745,6 +749,7 @@ function renderTab(){
   const c=$('#tabContent');
   if(activeTab==='funil') c.innerHTML=tabFunil();
   else if(activeTab==='quiz') c.innerHTML=tabQuiz();
+  else if(activeTab==='vsl') c.innerHTML=tabVsl();
   else if(activeTab==='eventos'){ c.innerHTML=tabEventos(); bindEventosUI(); }
   else if(activeTab==='resumo') c.innerHTML=tabResumo();
   else if(activeTab==='trafego') c.innerHTML=tabTrafego();
@@ -1131,6 +1136,85 @@ function tabQuiz(){
   <div class="grid2">${qCards}</div>`;
 }
 
+/* ====================== VSL (vsl2.html — vídeo antes da PV) ====================== */
+/* barras em ordem fixa (faixas de tempo — não reordena por contagem como o barGroup) */
+function orderedBars(pairs){
+  const tot=pairs.reduce((a,p)=>a+p[1],0), max=Math.max(1,...pairs.map(p=>p[1]));
+  if(!tot) return '<div class="empty">Sem dados no período.</div>';
+  return pairs.map(([k,v])=>`<div style="margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;gap:12px;font-size:12.5px;margin-bottom:4px">
+      <span style="flex:1">${esc(k)}</span><b style="white-space:nowrap">${fmt(v)} · ${Math.round(v/tot*100)}%</b></div>
+    <div class="bg-track"><div class="bg-fill" style="width:${(v/max*100).toFixed(1)}%"></div></div>
+  </div>`).join('');
+}
+/* distribui valores em faixas: edges asc; labels tem 1 item a mais que edges */
+function bucketize(vals, edges, labels){
+  const c=new Array(labels.length).fill(0);
+  vals.forEach(v=>{ let i=0; while(i<edges.length && v>=edges[i]) i++; c[i]++; });
+  return labels.map((l,i)=>[l,c[i]]);
+}
+function tabVsl(){
+  const opened=uViews('vsl2'), clicked=uClicks('vsl2'), reached=uViews('protocolo_pronto'), pvOpened=uViews('pv');
+  const pOpened=uSetIn(_evPrev,e=>e.ev==='view'&&String(e.step)==='vsl2');
+  const pClicked=uSetIn(_evPrev,e=>e.ev==='click'&&String(e.step)==='vsl2');
+  if(!opened){
+    return `<div class="card"><h2>🎬 VSL (vsl2.html)</h2>
+      <div class="empty">Ainda sem visitas na VSL no período selecionado.<br>Ajuste o filtro de período no topo (ex.: "Tudo").</div></div>`;
+  }
+  const abandoned=Math.max(0,opened-clicked);
+  const ev=liveEv();
+  const clickMs=ev.filter(e=>e.ev==='click'&&String(e.step)==='vsl2'&&e.ms>0&&e.ms<3600000).map(e=>e.ms);
+  const leaveE =ev.filter(e=>e.ev==='leave'&&String(e.step)==='vsl2');
+  const leaveMs=leaveE.filter(e=>e.ms>0&&e.ms<3600000).map(e=>e.ms);
+  const watchS =leaveE.map(e=>Number(e.ans)||0).filter(x=>x>0&&x<7200);
+  const medClick=medianOf(clickMs), medLeave=medianOf(leaveMs), medWatch=medianOf(watchS);
+
+  const kpis =
+    kpi('🎬','#a855f7',fmt(opened),'Abriram a VSL','vsl2.html · '+pct(opened,metrics().visitors)+'% dos visit.',deltaBadge(opened,pOpened))+
+    kpi('👉','#2cbf52',fmt(clicked),'Avançaram p/ PV',pct(clicked,opened)+'% · clicaram no CTA',deltaBadge(clicked,pClicked))+
+    kpi('🏁','#4A7AF5',fmt(reached),'Chegaram ao fim',pct(reached,opened)+'% · protocolo pronto (~6,3 min)','')+
+    kpi('🚪','#ef4444',fmt(abandoned),'Saíram sem avançar',pct(abandoned,opened)+'% dos que abriram','')+
+    kpi('⏱️','#f5a623',clickMs.length?fmtSec(medClick):'—','Tempo até avançar','mediana até clicar no CTA · n='+fmt(clickMs.length))+
+    kpi('⌛','#16a34a',leaveMs.length?fmtSec(medLeave):'—','Permanência de quem saiu','mediana na página · n='+fmt(leaveMs.length));
+
+  const stayBuckets =bucketize(leaveMs.map(x=>x/1000),[15,30,60,120,300],['Menos de 15s','15–30s','30–60s','1–2 min','2–5 min','5 min ou mais']);
+  const watchBuckets=bucketize(watchS,[30,60,120,190,300],['0–30s','30–60s','1–2 min','2–3 min','3–5 min','5 min ou mais']);
+
+  /* VSL por dia (últimos 14 dias do período) */
+  const days={};
+  ev.forEach(e=>{ if(!e.t||!e.s)return; const k=dayKey(e.t);
+    const d=days[k]=days[k]||{op:new Set(),cl:new Set()};
+    if(e.ev==='view'&&String(e.step)==='vsl2')d.op.add(e.s);
+    else if(e.ev==='click'&&String(e.step)==='vsl2')d.cl.add(e.s);
+  });
+  const dk=Object.keys(days).sort().slice(-14).reverse();
+  const dayRows=dk.map(k=>{const d=days[k];
+    return `<tr><td>${k.split('-').reverse().slice(0,2).join('/')}</td>
+      <td style="text-align:right">${fmt(d.op.size)}</td>
+      <td style="text-align:right">${fmt(d.cl.size)}</td>
+      <td style="text-align:right;font-weight:700;color:${pct(d.cl.size,d.op.size)>=50?'var(--accent-d)':'#d97706'}">${pct(d.cl.size,d.op.size)}%</td></tr>`;
+  }).join('') || '<tr><td colspan="4"><div class="empty">Sem dados.</div></td></tr>';
+
+  return `<div class="kpis" style="margin-bottom:8px">${kpis}</div>
+  <div class="note" style="margin-bottom:14px">A VSL (<code>vsl2.html</code>) é o vídeo que roda <b>antes</b> da página de vendas (<code>pv.html</code>). "Avançar" = clicar em <b>VER MEU PROTOCOLO</b> e ir pra PV. Tempo de permanência e ponto do vídeo em que saíram são coletados a partir de <b>15/07/2026</b> — antes disso aparecem zerados/"—".</div>
+  <div class="grid2">
+    <div class="card"><h2>🚪 Em quanto tempo foram embora <span class="badge">quem saiu sem avançar · n=${fmt(leaveMs.length)}</span></h2>
+      ${orderedBars(stayBuckets)}
+      <div class="note">Tempo entre abrir a VSL e sair da aba/página sem clicar no CTA. Mediana: ${leaveMs.length?fmtSec(medLeave):'—'}.</div>
+    </div>
+    <div class="card"><h2>▶️ Até onde assistiram antes de sair <span class="badge">ponto do vídeo · n=${fmt(watchS.length)}</span></h2>
+      ${orderedBars(watchBuckets)}
+      <div class="note">Segundo do player quando saíram (VSL revela a oferta em ~6,3 min). Mediana: ${watchS.length?fmtSec(medWatch*1000):'—'}. "0" = player não reportou tempo (autoplay bloqueado).</div>
+    </div>
+  </div>
+  <div class="card"><h2>📅 VSL por dia <span class="badge">últimos 14 dias do período</span></h2>
+    <div class="tbl-wrap"><table style="min-width:420px">
+      <thead><tr><th>Dia</th><th style="text-align:right">Abriram</th><th style="text-align:right">Avançaram</th><th style="text-align:right">Taxa</th></tr></thead>
+      <tbody>${dayRows}</tbody></table></div>
+    <div class="note">Avançaram = clicaram em "VER MEU PROTOCOLO" (foram pra pv.html). Taxa = avançaram ÷ abriram.</div>
+  </div>`;
+}
+
 /* ====================== EVENTOS (log + filtros + payload) ====================== */
 function evOrigin(e){ return e.utm_source || (e.ref? (''+e.ref).replace(/^https?:\/\//,'').split('/')[0] : 'direto'); }
 function eventosFiltered(){
@@ -1251,7 +1335,7 @@ function tabResumo(){
   const kpis =
     kpi('🧩','#4A7AF5',fmt(m.visitors),'Sessões no quiz','landing (step 0)',deltaBadge(m.visitors,p.visitors))+
     kpi('🏁','#a855f7',quizRate+'%','Conclusão do quiz',fmt(m.quizDone)+' concluíram',deltaBadge(quizRate,quizRateP))+
-    kpi('🛒','#cf3a7d',fmt(m.salesV),'Views da PV','vsl2.html',deltaBadge(m.salesV,p.salesV))+
+    kpi('🛒','#cf3a7d',fmt(m.salesV),'Views da PV','pv.html',deltaBadge(m.salesV,p.salesV))+
     kpi('🎯','#f5a623',convQuiz.toFixed(1).replace('.',',')+'%','Conv. quiz → venda',fmt(m.purchases)+' compras',deltaBadge(convQuiz,convQuizP))+
     kpi('📈','#2cbf52',convPV.toFixed(1).replace('.',',')+'%','Conv. PV → venda','sobre views da PV',deltaBadge(convPV,convPVP))+
     kpi('💰','#16a34a',fmtMoney(m.revenue),'Faturamento','Ticket '+fmtMoney(m.ticket),deltaBadge(m.revenue,p.revenue));
@@ -1267,7 +1351,7 @@ function tabResumo(){
     <div class="card"><h2>💬 Top Respostas</h2>${barGroup(answers,10)}</div>
     <div class="card"><h2>💳 Checkout</h2>
       <div class="mini-kpis" style="grid-template-columns:repeat(3,1fr)">
-        <div class="mini-kpi"><div class="n">${fmt(m.salesV)}</div><div class="l">Visitas PV (VSL2)</div></div>
+        <div class="mini-kpi"><div class="n">${fmt(m.salesV)}</div><div class="l">Visitas PV (pv.html)</div></div>
         <div class="mini-kpi"><div class="n">${fmt(m.checkout)}</div><div class="l">Cliques</div></div>
         <div class="mini-kpi"><div class="n">${pct(m.checkout,m.salesV)}%</div><div class="l">Taxa Conv.</div></div>
       </div>
