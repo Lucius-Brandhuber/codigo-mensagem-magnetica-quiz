@@ -1,8 +1,9 @@
 /* Tracking do funil — Código da Reconquista Magnética
-   Gera session id, dispara view/answer/checkout_click para o GAS e mantém
-   backup local. Usa fetch no-cors + text/plain (evita preflight CORS no GAS). */
+   Gera session id, dispara view/answer/checkout_click para a Edge Function do
+   Supabase (rcm-api) e mantém backup local. Usa fetch no-cors + text/plain
+   (requisição simples, sem preflight). Backend migrado do Google Apps Script. */
 (function(){
-  var GAS = 'https://script.google.com/macros/s/AKfycbwtTZCubt04EaR0WJxD8RvVnlUtYnwLkiN2k2cPhyqsu4FzyJusEa86CsVJdyG3geEQ6Q/exec';
+  var GAS = 'https://cwcryqleyfzeyzjzvdme.supabase.co/functions/v1/rcm-api';
 
   function uid(){ return 'xxxxxxxx'.replace(/x/g,function(){return (Math.random()*16|0).toString(16);})+Date.now().toString(36); }
   function sid(){ var k='cmm_sid'; var v=localStorage.getItem(k); if(!v){ v=uid(); localStorage.setItem(k,v); } return v; }

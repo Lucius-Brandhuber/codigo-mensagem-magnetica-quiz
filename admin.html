@@ -288,7 +288,9 @@ const KEY   = PFX+'_ev';                    // backup local de eventos
 const CKEY  = PFX+'_admin_cache';           // cache do painel
 const PERIODK = PFX+'_period';
 const SESSK = PFX+'_admin_sess';
-const GAS   = 'https://script.google.com/macros/s/AKfycbwtTZCubt04EaR0WJxD8RvVnlUtYnwLkiN2k2cPhyqsu4FzyJusEa86CsVJdyG3geEQ6Q/exec';
+// Backend de analytics: Edge Function do Supabase (rcm-api) — substituiu o Google Apps Script.
+// Leitura protegida por chave própria derivada da senha (TOFU: 1º login registra). Ver supabase/functions/rcm-api/.
+const GAS   = 'https://cwcryqleyfzeyzjzvdme.supabase.co/functions/v1/rcm-api';
 
 const QUIZ_TOTAL = 6;        // telas do quiz (step 0..5)
 const PRICE = 27.90;         // fallback de valor (BRL)
@@ -448,17 +450,27 @@ function metricsPrev(){ return metricsFor(_evPrev,_vendasPrev); }
 
 /* ====================== AUTH (hash + expiração 12h) ====================== */
 (function checkSession(){
+  let ok=false;
   try{
     const s = JSON.parse(localStorage.getItem(SESSK)||'null');
-    if(s && s.h===PWD_HASH && s.exp>Date.now()){ openDash(); return; }
+    ok = !!(s && s.h===PWD_HASH && s.k && s.exp>Date.now());   // s.k = chave da API (Supabase)
   }catch(e){}
-  localStorage.removeItem(SESSK);
+  if(!ok){ localStorage.removeItem(SESSK); return; }
+  // setTimeout 0: espera o script INTEIRO carregar antes de renderizar. Chamar openDash
+  // direto aqui referencia FUNIL_STEPS/QUIZ_QS (const declaradas abaixo) em TDZ →
+  // ReferenceError que era engolido pelo catch e apagava a sessão a cada visita.
+  setTimeout(openDash, 0);
 })();
+// Chave da API pra ler o backend (rcm-api). Vive na sessão; derivada da senha no login.
+function apiKey(){ try{ return (JSON.parse(localStorage.getItem(SESSK)||'null')||{}).k||''; }catch(e){ return ''; } }
 $('#pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
 async function login(){
   const h = await sha256hex('cmm-admin|'+$('#pwd').value);
   if(h===PWD_HASH){
-    localStorage.setItem(SESSK, JSON.stringify({h:PWD_HASH, exp:Date.now()+SESSION_HOURS*3600*1000}));
+    // Chave da API derivada da senha (nunca aparece no código-fonte).
+    // O backend registra o hash dela no 1º login e passa a exigir nas leituras.
+    const k = await sha256hex('rcm-api|'+$('#pwd').value);
+    localStorage.setItem(SESSK, JSON.stringify({h:PWD_HASH, k:k, exp:Date.now()+SESSION_HOURS*3600*1000}));
     openDash();
   } else { $('#gateErr').textContent='Senha incorreta. Tente novamente.'; }
 }
@@ -536,16 +548,16 @@ async function sync(manual){
     try{
       // Delta: se já temos dados locais e não é refresh manual, pedimos só o novo.
       const since = manual ? 0 : sinceTs();
-      const url = GAS+'?all=1'+(since>0 ? '&since='+since : (manual?'&fresh=1':''));
+      const url = GAS+'?all=1'+(since>0 ? '&since='+since : (manual?'&fresh=1':''))+'&key='+encodeURIComponent(apiKey());
       const j = await fetch(url).then(r=>r.json());
       let evRaw, veRaw, caRaw, isDelta=false;
       if(j && !Array.isArray(j) && (j.eventos||j.vendas||j.capi_log||j.delta)){
         evRaw=j.eventos||[]; veRaw=j.vendas||[]; caRaw=j.capi_log||[]; isDelta=!!j.delta;
       }else{
         const [a,b,c] = await Promise.all([
-          Array.isArray(j)?Promise.resolve(j):fetch(GAS).then(r=>r.json()).catch(()=>[]),
-          fetch(GAS+'?sheet=vendas').then(r=>r.json()).catch(()=>[]),
-          fetch(GAS+'?sheet=capi_log').then(r=>r.json()).catch(()=>[])
+          Array.isArray(j)?Promise.resolve(j):fetch(GAS+'?sheet=eventos&key='+encodeURIComponent(apiKey())).then(r=>r.json()).catch(()=>[]),
+          fetch(GAS+'?sheet=vendas&key='+encodeURIComponent(apiKey())).then(r=>r.json()).catch(()=>[]),
+          fetch(GAS+'?sheet=capi_log&key='+encodeURIComponent(apiKey())).then(r=>r.json()).catch(()=>[])
         ]);
         evRaw=extract(a); veRaw=extract(b); caRaw=extract(c);
       }
@@ -567,7 +579,7 @@ async function sync(manual){
     }
   }else{
     _evAll = mergeNoDup(_evAll, localBackup());
-    $('#syncTxt').textContent='GAS não configurado';
+    $('#syncTxt').textContent='API não configurada';
   }
   _syncing=false;
   applyFilter(); renderAll();
@@ -1556,11 +1568,11 @@ function exportCSV(){
   toast('✓ CSV exportado');
 }
 async function resetData(){
-  if(!confirm('Isso vai APAGAR todos os dados de eventos (no GAS e local). Continuar?')) return;
+  if(!confirm('Isso vai APAGAR os eventos e o log de CAPI (no Supabase e local). As vendas reais NÃO são apagadas (só vendas de teste). Continuar?')) return;
   if(!confirm('Tem certeza absoluta? Esta ação não pode ser desfeita.')) return;
   try{
     if(GAS && !/COLE_AQUI/.test(GAS)){
-      await fetch(GAS,{method:'POST',body:JSON.stringify({action:'reset'})}).catch(()=>{});
+      await fetch(GAS,{method:'POST',body:JSON.stringify({action:'reset', key:apiKey()})}).catch(()=>{});
     }
   }catch(e){}
   localStorage.removeItem(KEY); localStorage.removeItem(CKEY);
