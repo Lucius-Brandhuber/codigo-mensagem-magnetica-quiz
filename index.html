@@ -724,8 +724,7 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
       document.getElementById('processing').style.display = 'none';
       document.getElementById('diagnostico').style.display = 'block';
       _diagT0 = Date.now();
-      if (window.cmmTrack) cmmTrack.view('diagnostico');   // diagnóstico revelado
-      if (window.fbq) fbq('track', 'Lead');                // completou o quiz = lead
+      if (window.cmmTrack) cmmTrack.view('diagnostico');   // diagnóstico revelado → track.js dispara o Lead (navegador+CAPI, mesmo event_id)
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, items.length * 620 + 500);
   }

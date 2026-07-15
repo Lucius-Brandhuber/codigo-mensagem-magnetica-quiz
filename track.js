@@ -14,6 +14,17 @@
   function backup(e){ try{ var a=JSON.parse(localStorage.getItem('cmm_ev')||'[]'); a.push(e); if(a.length>500)a=a.slice(-500); localStorage.setItem('cmm_ev',JSON.stringify(a)); }catch(x){} }
   function seen(key){ var k='cmm_seen_'+sid()+'_'+key; if(localStorage.getItem(k))return true; try{localStorage.setItem(k,'1');}catch(x){} return false; }
 
+  /* Espelha o mapeamento da rcm-api: quais eventos do funil viram evento padrão do
+     Meta. O Pixel do navegador é disparado AQUI (com eventID = event_id) e a CAPI
+     no servidor usa o mesmo event_id → o Meta deduplica navegador × servidor.
+     Purchase fica de fora de propósito (é 100% da Payt). */
+  function metaName(ev, step){
+    if(ev==='view' && step==='diagnostico') return 'Lead';
+    if(ev==='view' && (step==='pv'||step==='vendas'||step==='vsl'||step==='vsl2')) return 'ViewContent';
+    if(ev==='checkout_click') return 'InitiateCheckout';
+    return null;
+  }
+
   function send(ev, p){
     p = p||{};
     var e = {
@@ -25,6 +36,9 @@
       price_ab: priceAb()
     };
     backup(e);
+    // Pixel do navegador com o MESMO event_id que vai pro servidor (dedup no Meta).
+    var mn = metaName(ev, e.step);
+    if(mn && window.fbq){ try{ fbq('track', mn, {}, {eventID: e.event_id}); }catch(x){} }
     try{ fetch(GAS, { method:'POST', mode:'no-cors', keepalive:true, headers:{'Content-Type':'text/plain;charset=UTF-8'}, body: JSON.stringify(e) }); }catch(x){}
   }
 

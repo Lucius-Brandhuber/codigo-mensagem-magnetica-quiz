@@ -22,7 +22,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '28159617713645746');
 fbq('track', 'PageView');
-fbq('track', 'ViewContent');
+// ViewContent é disparado pelo track.js (com o mesmo event_id da CAPI → dedup)
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/></noscript>
@@ -845,8 +845,7 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   function comprar(plano){
     var url = (plano === 'essencial') ? CHECKOUT_ESSENCIAL : CHECKOUT_COMPLETO;
     if (!url) { alert('Checkout em configuração. Tente novamente em instantes.'); return; }
-    if (window.fbq) fbq('track', 'InitiateCheckout');
-    if (window.cmmTrack) cmmTrack.checkout(plano === 'essencial' ? 'essencial' : 'completo');
+    if (window.cmmTrack) cmmTrack.checkout(plano === 'essencial' ? 'essencial' : 'completo');  // dispara InitiateCheckout (navegador+CAPI, mesmo event_id)
     window.location.href = url;
   }
 
