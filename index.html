@@ -215,10 +215,13 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     70%  { transform: scale(1.03);  box-shadow: 0 9px 24px rgba(31,168,74,0.40), 0 0 0 16px rgba(44,191,82,0);  }
     100% { transform: scale(1);     box-shadow: 0 6px 18px rgba(31,168,74,0.32), 0 0 0 0   rgba(44,191,82,0);   }
   }
-  #screen-0 .btn-main { animation: ctaPing 1.7s cubic-bezier(.4,0,.2,1) infinite; }
-  #screen-0 .btn-main:hover { animation-play-state: paused; }
+  #screen-0 .btn-main,
+  #diagnostico .btn-main { animation: ctaPing 1.7s cubic-bezier(.4,0,.2,1) infinite; }
+  #screen-0 .btn-main:hover,
+  #diagnostico .btn-main:hover { animation-play-state: paused; }
   @media (prefers-reduced-motion: reduce) {
-    #screen-0 .btn-main { animation: none; }
+    #screen-0 .btn-main,
+    #diagnostico .btn-main { animation: none; }
   }
   .trust-note {
     margin-top: 15px;
@@ -310,14 +313,18 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     text-align: center;
   }
   .result-badge {
-    display: inline-block;
-    background: #e9f9f0;
-    color: #1fa84a;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(100deg, #e9f9f0, #eafff5);
+    color: #1a9247;
+    border: 1px solid #bfe8cc;
     border-radius: 99px;
-    padding: 7px 18px;
+    padding: 7px 17px;
     font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 20px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 14px rgba(31,168,74,0.12);
   }
   .result-title {
     font-size: 30px;
@@ -361,7 +368,12 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     line-height: 1.5;
   }
   .result-item:last-child { margin-bottom: 0; }
-  .result-item .check { color: #1fa84a; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .result-item .check {
+    width: 21px; height: 21px; border-radius: 50%;
+    background: #e9f9f0; color: #1a9247;
+    font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
 
   /* medidor de chances (resultado "calculado" a partir das respostas) */
   .score-card {
@@ -380,28 +392,23 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     letter-spacing: 0.9px;
     margin-bottom: 12px;
   }
+  /* medidor circular (gauge) — mais "diagnóstico" que a barra */
+  .gauge { position: relative; width: 172px; height: 172px; margin: 6px auto 16px; }
+  .gauge-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .gauge-bg { fill: none; stroke: #f1e6ec; stroke-width: 10; }
+  .gauge-fill {
+    fill: none; stroke: url(#gaugeGrad); stroke-width: 10; stroke-linecap: round;
+    stroke-dasharray: 326.726; stroke-dashoffset: 326.726;
+    transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);
+    filter: drop-shadow(0 2px 6px rgba(31,168,74,0.32));
+  }
+  .gauge-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
   .score-value {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 44px;
+    font-size: 46px;
     font-weight: 900;
     color: var(--green-a);
     line-height: 1;
-    margin-bottom: 12px;
-  }
-  .score-track {
-    width: 100%;
-    height: 12px;
-    background: #f1e6ec;
-    border-radius: 99px;
-    overflow: hidden;
-    margin-bottom: 10px;
-  }
-  .score-fill {
-    height: 100%;
-    width: 0;
-    background: linear-gradient(90deg, var(--green-b), var(--green-a));
-    border-radius: 99px;
-    transition: width 1.1s cubic-bezier(.4,0,.2,1);
   }
   .score-note { font-size: 13px; color: #8a7e86; line-height: 1.5; }
 
@@ -421,35 +428,52 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   .urgency span strong { font-weight: 700; color: #b3332e; }
 
   /* ===== PROCESSANDO (montando o protocolo) ===== */
-  .proc-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    max-width: 360px;
-    margin: 26px auto 0;
-    text-align: left;
+  @keyframes procSpin { to { transform: rotate(360deg); } }
+  @keyframes procPulse { 50% { transform: scale(1.12); } }
+  @keyframes procPop { 0% { transform: scale(.5); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+  /* anel girando com coração pulsando no centro */
+  .proc-loader { width: 78px; height: 78px; margin: 4px auto 22px; position: relative; }
+  .proc-loader::before {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--pink-bright), var(--grad-a) 38%, #f7d6e6 68%, var(--pink-bright));
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
+    animation: procSpin 1s linear infinite;
   }
+  .proc-loader-heart { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 30px; animation: procPulse 1.4s ease-in-out infinite; }
+
+  .proc-card {
+    background: #fff; border: 1px solid #f3e8ee; border-radius: 20px;
+    padding: 22px 22px 20px; max-width: 404px; margin: 24px auto 0;
+    box-shadow: 0 6px 22px rgba(120,60,90,0.07);
+  }
+  .proc-list { display: flex; flex-direction: column; gap: 14px; text-align: left; }
   .proc-item {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    font-size: 14.5px;
-    color: #a99fa6;
-    opacity: 0.45;
+    display: flex; align-items: center; gap: 13px;
+    font-size: 14.5px; color: #a99fa6; opacity: 0.5;
     transition: opacity 0.35s, color 0.35s;
   }
   .proc-item::before {
-    content: '';
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    border: 2px solid #e0d6dd;
-    flex-shrink: 0;
+    content: ''; width: 24px; height: 24px; border-radius: 50%;
+    border: 2px solid #e0d6dd; flex-shrink: 0; box-sizing: border-box;
     display: flex; align-items: center; justify-content: center;
     font-size: 13px; font-weight: 700; color: #fff;
     transition: background 0.35s, border-color 0.35s;
   }
+  /* item sendo processado agora: spinner rosa */
+  .proc-item.active { opacity: 1; color: var(--ink-soft); }
+  .proc-item.active::before {
+    border-color: #f0cfe0; border-top-color: var(--pink-bright);
+    animation: procSpin 0.7s linear infinite;
+  }
+  /* item concluído: check verde com "pop" */
   .proc-item.done { opacity: 1; color: #463d45; }
-  .proc-item.done::before { content: '✓'; background: var(--green-a); border-color: var(--green-a); }
+  .proc-item.done::before { content: '✓'; background: var(--green-a); border-color: var(--green-a); animation: procPop 0.3s ease; }
+
+  .proc-bar { height: 8px; background: #f1e6ec; border-radius: 99px; overflow: hidden; margin: 20px 0 11px; }
+  .proc-bar-fill { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--grad-a), var(--pink-bright)); border-radius: 99px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+  .proc-pct { font-size: 12.5px; font-weight: 700; color: var(--pink); text-align: center; letter-spacing: 0.3px; }
 
   @media (max-width: 520px) {
     .progress-bar-wrap { padding: 12px 20px 14px; }
@@ -618,15 +642,19 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
   <div class="result-wrap">
     <!-- Fase 1: processando -->
     <div id="processing">
-      <span class="q-emoji">💗</span>
-      <h2 class="result-title serif">Criando o seu Protocolo Personalizado de Reconquista...</h2>
-      <p class="result-desc">Só um instante — estamos cruzando as suas respostas com os casos das mulheres que já trouxeram o ex de volta.</p>
-      <div class="proc-list" id="procList">
-        <div class="proc-item">Avaliando o tempo e o estado do término</div>
-        <div class="proc-item">Medindo o vínculo emocional que ainda existe</div>
-        <div class="proc-item">Identificando o erro que está afastando ele</div>
-        <div class="proc-item">Calculando suas chances reais de reconquista</div>
-        <div class="proc-item">Montando o seu protocolo personalizado</div>
+      <div class="proc-loader" aria-hidden="true"><span class="proc-loader-heart">💗</span></div>
+      <h2 class="result-title serif">Montando o seu <span class="accent">Protocolo de Reconquista</span></h2>
+      <p class="result-desc">Só um instante — estou cruzando as suas respostas com os casos de <strong>+3.300 mulheres</strong> que já trouxeram o ex de volta.</p>
+      <div class="proc-card">
+        <div class="proc-list" id="procList">
+          <div class="proc-item">Analisando o tempo e o estado do término</div>
+          <div class="proc-item">Medindo o vínculo emocional que ainda existe</div>
+          <div class="proc-item">Identificando o erro que está afastando ele</div>
+          <div class="proc-item">Calculando as suas chances reais de reconquista</div>
+          <div class="proc-item">Montando o seu protocolo personalizado</div>
+        </div>
+        <div class="proc-bar"><i class="proc-bar-fill" id="procBarFill"></i></div>
+        <div class="proc-pct"><span id="procPct">0</span>% concluído</div>
       </div>
     </div>
     <!-- Fase 2: diagnóstico revelado -->
@@ -636,8 +664,19 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
 
       <div class="score-card">
         <div class="score-label">Suas chances de reconquista</div>
-        <div class="score-value" id="scoreValue">—</div>
-        <div class="score-track"><div class="score-fill" id="scoreFill"></div></div>
+        <div class="gauge">
+          <svg class="gauge-svg" viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#2cbf52"/>
+                <stop offset="1" stop-color="#1fa84a"/>
+              </linearGradient>
+            </defs>
+            <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+            <circle class="gauge-fill" id="scoreFill" cx="60" cy="60" r="52"></circle>
+          </svg>
+          <div class="gauge-center"><span class="score-value" id="scoreValue">—</span></div>
+        </div>
         <div class="score-note" id="scoreNote">Calculado a partir das suas 7 respostas.</div>
       </div>
 
@@ -714,19 +753,29 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
     showScreen(8);
     if (window.cmmTrack) cmmTrack.view('resultado');
     var items = document.querySelectorAll('#procList .proc-item');
-    var i = 0;
-    var iv = setInterval(function () {
-      if (i < items.length) { items[i].classList.add('done'); i++; }
-      else { clearInterval(iv); }
-    }, 620);
-    setTimeout(function () {
+    var bar = document.getElementById('procBarFill');
+    var pct = document.getElementById('procPct');
+    var n = items.length, i = 0, STEP = 640;
+
+    // cada item: entra "processando" (spinner) → conclui (check) → passa pro próximo.
+    // a barra e o % sobem junto; ao fim do último, revela o diagnóstico.
+    function advance() {
+      if (i > 0) { items[i-1].classList.remove('active'); items[i-1].classList.add('done'); }
+      var feitos = i, prog = Math.round(feitos / n * 100);
+      if (bar) bar.style.width = prog + '%';
+      if (pct) pct.textContent = prog;
+      if (i < n) { items[i].classList.add('active'); i++; setTimeout(advance, STEP); }
+      else { setTimeout(reveal, 480); }
+    }
+    function reveal() {
       try { montarDiagnostico(); } catch(e){}
       document.getElementById('processing').style.display = 'none';
       document.getElementById('diagnostico').style.display = 'block';
       _diagT0 = Date.now();
       if (window.cmmTrack) cmmTrack.view('diagnostico');   // diagnóstico revelado → track.js dispara o Lead (navegador+CAPI, mesmo event_id)
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, items.length * 620 + 500);
+    }
+    advance();
   }
 
   // Etapa 04 — monta o diagnóstico PERSONALIZADO a partir das respostas
@@ -764,7 +813,8 @@ src="https://www.facebook.com/tr?id=28159617713645746&ev=PageView&noscript=1"/><
         if (p < 1) requestAnimationFrame(tick);
       });
       setTimeout(function () { sv.textContent = score + '%'; }, DUR + 200);   // garantia
-      setTimeout(function () { sf.style.width = score + '%'; }, 60);
+      // preenche o arco do medidor (circunferência 2·π·52 ≈ 326.726)
+      setTimeout(function () { sf.style.strokeDashoffset = (326.726 * (1 - score / 100)).toFixed(1); }, 60);
     }
     var sn = document.getElementById('scoreNote');
     if (sn) sn.innerHTML = 'Acima da média das mulheres que responderam esse teste — e <strong>bem acima</strong> do ponto em que a reconquista deixa de ser possível.';
