@@ -295,7 +295,6 @@ const GAS   = 'https://cwcryqleyfzeyzjzvdme.supabase.co/functions/v1/rcm-api';
 const QUIZ_TOTAL = 6;        // telas do quiz (step 0..5)
 const PRICE = 27.90;         // fallback de valor (BRL)
 const CURRENCY = 'BRL';
-const AB_MIN_BUYS = 10;      // mínimo de compras por variante p/ significância
 const PRODUTOS = { curso:'Curso principal', biblioteca:'Biblioteca das Respostas', reconstrucao:'Reconstrução da Confiança', 'manual-comunicacao':'Manual da Comunicação', manual:'Manual da Comunicação' };
 const PRICE_B = 34.90;       // variante B do curso
 const PRICE_BIBLIO = 14.90;  // Biblioteca das Respostas
@@ -1238,59 +1237,6 @@ function barGroup(obj,limit){
     <div class="bg-track"><div class="bg-fill" style="width:${v/max*100}%"></div></div>
     <div class="bg-val">${fmt(v)}</div></div>`).join('')+'</div>';
 }
-/* teste A/B de preço com significância */
-function priceAbCard(){
-  const labels={A:'A · R$ 27,90 (atual)', B:'B · R$ 34,90'};
-  const vis = uCountBy(e=>e.price_ab, e=>!!e.price_ab);
-  const chk = uCountBy(e=>e.price_ab, e=>e.ev==='checkout_click'&&e.price_ab);
-  const buys={}, rev={};
-  _vendas.filter(v=>APPROVED.test(v.status)).forEach(v=>{ const k=v.ab; if(k==='A'||k==='B'){ buys[k]=(buys[k]||0)+1; rev[k]=(rev[k]||0)+vValor(v); } });
-  const variants=['A','B'];
-  const totalVis = variants.reduce((a,k)=>a+(vis[k]||0),0);
-  const totalBuys= variants.reduce((a,k)=>a+(buys[k]||0),0);
-  if(!totalVis && !totalBuys){
-    return `<div class="card"><h2>🧪 Teste A/B de Preço</h2><div class="empty">Ainda sem dados. Assim que o tráfego novo entrar, os acessos e as compras por variante aparecem aqui.</div></div>`;
-  }
-  const rows = variants.map(k=>{
-    const a=vis[k]||0, cl=chk[k]||0, c=buys[k]||0, conv=a>0?(c/a*100):0;
-    return `<tr style="border-top:1px solid var(--line)">
-      <td style="padding:9px 6px;font-weight:700">${labels[k]}</td>
-      <td style="padding:9px 6px;text-align:right">${fmt(a)}</td>
-      <td style="padding:9px 6px;text-align:right">${fmt(cl)}</td>
-      <td style="padding:9px 6px;text-align:right;font-weight:700">${fmt(c)}</td>
-      <td style="padding:9px 6px;text-align:right;color:var(--primary);font-weight:700">${conv.toFixed(1).replace('.',',')}%</td>
-      <td style="padding:9px 6px;text-align:right">${fmtMoney(rev[k]||0)}</td>
-    </tr>`;
-  }).join('');
-  // significância (duas proporções: compras/acessos)
-  let sig='';
-  const nA=vis.A||0, nB=vis.B||0, cA=buys.A||0, cB=buys.B||0;
-  if(cA<AB_MIN_BUYS||cB<AB_MIN_BUYS){
-    sig=`<div class="sig small">⏳ Amostra ainda pequena — colete pelo menos ${AB_MIN_BUYS} compras por variante antes de decidir (A: ${cA} · B: ${cB}).</div>`;
-  }else if(nA>0&&nB>0){
-    const p1=cA/nA, p2=cB/nB, p=(cA+cB)/(nA+nB);
-    const se=Math.sqrt(p*(1-p)*(1/nA+1/nB));
-    const z=se>0?Math.abs(p1-p2)/se:0;
-    const winner = (rev.B||0)/(nB||1) > (rev.A||0)/(nA||1) ? 'B' : 'A';
-    if(z>=1.96) sig=`<div class="sig ok">✅ Diferença significativa (95%) — variante <b>${winner}</b> gera mais receita por visitante (z=${z.toFixed(2)}).</div>`;
-    else sig=`<div class="sig ns">📊 Ainda sem significância estatística (z=${z.toFixed(2)} &lt; 1,96) — continue o teste.</div>`;
-  }
-  return `<div class="card"><h2>🧪 Teste A/B de Preço <span class="badge">A: R$ 27,90 · B: R$ 34,90</span></h2>
-    <table style="width:100%;border-collapse:collapse;font-size:13.5px">
-      <thead><tr style="color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em">
-        <th style="text-align:left;padding:0 6px 6px">Variante</th>
-        <th style="text-align:right;padding:0 6px 6px">Acessos</th>
-        <th style="text-align:right;padding:0 6px 6px">Checkout</th>
-        <th style="text-align:right;padding:0 6px 6px">Compras</th>
-        <th style="text-align:right;padding:0 6px 6px">Conversão</th>
-        <th style="text-align:right;padding:0 6px 6px">Receita</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    ${sig}
-    <div class="note">Acessos = visitantes únicos por variante · Compras = vendas aprovadas com <code>ab</code> (postback Payt). Significância via teste z de duas proporções (compras/acessos).</div>
-  </div>`;
-}
 function tabResumo(){
   const m=metrics(), p=metricsPrev();
   const quizRate  = pct(m.quizDone,m.visitors), quizRateP = pct(p.quizDone,p.visitors);
@@ -1312,7 +1258,6 @@ function tabResumo(){
   const cmpNote = period.mode==='all' ? '<div class="note">Escolha um período (Hoje, 7 dias…) para ver a comparação com o período anterior equivalente.</div>'
     : '<div class="note">Setas comparam com o período anterior equivalente ('+PERIOD_LABEL[period.mode].toLowerCase()+' anterior).</div>';
   return `<div class="kpis" style="margin-bottom:4px">${kpis}</div>${cmpNote}<div style="height:12px"></div>`+
-  priceAbCard()+
   `<div class="card"><h2>🛒 Plano escolhido no checkout <span class="badge">essencial (R$ 19,90) × completo (R$ 54,90)</span></h2>${barGroup(pvBtns)}</div>
   <div class="grid2">
     <div class="card"><h2>👥 Por Gênero</h2>${barGroup(gender)}</div>
@@ -1408,11 +1353,10 @@ function tabVendas(){
     <td>${esc(PRODUTOS[x.produto]||x.produto||'— antiga')}</td>
     <td>${esc(x.metodo||'—')}</td>
     <td>${fmtMoney(vValor(x))}</td>
-    <td>${x.ab?('<b>'+esc(x.ab)+'</b>'):'—'}</td>
     <td>${esc(x.nome||'—')}</td>
     <td>${esc(x.email||'—')}</td>
     <td>${esc(x.order_id||'—')}</td></tr>`).join('');
-  if(!list.length) rows=`<tr><td colspan="9"><div class="empty">Nenhuma venda com esses filtros.</div></td></tr>`;
+  if(!list.length) rows=`<tr><td colspan="8"><div class="empty">Nenhuma venda com esses filtros.</div></td></tr>`;
   return `<div class="card"><h2>💰 Vendas <span class="badge">gateway: Payt</span></h2>
     <div class="row-actions">${stChip('all','Todas')}${stChip('aprovada','Aprovadas')}${stChip('pendente','Pendentes/Pix')}${stChip('recusada','Recusadas')}${stChip('reembolsada','Reembolsadas')}</div>
     <div class="row-actions"><span style="font-size:12px;color:var(--muted)">Produto:</span>${prods.map(prodChip).join('')}</div>
@@ -1423,7 +1367,7 @@ function tabVendas(){
       <div class="mini-kpi"><div class="n">${fmt(appr.filter(x=>/cart|credit|card/i.test(x.metodo)).length)}</div><div class="l">Cartão</div></div>
     </div>
     <div class="tbl-wrap"><table>
-      <thead><tr><th class="fix">Quando</th><th>Status</th><th>Produto</th><th>Método</th><th>Valor</th><th>A/B</th><th>Nome</th><th>Email</th><th>Pedido</th></tr></thead>
+      <thead><tr><th class="fix">Quando</th><th>Status</th><th>Produto</th><th>Método</th><th>Valor</th><th>Nome</th><th>Email</th><th>Pedido</th></tr></thead>
       <tbody>${rows}</tbody></table></div>
     <div class="note">Vendas chegam pelo postback do Payt (server-side) e não carregam sessão/UTM — a jornada individual não é linkável à venda. "(antigas s/ produto)" = registradas antes da coluna produto.</div></div>`;
 }
