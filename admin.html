@@ -334,17 +334,22 @@ const QUIZ_TOTAL = 6;        // telas do quiz (step 0..5)
 const PRICE = 27.90;         // fallback de valor (BRL)
 const CURRENCY = 'BRL';
 const PRODUTOS = { curso:'Curso principal', biblioteca:'Biblioteca das Respostas', reconstrucao:'Reconstrução da Confiança', 'manual-comunicacao':'Manual da Comunicação', manual:'Manual da Comunicação' };
-const PRICE_B = 34.90;       // variante B do curso
+const PRICE_B = 34.90;       // variante B do curso (legado A/B, só p/ vendas antigas)
 const PRICE_BIBLIO = 14.90;  // Biblioteca das Respostas
+const PRICE_ESSENCIAL = 19.90; // plano Essencial (checkout 4EX8DE)
+const PRICE_COMPLETO  = 54.90; // plano Completo (checkout RW3A2P)
 // Valor real da venda. Usa o valor do postback da Payt quando vem preenchido;
-// senão cai no preço conhecido por produto + variante A/B (evita computar tudo
-// como 27,90 quando o postback não traz o valor).
+// senão cai no preço conhecido por produto (a Payt manda o valor em centavos em
+// transaction.total_price — o postback já converte; este fallback cobre vendas
+// antigas gravadas antes dessa correção).
 function vValor(v){
   if(v && v.valor>0) return v.valor;
   const prod=String(v&&v.produto||'').toLowerCase();
   const ab=String(v&&v.ab||'').toUpperCase();
+  if(prod==='essencial')        return PRICE_ESSENCIAL;
+  if(prod==='completo')         return PRICE_COMPLETO;
   if(prod==='biblioteca')       return PRICE_BIBLIO;
-  if(prod==='curso' || prod==='') return ab==='B' ? PRICE_B : PRICE; // curso (ou antiga s/ produto): A=27,90 | B=34,90
+  if(prod==='curso' || prod==='') return ab==='B' ? PRICE_B : PRICE; // curso antigo (ou s/ produto)
   return 0;                                          // reconstrução, manual e outros: preço só na Payt
 }
 
